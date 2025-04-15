@@ -34,5 +34,10 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
-    
+  
+    //analisis-pabrik
+    public function analisisPabrik()
+{
+    return view('dashboard.analisis-pabrik');
+}
 }
