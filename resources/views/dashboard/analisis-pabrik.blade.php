@@ -21,6 +21,10 @@
         font-size: 1.2rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
+    .sidebar .logo img {
+        max-width: 100%;
+        padding: 10px;
+    }
     .sidebar .nav-link {
         color: white;
         padding: 0.75rem 1rem;
@@ -103,7 +107,7 @@
         justify-content: center;
         font-weight: bold;
     }
-    
+
     /* Style khusus untuk analisis pabrik */
     .factory-card {
         background-color: #d6e4f0;
@@ -154,7 +158,8 @@
 <!-- Sidebar -->
 <div class="sidebar d-flex flex-column">
     <div class="logo d-flex align-items-center">
-        <span>PG Rajawali I</span>
+        <!-- Updated logo with Laravel asset() helper -->
+        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I">
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">

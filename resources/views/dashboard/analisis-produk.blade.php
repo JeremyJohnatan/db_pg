@@ -126,7 +126,7 @@
 <!-- Sidebar -->
 <div class="sidebar d-flex flex-column">
     <div class="logo d-flex align-items-center justify-content-center" style="background-color: #004a94;">
-        <img src="http://localhost/db_pg/public/assets/images/logo.png" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
+        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
