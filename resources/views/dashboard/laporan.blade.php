@@ -21,10 +21,13 @@
         font-size: 1.2rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
+<<<<<<< HEAD
     .sidebar .logo img {
         max-width: 100%;
         padding: 10px;
     }
+=======
+>>>>>>> 9519e125b96f8e9b7ccff50261d91678a7113926
     .sidebar .nav-link {
         color: white;
         padding: 0.75rem 1rem;
@@ -171,9 +174,14 @@
 
 @section('content')
 <div class="sidebar d-flex flex-column">
+<<<<<<< HEAD
     <div class="logo d-flex align-items-center justify-content-center" style="background-color: #004a94;">
         <!-- Updated logo with Laravel asset() helper -->
         <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
+=======
+    <div class="logo d-flex align-items-center">
+        <span>PG Rajawali I</span>
+>>>>>>> 9519e125b96f8e9b7ccff50261d91678a7113926
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
@@ -209,8 +217,6 @@
             </div>
         </a>
     </div>
-    <a href="{{ route('logout') }}" class="nav-link logout mt-auto" 
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <div class="d-flex align-items-center">
             <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                 <i class="fas fa-sign-out-alt text-primary"></i>
