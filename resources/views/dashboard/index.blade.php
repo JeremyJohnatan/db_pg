@@ -53,20 +53,21 @@
     }
     .navbar .search-bar {
         position: relative;
-        margin-right: 20px;
     }
     .navbar .search-bar input {
-        padding-left: 35px;
+        padding-left: 40px; /* Space for the icon */
         border-radius: 20px;
         border: 1px solid #e0e0e0;
         background-color: #f5f7fb;
     }
-    .navbar .search-bar i {
+    .navbar .search-bar .search-icon {
         position: absolute;
-        left: 12px;
-        top: 50%;
+        left: 15px;
+        top: 48%;
         transform: translateY(-50%);
         color: #a0a0a0;
+        pointer-events: none; /* Ensures icon doesn't interfere with input */
+        z-index: 10;
     }
     .card {
         border: none;
@@ -110,7 +111,8 @@
 <!-- Sidebar -->
 <div class="sidebar d-flex flex-column">
     <div class="logo d-flex align-items-center">
-        <span>PG Rajawali I</span>
+        <!-- Updated logo with Laravel asset() helper -->
+        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link active">
@@ -173,8 +175,8 @@
                 </select>
             </div>
             <div class="d-flex align-items-center">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
+                <div class="search-bar me-3">
+                    <i class="fas fa-search search-icon"></i>
                     <input type="text" class="form-control" placeholder="Search">
                 </div>
                 <div class="d-flex align-items-center">

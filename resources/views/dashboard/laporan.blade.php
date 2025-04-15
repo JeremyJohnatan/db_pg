@@ -167,8 +167,6 @@
 
 @section('content')
 <div class="sidebar d-flex flex-column">
-    <div class="logo d-flex align-items-center">
-        <span>PG Rajawali I</span>
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
@@ -204,8 +202,6 @@
             </div>
         </a>
     </div>
-    <a href="{{ route('logout') }}" class="nav-link logout mt-auto"
-        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <div class="d-flex align-items-center">
             <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                 <i class="fas fa-sign-out-alt text-primary"></i>
@@ -310,4 +306,3 @@
         });
     });
 </script>
-@endsection
