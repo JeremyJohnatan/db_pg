@@ -17,9 +17,11 @@
     }
     .sidebar .logo {
         padding: 15px;
-        font-weight: bold;
-        font-size: 1.2rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: #004a94;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     .sidebar .nav-link {
         color: white;
@@ -109,8 +111,8 @@
 @section('content')
 <!-- Sidebar -->
 <div class="sidebar d-flex flex-column">
-    <div class="logo d-flex align-items-center">
-        <span>PG Rajawali I</span>
+    <div class="logo d-flex align-items-center justify-content-center">
+        <img src="http://localhost/db_pg/public/assets/images/logo.png" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link active">
