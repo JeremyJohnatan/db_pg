@@ -17,17 +17,18 @@
     }
     .sidebar .logo {
         padding: 15px;
-        font-weight: bold;
-        font-size: 1.2rem;
+        /* font-weight: bold; */ /* Hilangkan ini agar logo tidak terpengaruh */
+        /* font-size: 1.2rem; */ /* Hilangkan ini agar logo tidak terpengaruh */
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex; /* Tambahkan flex untuk mengatur posisi logo dan teks */
+        align-items: center; /* Sejajarkan vertikal logo dan teks */
+        justify-content: center; /* Tengahkan horizontal logo dan teks */
     }
-<<<<<<< HEAD
     .sidebar .logo img {
-        max-width: 100%;
-        padding: 10px;
+        max-width: 80%; /* Atur lebar maksimum logo agar tidak terlalu besar */
+        height: auto; /* Biarkan tinggi menyesuaikan aspek rasio */
+        margin-right: 10px; /* Beri sedikit jarak antara logo dan teks jika ada */
     }
-=======
->>>>>>> 9519e125b96f8e9b7ccff50261d91678a7113926
     .sidebar .nav-link {
         color: white;
         padding: 0.75rem 1rem;
@@ -174,14 +175,9 @@
 
 @section('content')
 <div class="sidebar d-flex flex-column">
-<<<<<<< HEAD
-    <div class="logo d-flex align-items-center justify-content-center" style="background-color: #004a94;">
-        <!-- Updated logo with Laravel asset() helper -->
-        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
-=======
-    <div class="logo d-flex align-items-center">
-        <span>PG Rajawali I</span>
->>>>>>> 9519e125b96f8e9b7ccff50261d91678a7113926
+    <div class="logo d-flex align-items-center justify-content-center">
+        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 80%; height: auto;">
+        {{-- <span>PG Rajawali I</span> --}} {{-- Anda bisa menghapus atau mengomentari teks jika hanya ingin menampilkan logo --}}
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
@@ -217,6 +213,8 @@
             </div>
         </a>
     </div>
+    <a href="{{ route('logout') }}" class="nav-link logout mt-auto"
+        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <div class="d-flex align-items-center">
             <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                 <i class="fas fa-sign-out-alt text-primary"></i>
