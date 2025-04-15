@@ -24,6 +24,11 @@
         align-items: center; /* Sejajarkan vertikal logo dan teks */
         justify-content: center; /* Tengahkan horizontal logo dan teks */
     }
+    .sidebar .logo img {
+        max-width: 80%; /* Atur lebar maksimum logo agar tidak terlalu besar */
+        height: auto; /* Biarkan tinggi menyesuaikan aspek rasio */
+        margin-right: 10px; /* Beri sedikit jarak antara logo dan teks jika ada */
+    }
     .sidebar .nav-link {
         color: white;
         padding: 0.75rem 1rem;
@@ -170,6 +175,9 @@
 
 @section('content')
 <div class="sidebar d-flex flex-column">
+    <div class="logo d-flex align-items-center justify-content-center">
+        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 80%; height: auto;">
+        {{-- <span>PG Rajawali I</span> --}} {{-- Anda bisa menghapus atau mengomentari teks jika hanya ingin menampilkan logo --}}
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
@@ -205,6 +213,8 @@
             </div>
         </a>
     </div>
+    <a href="{{ route('logout') }}" class="nav-link logout mt-auto"
+        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <div class="d-flex align-items-center">
             <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                 <i class="fas fa-sign-out-alt text-primary"></i>
@@ -309,4 +319,4 @@
         });
     });
 </script>
-
+@endsection
