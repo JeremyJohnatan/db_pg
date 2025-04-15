@@ -167,10 +167,10 @@
 
 @section('content')
 <div class="sidebar d-flex flex-column">
-    <div class="logo d-flex align-items-center">
-        <span>PG Rajawali I</span>
+    <div class="logo d-flex align-items-center justify-content-center" style="background-color: #004a94;">
+        <img src="http://localhost/db_pg/public/assets/images/logo.png" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
     </div>
-    <div class="nav flex-column mt-4">
+       <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
             <div class="d-flex align-items-center">
                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
