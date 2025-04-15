@@ -17,17 +17,9 @@
     }
     .sidebar .logo {
         padding: 15px;
-        /* font-weight: bold; */ /* Hilangkan ini agar logo tidak terpengaruh */
-        /* font-size: 1.2rem; */ /* Hilangkan ini agar logo tidak terpengaruh */
+        font-weight: bold;
+        font-size: 1.2rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex; /* Tambahkan flex untuk mengatur posisi logo dan teks */
-        align-items: center; /* Sejajarkan vertikal logo dan teks */
-        justify-content: center; /* Tengahkan horizontal logo dan teks */
-    }
-    .sidebar .logo img {
-        max-width: 80%; /* Atur lebar maksimum logo agar tidak terlalu besar */
-        height: auto; /* Biarkan tinggi menyesuaikan aspek rasio */
-        margin-right: 10px; /* Beri sedikit jarak antara logo dan teks jika ada */
     }
     .sidebar .nav-link {
         color: white;
@@ -58,61 +50,24 @@
     .navbar {
         background-color: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        padding: 15px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
-    .navbar-left {
-        display: flex;
-        align-items: center;
-    }
-    .navbar-left .form-select-sm {
-        margin-right: 15px;
-    }
-    .navbar-right {
-        display: flex;
-        align-items: center;
-    }
-    .navbar-right .search-bar {
+    .navbar .search-bar {
         position: relative;
-        margin-right: 20px;
     }
-    .navbar-right .search-bar input {
-        padding-left: 35px;
+    .navbar .search-bar input {
+        padding-left: 40px; /* Space for the icon */
         border-radius: 20px;
         border: 1px solid #e0e0e0;
         background-color: #f5f7fb;
-        font-size: 0.9rem;
-        padding-top: 8px;
-        padding-bottom: 8px;
     }
-    .navbar-right .search-bar i {
+    .navbar .search-bar .search-icon {
         position: absolute;
-        left: 12px;
-        top: 50%;
+        left: 15px;
+        top: 48%;
         transform: translateY(-50%);
         color: #a0a0a0;
-    }
-    .user-info {
-        display: flex;
-        align-items: center;
-    }
-    .user-info span {
-        margin-right: 10px;
-        font-size: 0.9rem;
-    }
-    .user-avatar {
-        width: 32px;
-        height: 32px;
-        background-color: #004a94;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 0.8rem;
+        pointer-events: none; /* Ensures icon doesn't interfere with input */
+        z-index: 10;
     }
     .content-area {
         padding: 20px;
@@ -170,14 +125,24 @@
         color: #777;
         font-style: italic;
     }
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: #004a94;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
 </style>
 @endsection
 
 @section('content')
 <div class="sidebar d-flex flex-column">
-    <div class="logo d-flex align-items-center justify-content-center">
-        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 80%; height: auto;">
-        {{-- <span>PG Rajawali I</span> --}} {{-- Anda bisa menghapus atau mengomentari teks jika hanya ingin menampilkan logo --}}
+    <div class="logo d-flex align-items-center">
+        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
@@ -213,8 +178,8 @@
             </div>
         </a>
     </div>
-    <a href="{{ route('logout') }}" class="nav-link logout mt-auto"
-        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    <a href="{{ route('logout') }}" class="nav-link logout mt-auto" 
+       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <div class="d-flex align-items-center">
             <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                 <i class="fas fa-sign-out-alt text-primary"></i>
@@ -230,7 +195,7 @@
 <div class="main-content">
     <nav class="navbar navbar-expand-lg navbar-light mb-4">
         <div class="container-fluid">
-            <div class="navbar-left">
+            <div class="d-flex align-items-center">
                 <select class="form-select form-select-sm me-3">
                     <option selected>Tanggal</option>
                     <option value="today">Hari Ini</option>
@@ -239,12 +204,12 @@
                     <option value="last_month">Bulan Lalu</option>
                 </select>
             </div>
-            <div class="navbar-right">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
+            <div class="d-flex align-items-center">
+                <div class="search-bar me-3">
+                    <i class="fas fa-search search-icon"></i>
                     <input type="text" class="form-control" placeholder="Cari Laporan">
                 </div>
-                <div class="user-info">
+                <div class="d-flex align-items-center">
                     <span class="me-2">Halo, {{ Auth::user()->name }}</span>
                     <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
                 </div>
