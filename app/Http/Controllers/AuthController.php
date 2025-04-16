@@ -40,4 +40,5 @@ class AuthController extends Controller
 {
     return view('dashboard.analisis-pabrik');
 }
+
 }
