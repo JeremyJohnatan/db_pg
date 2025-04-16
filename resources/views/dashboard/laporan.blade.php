@@ -207,7 +207,7 @@
             <div class="d-flex align-items-center">
                 <div class="search-bar me-3">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="form-control" placeholder="Cari Laporan">
+                    <input type="text" class="form-control" placeholder="Search">
                 </div>
                 <div class="d-flex align-items-center">
                     <span class="me-2">Halo, {{ Auth::user()->name }}</span>
