@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AnalisisPabrikController;
 
 // Rute untuk landing page
 Route::get('/', function () {
@@ -23,12 +24,11 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.analisis-produk');
     })->name('dashboard.analisis-produk');
     
-    Route::get('/dashboard/analisis-pabrik', function () {
-        return view('dashboard.analisis-pabrik');
-    })->name('dashboard.analisis-pabrik');
+    // Menggunakan controller baru untuk analisis pabrik
+    Route::get('/dashboard/analisis-pabrik', [AnalisisPabrikController::class, 'index'])->name('dashboard.analisis-pabrik');
     
     Route::get('/dashboard/laporan', function () {
         return view('dashboard.laporan');
     })->name('dashboard.laporan');
+    
 });
-
