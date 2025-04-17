@@ -183,16 +183,21 @@
     <nav class="navbar navbar-expand-lg navbar-light mb-4">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
-                <select class="form-select form-select-sm me-3">
-                    <option selected>30 Hari Terakhir</option>
-                    <option>60 Hari Terakhir</option>
-                    <option>90 Hari Terakhir</option>
-                </select>
+                <!-- Mengganti dropdown dengan filter kalender -->
+                <div class="input-group me-3">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                    <input type="date" class="form-control" id="tanggal-mulai" name="tanggal_mulai" value="{{ $tanggal_mulai ?? '' }}">
+                </div>
+                <div class="input-group me-3">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                    <input type="date" class="form-control" id="tanggal-akhir" name="tanggal_akhir" value="{{ $tanggal_akhir ?? '' }}">
+                </div>
+                <button class="btn btn-primary btn-sm" id="filter-tanggal">Filter</button>
             </div>
             <div class="d-flex align-items-center">
                 <div class="search-bar me-3">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search" onkeyup="searchProducts()">
                 </div>
                 <div class="d-flex align-items-center">
                     <span class="me-2">Halo, {{ Auth::user()->name }}</span>
@@ -210,59 +215,17 @@
         <!-- Analisis Penjualan Box (Left) -->
         <div class="col-md-6">
             <div class="content-box h-100">
-                <h5 class="card-title mb-3">Analisis Penjualan</h5>
+                <h5 class="card-title mb-3">Analisis Penjualan Berdasarkan Kategori</h5>
                 <div class="chart-container">
                     <canvas id="salesChart" width="400" height="200"></canvas>
                 </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const ctx = document.getElementById('salesChart').getContext('2d');
-                        const salesChart = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: ['Gula Bulk', 'Gula Kemasan 1Kg'],
-                                datasets: [{
-                                    label: 'Penjualan (ton)',
-                                    data: [7520, 5680],
-                                    backgroundColor: [
-                                        '#004a94',
-                                        '#0066cc'
-                                    ],
-                                    borderColor: [
-                                        '#004a94',
-                                        '#0066cc'
-                                    ],
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        title: {
-                                            display: true,
-                                            text: 'Ton'
-                                        }
-                                    },
-                                    x: {
-                                        title: {
-                                            display: true,
-                                            text: 'Produk'
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    });
-                </script>
             </div>
         </div>
         
         <!-- Data Table Box (Right) -->
         <div class="col-md-6">
             <div class="content-box h-100">
+                <h5 class="card-title mb-3">Data Penjualan per Kategori</h5>
                 <table class="product-table">
                     <thead>
                         <tr>
@@ -270,21 +233,53 @@
                             <th>Penjualan</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="productTableBody">
+                        @foreach($penjualanPerKategori as $item)
                         <tr>
-                            <td>Gula Bulk</td>
+                            <td>{{ $item->Kategori }}</td>
                             <td>
-                                <span class="fw-bold">7.520 ton</span>
+                                <span class="fw-bold">{{ number_format($item->TotalPenjualan, 2) }} ton</span>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Gula Kemasan 1Kg</td>
-                            <td>
-                                <span class="fw-bold">5.680 ton</span>
-                            </td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Analisis Detail Produk -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="content-box">
+                <h5 class="card-title mb-3">Detail Penjualan per Jenis Produk</h5>
+                <div class="chart-container">
+                    <canvas id="detailChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Produksi vs Kontrak -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="content-box">
+                <h5 class="card-title mb-3">Perbandingan Kontrak vs Pengambilan</h5>
+                <div class="chart-container">
+                    <canvas id="comparisonChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tren Penjualan -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="content-box">
+                <h5 class="card-title mb-3">Tren Penjualan 6 Bulan Terakhir</h5>
+                <div class="chart-container">
+                    <canvas id="trendChart" width="400" height="200"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -306,6 +301,329 @@
                 this.classList.add('active');
             });
         });
+        
+        // Chart.js untuk grafik penjualan
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {!! $labels !!},
+                datasets: [{
+                    label: 'Penjualan (ton)',
+                    data: {!! $data !!},
+                    backgroundColor: [
+                        '#004a94',
+                        '#0066cc',
+                        '#3399ff'
+                    ],
+                    borderColor: [
+                        '#004a94',
+                        '#0066cc',
+                        '#3399ff'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Ton'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Kategori Produk'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Memuat data detail produk
+        loadDetailProductData();
+        
+        // Memuat data perbandingan kontrak vs pengambilan
+        loadComparisonData();
+        
+        // Memuat data tren penjualan
+        loadTrendData();
+
+        // Set default tanggal (hari ini dan 30 hari sebelumnya)
+        const setDefaultDates = () => {
+            const today = new Date();
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            // Hanya set default jika tanggal belum diset
+            if (!document.getElementById('tanggal-mulai').value) {
+                document.getElementById('tanggal-mulai').value = formatDate(thirtyDaysAgo);
+            }
+            if (!document.getElementById('tanggal-akhir').value) {
+                document.getElementById('tanggal-akhir').value = formatDate(today);
+            }
+        };
+        
+        setDefaultDates();
+
+        // Listener untuk filter tanggal
+        const filterTanggalBtn = document.getElementById('filter-tanggal');
+        if (filterTanggalBtn) {
+            filterTanggalBtn.addEventListener('click', function() {
+                const tanggalMulai = document.getElementById('tanggal-mulai').value;
+                const tanggalAkhir = document.getElementById('tanggal-akhir').value;
+                
+                if (!tanggalMulai || !tanggalAkhir) {
+                    alert('Silakan pilih tanggal mulai dan tanggal akhir');
+                    return;
+                }
+                
+                window.location.href = `{{ route('dashboard.analisis-produk') }}?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+            });
+        }
     });
+    
+    // Fungsi untuk memuat data detail produk
+    function loadDetailProductData() {
+        // Ambil parameter tanggal dari URL jika ada
+        const urlParams = new URLSearchParams(window.location.search);
+        const tanggalMulai = urlParams.get('tanggal_mulai');
+        const tanggalAkhir = urlParams.get('tanggal_akhir');
+        
+        // Buat URL dengan parameter tanggal
+        let apiUrl = '/api/detail-produk';
+        if (tanggalMulai && tanggalAkhir) {
+            apiUrl += `?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+        }
+        
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('detailChart').getContext('2d');
+                const detailChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Penjualan (ton)',
+                            data: data.data,
+                            backgroundColor: '#0066cc',
+                            borderColor: '#004a94',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Ton'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Jenis Produk'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    }
+    
+    // Fungsi untuk memuat data perbandingan kontrak vs pengambilan
+    function loadComparisonData() {
+        // Ambil parameter tanggal dari URL jika ada
+        const urlParams = new URLSearchParams(window.location.search);
+        const tanggalMulai = urlParams.get('tanggal_mulai');
+        const tanggalAkhir = urlParams.get('tanggal_akhir');
+        
+        // Buat URL dengan parameter tanggal
+        let apiUrl = '/api/production-analysis';
+        if (tanggalMulai && tanggalAkhir) {
+            apiUrl += `?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+        }
+        
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const perbandingan = data.perbandingan;
+                const labels = perbandingan.map(item => item.Jenis);
+                const kontrakData = perbandingan.map(item => item.TotalKontrak);
+                const pengambilanData = perbandingan.map(item => item.TotalPengambilan);
+                
+                const ctx = document.getElementById('comparisonChart').getContext('2d');
+                const comparisonChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Total Kontrak (ton)',
+                                data: kontrakData,
+                                backgroundColor: '#004a94',
+                                borderColor: '#004a94',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Total Pengambilan (ton)',
+                                data: pengambilanData,
+                                backgroundColor: '#3399ff',
+                                borderColor: '#3399ff',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Ton'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Jenis Produk'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    }
+    
+    // Fungsi untuk memuat data tren penjualan
+    function loadTrendData() {
+        // Ambil parameter tanggal dari URL jika ada
+        const urlParams = new URLSearchParams(window.location.search);
+        const tanggalMulai = urlParams.get('tanggal_mulai');
+        const tanggalAkhir = urlParams.get('tanggal_akhir');
+        
+        // Buat URL dengan parameter tanggal
+        let apiUrl = '/api/product-trends';
+        if (tanggalMulai && tanggalAkhir) {
+            apiUrl += `?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+        }
+        
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('trendChart').getContext('2d');
+                
+                // Siapkan dataset dengan warna berbeda untuk setiap kategori
+                const datasets = data.datasets.map((dataset, index) => {
+                    const colors = ['#004a94', '#0066cc', '#3399ff', '#66b2ff', '#99ccff'];
+                    return {
+                        label: dataset.label,
+                        data: dataset.data,
+                        backgroundColor: colors[index % colors.length],
+                        borderColor: colors[index % colors.length],
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4
+                    };
+                });
+                
+                const trendChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Ton'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Bulan'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    }
+    
+    // Fungsi untuk pencarian produk
+    function searchProducts() {
+        const keyword = document.getElementById('searchInput').value;
+        
+        if (keyword.length > 2) {
+            // Ambil parameter tanggal dari URL jika ada
+            const urlParams = new URLSearchParams(window.location.search);
+            const tanggalMulai = urlParams.get('tanggal_mulai');
+            const tanggalAkhir = urlParams.get('tanggal_akhir');
+            
+            // Buat URL dengan parameter tanggal dan keyword
+            let apiUrl = `/api/search-product?keyword=${keyword}`;
+            if (tanggalMulai && tanggalAkhir) {
+                apiUrl += `&tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+            }
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Memperbarui tabel berdasarkan hasil pencarian
+                    updateProductTable(data);
+                });
+        }
+    }
+    
+    // Fungsi untuk memperbarui tabel produk
+    function updateProductTable(data) {
+        const tableBody = document.getElementById('productTableBody');
+        tableBody.innerHTML = '';
+        
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            
+            const categoryCell = document.createElement('td');
+            categoryCell.textContent = item.Kategori;
+            
+            const salesCell = document.createElement('td');
+            const salesValue = document.createElement('span');
+            salesValue.classList.add('fw-bold');
+            salesValue.textContent = `${Number(item.TotalPenjualan).toLocaleString('id-ID', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })} ton`;
+            salesCell.appendChild(salesValue);
+            
+            row.appendChild(categoryCell);
+            row.appendChild(salesCell);
+            
+            tableBody.appendChild(row);
+        });
+    }
 </script>
 @endsection
