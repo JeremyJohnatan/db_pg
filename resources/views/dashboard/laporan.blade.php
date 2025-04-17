@@ -136,6 +136,26 @@
         justify-content: center;
         font-weight: bold;
     }
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+    .action-buttons .btn {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+    /* Modal styles for preview */
+    .modal-preview {
+        max-width: 90%;
+    }
+    .modal-preview .modal-body {
+        height: 70vh;
+    }
+    .modal-preview iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
 </style>
 @endsection
 
@@ -207,7 +227,7 @@
             <div class="d-flex align-items-center">
                 <div class="search-bar me-3">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" class="form-control" placeholder="Cari Laporan">
                 </div>
                 <div class="d-flex align-items-center">
                     <span class="me-2">Halo, {{ Auth::user()->name }}</span>
@@ -222,7 +242,7 @@
             <div class="report-card-header">
                 <h5 class="report-card-title">Laporan</h5>
                 <div class="report-actions">
-                    <button class="btn btn-primary">Download Laporan</button>
+                    <button class="btn btn-primary" id="downloadAllReports">Download Semua Laporan</button>
                 </div>
             </div>
             <div class="report-table-container">
@@ -242,21 +262,57 @@
                             <td>Laporan Produksi Harian</td>
                             <td>14 April 2025</td>
                             <td>Selesai</td>
-                            <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="fas fa-download"></i> Unduh</a></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline-primary preview-btn" data-report="1">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
+                                    <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="1">
+                                        <i class="fas fa-download"></i> Unduh
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-secondary print-btn" data-report="1">
+                                        <i class="fas fa-print"></i> Cetak
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>Laporan Analisis Produk Mingguan</td>
                             <td>12 April 2025</td>
                             <td>Selesai</td>
-                            <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="fas fa-download"></i> Unduh</a></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline-primary preview-btn" data-report="2">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
+                                    <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="2">
+                                        <i class="fas fa-download"></i> Unduh
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-secondary print-btn" data-report="2">
+                                        <i class="fas fa-print"></i> Cetak
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>Laporan Stok Barang Bulanan</td>
                             <td>10 April 2025</td>
                             <td>Selesai</td>
-                            <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="fas fa-download"></i> Unduh</a></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline-primary preview-btn" data-report="3">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
+                                    <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="3">
+                                        <i class="fas fa-download"></i> Unduh
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-secondary print-btn" data-report="3">
+                                        <i class="fas fa-print"></i> Cetak
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="5" class="text-center no-data">Tidak ada data laporan yang tersedia.</td>
@@ -267,6 +323,27 @@
         </div>
     </div>
 </div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-preview">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">Preview Laporan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="previewFrame" src=""></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="printFromPreview">Cetak</button>
+                <button type="button" class="btn btn-success" id="downloadFromPreview">Unduh</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -275,12 +352,78 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const navLinks = document.querySelectorAll('.sidebar .nav-link');
-
+        const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+        
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
                 navLinks.forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
             });
+        });
+
+        // Preview button functionality
+        document.querySelectorAll('.preview-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const reportId = this.getAttribute('data-report');
+                // In a real application, you would fetch the report content here
+                // For demo purposes, we'll use a placeholder
+                const reportContent = `<h1>Preview Laporan #${reportId}</h1><p>Ini adalah konten preview untuk laporan ${reportId}.</p>`;
+                
+                const previewFrame = document.getElementById('previewFrame');
+                previewFrame.srcdoc = reportContent;
+                
+                // Set the modal title
+                document.getElementById('previewModalLabel').textContent = `Preview Laporan #${reportId}`;
+                
+                // Set data attributes for print and download from preview
+                previewFrame.setAttribute('data-report-id', reportId);
+                
+                previewModal.show();
+            });
+        });
+
+        // Download button functionality
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const reportId = this.getAttribute('data-report');
+                // In a real application, you would initiate a download here
+                alert(`Mengunduh laporan #${reportId}...`);
+                // Example: window.location.href = `/reports/${reportId}/download`;
+            });
+        });
+
+        // Print button functionality
+        document.querySelectorAll('.print-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const reportId = this.getAttribute('data-report');
+                // In a real application, you would open a print dialog for the report
+                alert(`Mencetak laporan #${reportId}...`);
+                // Example: window.open(`/reports/${reportId}/print`, '_blank');
+            });
+        });
+
+        // Download all reports button
+        document.getElementById('downloadAllReports').addEventListener('click', function() {
+            alert('Mengunduh semua laporan dalam format ZIP...');
+            // In a real application, you would initiate a bulk download
+            // Example: window.location.href = '/reports/download-all';
+        });
+
+        // Print from preview
+        document.getElementById('printFromPreview').addEventListener('click', function() {
+            const reportId = document.getElementById('previewFrame').getAttribute('data-report-id');
+            alert(`Mencetak laporan #${reportId} dari preview...`);
+            // In a real application, you would print the iframe content
+            // Example: document.getElementById('previewFrame').contentWindow.print();
+        });
+
+        // Download from preview
+        document.getElementById('downloadFromPreview').addEventListener('click', function() {
+            const reportId = document.getElementById('previewFrame').getAttribute('data-report-id');
+            alert(`Mengunduh laporan #${reportId} dari preview...`);
+            // In a real application, you would initiate download
+            // Example: window.location.href = `/reports/${reportId}/download`;
         });
     });
 </script>
