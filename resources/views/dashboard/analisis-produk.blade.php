@@ -183,13 +183,16 @@
     <nav class="navbar navbar-expand-lg navbar-light mb-4">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
-                <form id="periodeForm" action="{{ route('dashboard.analisis-produk') }}" method="GET">
-                    <select class="form-select form-select-sm me-3" name="periode" id="periode" onchange="document.getElementById('periodeForm').submit()">
-                        <option value="30" {{ $periode == 30 ? 'selected' : '' }}>30 Hari Terakhir</option>
-                        <option value="60" {{ $periode == 60 ? 'selected' : '' }}>60 Hari Terakhir</option>
-                        <option value="90" {{ $periode == 90 ? 'selected' : '' }}>90 Hari Terakhir</option>
-                    </select>
-                </form>
+                <!-- Mengganti dropdown dengan filter kalender -->
+                <div class="input-group me-3">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                    <input type="date" class="form-control" id="tanggal-mulai" name="tanggal_mulai" value="{{ $tanggal_mulai ?? '' }}">
+                </div>
+                <div class="input-group me-3">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                    <input type="date" class="form-control" id="tanggal-akhir" name="tanggal_akhir" value="{{ $tanggal_akhir ?? '' }}">
+                </div>
+                <button class="btn btn-primary btn-sm" id="filter-tanggal">Filter</button>
             </div>
             <div class="d-flex align-items-center">
                 <div class="search-bar me-3">
@@ -350,11 +353,62 @@
         
         // Memuat data tren penjualan
         loadTrendData();
+
+        // Set default tanggal (hari ini dan 30 hari sebelumnya)
+        const setDefaultDates = () => {
+            const today = new Date();
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            // Hanya set default jika tanggal belum diset
+            if (!document.getElementById('tanggal-mulai').value) {
+                document.getElementById('tanggal-mulai').value = formatDate(thirtyDaysAgo);
+            }
+            if (!document.getElementById('tanggal-akhir').value) {
+                document.getElementById('tanggal-akhir').value = formatDate(today);
+            }
+        };
+        
+        setDefaultDates();
+
+        // Listener untuk filter tanggal
+        const filterTanggalBtn = document.getElementById('filter-tanggal');
+        if (filterTanggalBtn) {
+            filterTanggalBtn.addEventListener('click', function() {
+                const tanggalMulai = document.getElementById('tanggal-mulai').value;
+                const tanggalAkhir = document.getElementById('tanggal-akhir').value;
+                
+                if (!tanggalMulai || !tanggalAkhir) {
+                    alert('Silakan pilih tanggal mulai dan tanggal akhir');
+                    return;
+                }
+                
+                window.location.href = `{{ route('dashboard.analisis-produk') }}?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+            });
+        }
     });
     
     // Fungsi untuk memuat data detail produk
     function loadDetailProductData() {
-        fetch(`/api/detail-produk?periode=${document.getElementById('periode').value}`)
+        // Ambil parameter tanggal dari URL jika ada
+        const urlParams = new URLSearchParams(window.location.search);
+        const tanggalMulai = urlParams.get('tanggal_mulai');
+        const tanggalAkhir = urlParams.get('tanggal_akhir');
+        
+        // Buat URL dengan parameter tanggal
+        let apiUrl = '/api/detail-produk';
+        if (tanggalMulai && tanggalAkhir) {
+            apiUrl += `?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+        }
+        
+        fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('detailChart').getContext('2d');
@@ -395,7 +449,18 @@
     
     // Fungsi untuk memuat data perbandingan kontrak vs pengambilan
     function loadComparisonData() {
-        fetch('/api/production-analysis')
+        // Ambil parameter tanggal dari URL jika ada
+        const urlParams = new URLSearchParams(window.location.search);
+        const tanggalMulai = urlParams.get('tanggal_mulai');
+        const tanggalAkhir = urlParams.get('tanggal_akhir');
+        
+        // Buat URL dengan parameter tanggal
+        let apiUrl = '/api/production-analysis';
+        if (tanggalMulai && tanggalAkhir) {
+            apiUrl += `?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+        }
+        
+        fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
                 const perbandingan = data.perbandingan;
@@ -450,7 +515,18 @@
     
     // Fungsi untuk memuat data tren penjualan
     function loadTrendData() {
-        fetch('/api/product-trends')
+        // Ambil parameter tanggal dari URL jika ada
+        const urlParams = new URLSearchParams(window.location.search);
+        const tanggalMulai = urlParams.get('tanggal_mulai');
+        const tanggalAkhir = urlParams.get('tanggal_akhir');
+        
+        // Buat URL dengan parameter tanggal
+        let apiUrl = '/api/product-trends';
+        if (tanggalMulai && tanggalAkhir) {
+            apiUrl += `?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+        }
+        
+        fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('trendChart').getContext('2d');
@@ -503,7 +579,18 @@
         const keyword = document.getElementById('searchInput').value;
         
         if (keyword.length > 2) {
-            fetch(`/api/search-product?keyword=${keyword}`)
+            // Ambil parameter tanggal dari URL jika ada
+            const urlParams = new URLSearchParams(window.location.search);
+            const tanggalMulai = urlParams.get('tanggal_mulai');
+            const tanggalAkhir = urlParams.get('tanggal_akhir');
+            
+            // Buat URL dengan parameter tanggal dan keyword
+            let apiUrl = `/api/search-product?keyword=${keyword}`;
+            if (tanggalMulai && tanggalAkhir) {
+                apiUrl += `&tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+            }
+            
+            fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     // Memperbarui tabel berdasarkan hasil pencarian
