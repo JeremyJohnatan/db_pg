@@ -73,7 +73,7 @@
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         margin-bottom: 20px;
-    }
+            }
     .card-title {
         color: #6c757d;
         font-size: 0.9rem;
@@ -83,6 +83,7 @@
         font-size: 1.5rem;
         font-weight: bold;
         margin-bottom: 0;
+        text-align: center;
     }
     .chart-container {
         height: 250px;
