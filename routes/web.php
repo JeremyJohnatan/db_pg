@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AnalisisPabrikController;
 use App\Http\Controllers\AnalisisProdukController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\DashboardController;
 
 // Rute untuk landing page
 Route::get('/', function () {
@@ -20,9 +21,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     
     // Dashboard route
-    Route::get('/dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Analisis Produk routes
     Route::get('/dashboard/analisis-produk', [AnalisisProdukController::class, 'index'])
@@ -53,4 +52,3 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/product-trends', [ProdukController::class, 'productTrends']);
     });
 });
-
