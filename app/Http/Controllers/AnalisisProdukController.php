@@ -14,16 +14,20 @@ class AnalisisProdukController extends Controller
         $tanggal_mulai = $request->input('tanggal_mulai');
         $tanggal_akhir = $request->input('tanggal_akhir');
         
-        // Default to 30 days if no dates are provided
+        // Default ke 1 Januari 2024 sampai tanggal hari ini jika tidak ada tanggal yang disediakan
         if (!$tanggal_mulai || !$tanggal_akhir) {
             $tanggal_akhir = Carbon::now()->format('Y-m-d');
-            $tanggal_mulai = Carbon::now()->subDays(30)->format('Y-m-d');
+            $tanggal_mulai = Carbon::parse('2024-01-01')->format('Y-m-d');
         }
-        
-        // Convert to Carbon objects
-        $startDate = Carbon::parse($tanggal_mulai)->startOfDay();
-        $endDate = Carbon::parse($tanggal_akhir)->endOfDay();
-        
+
+        // Validate date input
+        try {
+            $startDate = Carbon::parse($tanggal_mulai)->startOfDay();
+            $endDate = Carbon::parse($tanggal_akhir)->endOfDay();
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Tanggal yang diberikan tidak valid.'], 400);
+        }
+
         // Get sales data by category from tblKontrak
         $penjualanPerKategori = DB::table('tblJenisProduk')
             ->select('tblJenisProduk.Kategori', DB::raw('SUM(tblKontrak.Jml) as TotalPenjualan'))
@@ -32,7 +36,7 @@ class AnalisisProdukController extends Controller
             ->groupBy('tblJenisProduk.Kategori')
             ->orderBy('TotalPenjualan', 'desc')
             ->get();
-            
+        
         // Prepare data for chart
         $labels = $penjualanPerKategori->pluck('Kategori')->toJson();
         $data = $penjualanPerKategori->pluck('TotalPenjualan')->toJson();
@@ -47,16 +51,19 @@ class AnalisisProdukController extends Controller
         $tanggal_mulai = $request->input('tanggal_mulai');
         $tanggal_akhir = $request->input('tanggal_akhir');
         
-        // Default to 30 days if no dates are provided
+        // Default ke 1 Januari 2024 sampai tanggal hari ini jika tidak ada tanggal yang disediakan
         if (!$tanggal_mulai || !$tanggal_akhir) {
-            $periode = $request->input('periode', 30);
-            $startDate = Carbon::now()->subDays($periode);
             $endDate = Carbon::now();
+            $startDate = Carbon::parse('2024-01-01');
         } else {
-            $startDate = Carbon::parse($tanggal_mulai)->startOfDay();
-            $endDate = Carbon::parse($tanggal_akhir)->endOfDay();
+            try {
+                $startDate = Carbon::parse($tanggal_mulai)->startOfDay();
+                $endDate = Carbon::parse($tanggal_akhir)->endOfDay();
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Tanggal yang diberikan tidak valid.'], 400);
+            }
         }
-        
+
         $detailProduk = DB::table('tblJenisProduk')
             ->select('tblJenisProduk.Jenis', DB::raw('SUM(tblKontrak.Jml) as TotalPenjualan'))
             ->leftJoin('tblKontrak', 'tblJenisProduk.KdJenis', '=', 'tblKontrak.KdJenis')
@@ -81,6 +88,19 @@ class AnalisisProdukController extends Controller
         $tanggal_mulai = $request->input('tanggal_mulai');
         $tanggal_akhir = $request->input('tanggal_akhir');
         
+        // Default ke 1 Januari 2024 sampai tanggal hari ini jika tidak ada tanggal yang disediakan
+        if (!$tanggal_mulai || !$tanggal_akhir) {
+            $endDate = Carbon::now();
+            $startDate = Carbon::parse('2024-01-01');
+        } else {
+            try {
+                $startDate = Carbon::parse($tanggal_mulai)->startOfDay();
+                $endDate = Carbon::parse($tanggal_akhir)->endOfDay();
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Tanggal yang diberikan tidak valid.'], 400);
+            }
+        }
+        
         // Use date range if provided
         $query = DB::table('tblJenisProduk')
             ->select(
@@ -90,17 +110,11 @@ class AnalisisProdukController extends Controller
             )
             ->leftJoin('tblKontrak', 'tblJenisProduk.KdJenis', '=', 'tblKontrak.KdJenis')
             ->leftJoin('tblPengambilan', 'tblJenisProduk.KdJenis', '=', 'tblPengambilan.KdJenis');
-        
-        // Apply date filter if provided
-        if ($tanggal_mulai && $tanggal_akhir) {
-            $startDate = Carbon::parse($tanggal_mulai)->startOfDay();
-            $endDate = Carbon::parse($tanggal_akhir)->endOfDay();
             
-            $query->where(function($q) use ($startDate, $endDate) {
-                $q->whereBetween('tblKontrak.Tgl', [$startDate, $endDate])
-                  ->orWhereBetween('tblPengambilan.Tgl', [$startDate, $endDate]);
-            });
-        }
+        $query->where(function($q) use ($startDate, $endDate) {
+            $q->whereBetween('tblKontrak.Tgl', [$startDate, $endDate])
+              ->orWhereBetween('tblPengambilan.Tgl', [$startDate, $endDate]);
+        });
             
         $perbandingan = $query->groupBy('tblJenisProduk.Jenis')->get();
             
@@ -116,33 +130,35 @@ class AnalisisProdukController extends Controller
         $tanggal_mulai = $request->input('tanggal_mulai');
         $tanggal_akhir = $request->input('tanggal_akhir');
         
-        // Default is 6 months
+        // Default ke 1 Januari 2024 sampai tanggal hari ini jika tidak ada tanggal yang disediakan
+        if (!$tanggal_mulai || !$tanggal_akhir) {
+            $endDate = Carbon::now();
+            $startDate = Carbon::parse('2024-01-01');
+        } else {
+            try {
+                $startDate = Carbon::parse($tanggal_mulai);
+                $endDate = Carbon::parse($tanggal_akhir);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Tanggal yang diberikan tidak valid.'], 400);
+            }
+        }
+
+        // Determine range based on provided dates or default to last 6 months
         $months = [];
         $datasets = [];
         
-        // Determine range based on provided dates or default to last 6 months
-        if ($tanggal_mulai && $tanggal_akhir) {
-            $startDate = Carbon::parse($tanggal_mulai);
-            $endDate = Carbon::parse($tanggal_akhir);
-            
-            // If date range is more than 6 months, limit to 6 months
-            $diffInMonths = $startDate->diffInMonths($endDate);
-            $monthsToShow = min($diffInMonths + 1, 6);
-            
-            // Generate month labels based on date range
-            for ($i = 0; $i < $monthsToShow; $i++) {
-                $currentDate = (clone $startDate)->addMonths($i);
-                if ($currentDate->lte($endDate)) {
-                    $months[] = $currentDate->format('M Y');
-                }
-            }
-        } else {
-            // Default to last 6 months
-            for ($i = 5; $i >= 0; $i--) {
-                $months[] = Carbon::now()->subMonths($i)->format('M Y');
+        // If date range is more than 6 months, limit to 6 months
+        $diffInMonths = $startDate->diffInMonths($endDate);
+        $monthsToShow = min($diffInMonths + 1, 6);
+        
+        // Generate month labels based on date range
+        for ($i = 0; $i < $monthsToShow; $i++) {
+            $currentDate = (clone $startDate)->addMonths($i);
+            if ($currentDate->lte($endDate)) {
+                $months[] = $currentDate->format('M Y');
             }
         }
-        
+
         // Get categories
         $categories = DB::table('tblJenisProduk')
             ->select('Kategori')
@@ -155,45 +171,21 @@ class AnalisisProdukController extends Controller
         foreach ($categories as $category) {
             $data = [];
             
-            if ($tanggal_mulai && $tanggal_akhir) {
-                $startDate = Carbon::parse($tanggal_mulai);
-                $endDate = Carbon::parse($tanggal_akhir);
-                
-                // If date range is more than 6 months, limit to 6 months
-                $diffInMonths = $startDate->diffInMonths($endDate);
-                $monthsToShow = min($diffInMonths + 1, 6);
-                
-                for ($i = 0; $i < $monthsToShow; $i++) {
-                    $currentDate = (clone $startDate)->addMonths($i);
-                    if ($currentDate->lte($endDate)) {
-                        $monthStartDate = (clone $currentDate)->startOfMonth();
-                        $monthEndDate = (clone $currentDate)->endOfMonth();
-                        
-                        if ($monthEndDate->gt($endDate)) {
-                            $monthEndDate = $endDate;
-                        }
-                        
-                        $total = DB::table('tblJenisProduk')
-                            ->select(DB::raw('SUM(tblKontrak.Jml) as TotalPenjualan'))
-                            ->leftJoin('tblKontrak', 'tblJenisProduk.KdJenis', '=', 'tblKontrak.KdJenis')
-                            ->where('tblJenisProduk.Kategori', $category)
-                            ->whereBetween('tblKontrak.Tgl', [$monthStartDate, $monthEndDate])
-                            ->value('TotalPenjualan') ?? 0;
-                            
-                        $data[] = $total;
+            for ($i = 0; $i < $monthsToShow; $i++) {
+                $currentDate = (clone $startDate)->addMonths($i);
+                if ($currentDate->lte($endDate)) {
+                    $monthStartDate = (clone $currentDate)->startOfMonth();
+                    $monthEndDate = (clone $currentDate)->endOfMonth();
+                    
+                    if ($monthEndDate->gt($endDate)) {
+                        $monthEndDate = $endDate;
                     }
-                }
-            } else {
-                // Default behavior
-                for ($i = 5; $i >= 0; $i--) {
-                    $startDate = Carbon::now()->subMonths($i)->startOfMonth();
-                    $endDate = Carbon::now()->subMonths($i)->endOfMonth();
                     
                     $total = DB::table('tblJenisProduk')
                         ->select(DB::raw('SUM(tblKontrak.Jml) as TotalPenjualan'))
                         ->leftJoin('tblKontrak', 'tblJenisProduk.KdJenis', '=', 'tblKontrak.KdJenis')
                         ->where('tblJenisProduk.Kategori', $category)
-                        ->whereBetween('tblKontrak.Tgl', [$startDate, $endDate])
+                        ->whereBetween('tblKontrak.Tgl', [$monthStartDate, $monthEndDate])
                         ->value('TotalPenjualan') ?? 0;
                         
                     $data[] = $total;
@@ -219,6 +211,19 @@ class AnalisisProdukController extends Controller
         $tanggal_mulai = $request->input('tanggal_mulai');
         $tanggal_akhir = $request->input('tanggal_akhir');
         
+        // Default ke 1 Januari 2024 sampai tanggal hari ini jika tidak ada tanggal yang disediakan
+        if (!$tanggal_mulai || !$tanggal_akhir) {
+            $endDate = Carbon::now();
+            $startDate = Carbon::parse('2024-01-01');
+        } else {
+            try {
+                $startDate = Carbon::parse($tanggal_mulai)->startOfDay();
+                $endDate = Carbon::parse($tanggal_akhir)->endOfDay();
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Tanggal yang diberikan tidak valid.'], 400);
+            }
+        }
+        
         // Base query
         $query = DB::table('tblJenisProduk')
             ->select('tblJenisProduk.Kategori', DB::raw('SUM(tblKontrak.Jml) as TotalPenjualan'))
@@ -226,14 +231,8 @@ class AnalisisProdukController extends Controller
             ->where(function($q) use ($keyword) {
                 $q->where('tblJenisProduk.Kategori', 'like', "%{$keyword}%")
                   ->orWhere('tblJenisProduk.Jenis', 'like', "%{$keyword}%");
-            });
-        
-        // Apply date filter if provided
-        if ($tanggal_mulai && $tanggal_akhir) {
-            $startDate = Carbon::parse($tanggal_mulai)->startOfDay();
-            $endDate = Carbon::parse($tanggal_akhir)->endOfDay();
-            $query->whereBetween('tblKontrak.Tgl', [$startDate, $endDate]);
-        }
+            })
+            ->whereBetween('tblKontrak.Tgl', [$startDate, $endDate]);
         
         $results = $query->groupBy('tblJenisProduk.Kategori')->get();
             
