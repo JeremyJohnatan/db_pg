@@ -47,11 +47,16 @@
     }
     .main-content {
         margin-left: 250px;
-        padding: 20px;
+        padding: 80px 20px 20px 20px; /* Tambahkan padding-top yang lebih besar */
     }
     .navbar {
         background-color: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: fixed; /* Membuat navbar tetap berada di posisinya */
+        top: 0; /* Posisi di bagian atas */
+        right: 0; /* Posisi di bagian kanan */
+        left: 250px; /* Sesuaikan dengan lebar sidebar (250px) */
+        z-index: 1000; /* Memastikan navbar berada di atas konten lain */
     }
     .navbar .search-bar {
         position: relative;
