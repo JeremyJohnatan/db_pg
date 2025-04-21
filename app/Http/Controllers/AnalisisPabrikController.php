@@ -14,10 +14,10 @@ class AnalisisPabrikController extends Controller
         $tanggalMulai = $request->input('tanggal_mulai');
         $tanggalAkhir = $request->input('tanggal_akhir');
         
-        // Set default jika tidak ada tanggal yang dipilih
+        // Default ke 1 Januari 2024 sampai tanggal hari ini jika tidak ada tanggal yang disediakan
         if (!$tanggalMulai || !$tanggalAkhir) {
             $tanggalAkhir = Carbon::today()->format('Y-m-d');
-            $tanggalMulai = Carbon::today()->subDays(30)->format('Y-m-d');
+            $tanggalMulai = Carbon::parse('2024-01-01')->format('Y-m-d');
         }
         
         // Query data produksi per pabrik dengan filter tanggal

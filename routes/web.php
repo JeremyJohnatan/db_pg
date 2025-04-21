@@ -16,11 +16,10 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'loginAction'])->name('login.action');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Laravel UI Auth Routes (jika diperlukan)
-// Auth::routes();
-
 // Rute yang dilindungi autentikasi
 Route::middleware(['auth'])->group(function () {
+    
+    // Dashboard route
     Route::get('/dashboard', function () {
         return view('dashboard.index');
     })->name('dashboard');
@@ -28,10 +27,6 @@ Route::middleware(['auth'])->group(function () {
     // Analisis Produk routes
     Route::get('/dashboard/analisis-produk', [AnalisisProdukController::class, 'index'])
         ->name('dashboard.analisis-produk');
-    
-    // Jika ingin menggunakan ProdukController yang baru
-    // Route::get('/dashboard/analisis-produk', [ProdukController::class, 'index'])
-    //    ->name('dashboard.analisis-produk');
     
     // Analisis Pabrik routes
     Route::get('/dashboard/analisis-pabrik', [AnalisisPabrikController::class, 'index'])
@@ -44,16 +39,18 @@ Route::middleware(['auth'])->group(function () {
     
     // API routes for AJAX
     Route::prefix('api')->group(function () {
-        // Routes dari AnalisisProdukController asli
+        
+        // Routes dari AnalisisProdukController
         Route::get('/detail-produk', [AnalisisProdukController::class, 'getDetailProduk']);
         Route::get('/search-product', [AnalisisProdukController::class, 'searchProduct']);
         Route::get('/production-analysis', [AnalisisProdukController::class, 'getProductionAnalysis']);
         Route::get('/product-trends', [AnalisisProdukController::class, 'getProductTrends']);
         
-        // Routes dari ProdukController baru (jika ingin digunakan)
+        // Routes dari ProdukController (jika ingin digunakan)
         // Route::get('/detail-produk', [ProdukController::class, 'detailProduk']);
         // Route::get('/search-product', [ProdukController::class, 'searchProduct']);
         // Route::get('/production-analysis', [ProdukController::class, 'productionAnalysis']);
         // Route::get('/product-trends', [ProdukController::class, 'productTrends']);
     });
 });
+

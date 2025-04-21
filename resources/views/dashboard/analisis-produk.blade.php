@@ -354,11 +354,10 @@
         // Memuat data tren penjualan
         loadTrendData();
 
-        // Set default tanggal (hari ini dan 30 hari sebelumnya)
+        // Set default tanggal (1 Januari 2024 dan hari ini)
         const setDefaultDates = () => {
             const today = new Date();
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(today.getDate() - 30);
+            const startOfYear = new Date('2024-01-01');
             
             const formatDate = (date) => {
                 const year = date.getFullYear();
@@ -369,7 +368,7 @@
             
             // Hanya set default jika tanggal belum diset
             if (!document.getElementById('tanggal-mulai').value) {
-                document.getElementById('tanggal-mulai').value = formatDate(thirtyDaysAgo);
+                document.getElementById('tanggal-mulai').value = formatDate(startOfYear);
             }
             if (!document.getElementById('tanggal-akhir').value) {
                 document.getElementById('tanggal-akhir').value = formatDate(today);
