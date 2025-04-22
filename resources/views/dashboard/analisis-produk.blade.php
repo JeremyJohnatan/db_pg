@@ -14,6 +14,7 @@
         min-height: 100vh;
         position: fixed;
         width: 250px;
+        z-index: 1020; /* Nilai z-index lebih rendah dari navbar */
     }
     .sidebar .logo {
         padding: 15px;
@@ -22,6 +23,16 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    /* Menambahkan style untuk logo agar terlihat dapat diklik */
+    .sidebar .logo a {
+        display: block;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+    }
+    .sidebar .logo a:hover {
+        opacity: 0.9;
     }
     .sidebar .nav-link {
         color: white;
@@ -47,7 +58,10 @@
     }
     .main-content {
         margin-left: 250px;
-        padding: 80px 20px 20px 20px; /* Tambahkan padding-top yang lebih besar */
+        padding-top: 80px; /* Sesuaikan dengan tinggi navbar */
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
     }
     .navbar {
         background-color: white;
@@ -56,7 +70,12 @@
         top: 0; /* Posisi di bagian atas */
         right: 0; /* Posisi di bagian kanan */
         left: 250px; /* Sesuaikan dengan lebar sidebar (250px) */
-        z-index: 1000; /* Memastikan navbar berada di atas konten lain */
+        z-index: 1030; /* Nilai z-index yang lebih tinggi untuk memastikan navbar di atas semua konten */
+        width: calc(100% - 250px); /* Lebar navbar harus dikurangi lebar sidebar */
+        transition: box-shadow 0.3s ease; /* Transisi yang halus saat scroll */
+    }
+    .navbar.scrolled {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Efek bayangan saat di-scroll */
     }
     .navbar .search-bar {
         position: relative;
@@ -132,7 +151,10 @@
 <!-- Sidebar -->
 <div class="sidebar d-flex flex-column">
     <div class="logo d-flex align-items-center justify-content-center" style="background-color: #004a94;">
-        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
+        <!-- Menambahkan link ke logo untuk kembali ke dashboard -->
+        <a href="{{ route('dashboard') }}" title="Kembali ke Dashboard">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
+        </a>
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
@@ -305,6 +327,16 @@
                 navLinks.forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
             });
+        });
+        
+        // Menambahkan event listener untuk efek bayangan pada navbar saat scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 10) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         });
         
         // Chart.js untuk grafik penjualan
