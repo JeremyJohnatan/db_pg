@@ -34,7 +34,6 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.laporan');
     })->name('dashboard.laporan');
 
-    // Manajemen User
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users');
     Route::resource('users', UserController::class)->except(['show']);
 
