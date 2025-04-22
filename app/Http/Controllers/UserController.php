@@ -10,128 +10,157 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     /**
-     * Menampilkan daftar pengguna
+     * Display a listing of the users.
+     *
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::orderBy('name')->get();
+        
         return view('dashboard.users', compact('users'));
     }
 
     /**
-     * Menampilkan form tambah pengguna baru
+     * Show the form for creating a new user.
+     *
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        return view('dashboard.users-create');
+        // List of divisions for the dropdown
+        $divisions = [
+            'IT',
+            'HRD',
+            'Produksi',
+            'Keuangan',
+            'Marketing',
+            'QA',
+        ];
+        
+        // List of roles for the dropdown
+        $roles = [
+            'Admin',
+            'Manager',
+            'Staff',
+            'Operator'
+        ];
+        
+        return view('dashboard.users.create', compact('divisions', 'roles'));
     }
 
     /**
-     * Menyimpan pengguna baru
+     * Store a newly created user in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        // Validasi input
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-            'role' => 'nullable|in:admin,user,manager', // Sesuaikan dengan role yang ada
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'division' => 'required|string|max:100',
+            'role' => 'required|string|max:100',
         ]);
 
-        // Buat pengguna baru
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'role' => $validatedData['role'] ?? 'user', // Default role
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'division' => $validated['division'],
+            'role' => $validated['role'],
         ]);
 
-        // Redirect dengan pesan sukses
         return redirect()->route('dashboard.users')
-            ->with('success', 'Pengguna berhasil ditambahkan');
+            ->with('success', 'User berhasil ditambahkan!');
     }
 
     /**
-     * Menampilkan form edit pengguna
+     * Show the form for editing the specified user.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::findOrFail($id);
-        return view('dashboard.users-edit', compact('user'));
+        // List of divisions for the dropdown
+        $divisions = [
+            'IT',
+            'HRD',
+            'Produksi',
+            'Keuangan',
+            'Marketing',
+            'QA',
+        ];
+        
+        // List of roles for the dropdown
+        $roles = [
+            'Admin',
+            'Manager',
+            'Staff',
+            'Operator'
+        ];
+        
+        return view('dashboard.users.edit', compact('user', 'divisions', 'roles'));
     }
 
     /**
-     * Memperbarui data pengguna
+     * Update the specified user in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::findOrFail($id);
-
-        // Validasi input
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => [
                 'required', 
+                'string', 
                 'email', 
-                Rule::unique('users')->ignore($user->id)
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
             ],
-            'password' => 'nullable|min:8|confirmed',
-            'role' => 'nullable|in:admin,user,manager', // Sesuaikan dengan role yang ada
+            'division' => 'required|string|max:100',
+            'role' => 'required|string|max:100',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        // Update data pengguna
-        $user->name = $validatedData['name'];
-        $user->email = $validatedData['email'];
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->division = $validated['division'];
+        $user->role = $validated['role'];
         
-        // Update password hanya jika diisi
-        if (!empty($validatedData['password'])) {
-            $user->password = Hash::make($validatedData['password']);
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
         }
-
-        // Update role
-        if (!empty($validatedData['role'])) {
-            $user->role = $validatedData['role'];
-        }
-
+        
         $user->save();
 
-        // Redirect dengan pesan sukses
         return redirect()->route('dashboard.users')
-            ->with('success', 'Data pengguna berhasil diperbarui');
+            ->with('success', 'User berhasil diperbarui!');
     }
 
     /**
-     * Menghapus pengguna
+     * Remove the specified user from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
-        
-        // Cegah penghapusan user yang sedang login
+        // Prevent deleting yourself
         if ($user->id === auth()->id()) {
             return redirect()->route('dashboard.users')
-                ->with('error', 'Anda tidak dapat menghapus akun sendiri');
+                ->with('error', 'Anda tidak dapat menghapus akun yang sedang digunakan!');
         }
-
+        
         $user->delete();
 
         return redirect()->route('dashboard.users')
-            ->with('success', 'Pengguna berhasil dihapus');
-    }
-
-    /**
-     * Metode untuk mengubah status aktif pengguna
-     */
-    public function toggleStatus($id)
-    {
-        $user = User::findOrFail($id);
-        
-        // Toggle status aktif
-        $user->is_active = !$user->is_active;
-        $user->save();
-
-        return redirect()->route('dashboard.users')
-            ->with('success', 'Status pengguna berhasil diperbarui');
+            ->with('success', 'User berhasil dihapus!');
     }
 }
