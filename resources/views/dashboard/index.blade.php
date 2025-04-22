@@ -36,10 +36,6 @@
         width: 20px;
         text-align: center;
     }
-    .sidebar .nav-link.logout {
-        margin-top: auto;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
     .sidebar .nav-link .text-primary {
         color: #004a94 !important;
     }
@@ -109,6 +105,15 @@
         align-items: center;
         justify-content: center;
         font-weight: bold;
+        cursor: pointer;
+    }
+    /* Tambahan style untuk dropdown profile */
+    .profile-dropdown {
+        position: relative;
+    }
+    .profile-dropdown .dropdown-menu {
+        right: 0;
+        left: auto;
     }
 </style>
 @endsection
@@ -154,18 +159,7 @@
             </div>
         </a>
     </div>
-    <a href="{{ route('logout') }}" class="nav-link logout mt-auto" 
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-        <div class="d-flex align-items-center">
-            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                <i class="fas fa-sign-out-alt text-primary"></i>
-            </div>
-            <span>Log Out</span>
-        </div>
-    </a>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-        @csrf
-    </form>
+    <!-- Logout link removed from sidebar -->
 </div>
 
 <!-- Main Content -->
@@ -189,9 +183,26 @@
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" class="form-control" placeholder="Search">
                 </div>
-                <div class="d-flex align-items-center">
-                    <span class="me-2">Halo, {{ Auth::user()->name }}</span>
-                    <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                <!-- Profile dropdown menu -->
+                <div class="dropdown profile-dropdown">
+                    <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-2">Halo, {{ Auth::user()->name }}</span>
+                        <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="{{ route('logout') }}" 
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt me-2"></i> Log Out
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
