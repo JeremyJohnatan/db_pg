@@ -126,7 +126,7 @@
                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                     <i class="fas fa-home text-primary"></i>
                 </div>
-                <span>Home</span>
+                <span>Dashboard</span>
             </div>
         </a>
         <a href="{{ route('dashboard.analisis-produk') }}" class="nav-link">
