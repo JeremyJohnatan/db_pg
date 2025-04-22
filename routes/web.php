@@ -33,6 +33,11 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.laporan');
     })->name('dashboard.laporan');
     
+    // Profil route
+    Route::get('/profile', function () {
+        return view('dashboard.profile');
+    })->name('profile');
+    
     // User management routes
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users');
     Route::resource('users', UserController::class)->except(['show']);
