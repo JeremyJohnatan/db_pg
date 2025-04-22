@@ -153,6 +153,14 @@
                 <span>Laporan</span>
             </div>
         </a>
+        <a href="{{ route('dashboard.users') }}" class="nav-link">
+            <div class="d-flex align-items-center">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                    <i class="fas fa-users text-primary"></i>
+                </div>
+                <span>Users</span>
+            </div>
+        </a>
     </div>
     <a href="{{ route('logout') }}" class="nav-link logout mt-auto" 
        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
