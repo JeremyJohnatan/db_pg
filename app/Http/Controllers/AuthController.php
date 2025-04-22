@@ -15,16 +15,19 @@ class AuthController extends Controller
     public function loginAction(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'username' => ['required'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
+        if (Auth::attempt([
+            'username' => $credentials['username'],
+            'password' => $credentials['password']
+        ], $request->remember)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            return redirect()->route('dashboard');
         }
 
-        return back()->with('error', 'Email atau Password salah!');
+        return back()->with('error', 'Username atau Password salah!');
     }
 
     public function logout(Request $request)
@@ -34,11 +37,9 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
-  
-    //analisis-pabrik
-    public function analisisPabrik()
-{
-    return view('dashboard.analisis-pabrik');
-}
 
+    public function analisisPabrik()
+    {
+        return view('dashboard.analisis-pabrik');
+    }
 }

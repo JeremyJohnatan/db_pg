@@ -69,7 +69,6 @@
     <!-- Brand Logo -->
     <div class="brand">
         <img src="{{ asset('assets/images/logo.png') }}" alt="Logo PG">
-        
     </div>
 
     <!-- Login Box -->
@@ -83,8 +82,8 @@
         <form action="{{ route('login.action') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="Masukkan Email..." required>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan Username..." required>
             </div>
             <div class="mb-3">
                 <label for="password">Password</label>
