@@ -312,6 +312,23 @@
     .alert-popup.hide {
         animation: fadeOut 0.5s forwards;
     }
+    
+    /* Removed filter dropdown styles */
+    
+    .activity-hidden {
+        display: none !important;
+    }
+    
+    /* Style untuk debug label */
+    .debug-label {
+        background-color: #fffde7;
+        padding: 5px;
+        margin: 5px 0;
+        font-size: 12px;
+        font-family: monospace;
+        border-radius: 3px;
+        border-left: 3px solid #ffc107;
+    }
 </style>
 @endsection
 
@@ -421,9 +438,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true">Informasi Akun</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">Keamanan</button>
-                </li>
+                <!-- Tab keamanan dihapus -->
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false">Aktivitas</button>
                 </li>
@@ -479,63 +494,15 @@
                 </form>
             </div>
 
-            <!-- Keamanan Tab -->
-            <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
-                <form id="securityForm">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="current_password" class="form-label">Password Saat Ini</label>
-                                <input type="password" class="form-control" id="current_password">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="new_password" class="form-label">Password Baru</label>
-                                <input type="password" class="form-control" id="new_password">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="confirm_password" class="form-label">Konfirmasi Password Baru</label>
-                                <input type="password" class="form-control" id="confirm_password">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="form-label">Verifikasi Dua Faktor</label>
-                                <div class="d-flex align-items-center mt-2">
-                                    <label class="toggle-switch me-3">
-                                        <input type="checkbox">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                    <span>Aktifkan verifikasi dua faktor untuk meningkatkan keamanan akun</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group text-end">
-                        <button type="button" id="saveSecurityBtn" class="btn btn-save">Perbarui Password</button>
-                    </div>
-                </form>
-            </div>
+            <!-- Tab keamanan dihapus -->
 
             <!-- Aktivitas Tab -->
             <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="mb-0">Aktivitas Terbaru</h6>
-                    <div>
-                        <button class="btn btn-sm btn-outline-secondary me-2">
-                            <i class="fas fa-filter me-1"></i> Filter
-                        </button>
-                    </div>
                 </div>
                 
-                <div class="activity-item d-flex">
+                <div class="activity-item d-flex" data-activity-type="laporan" data-time="today">
                     <div class="activity-icon">
                         <i class="fas fa-file-alt"></i>
                     </div>
@@ -546,7 +513,7 @@
                     </div>
                 </div>
                 
-                <div class="activity-item d-flex">
+                <div class="activity-item d-flex" data-activity-type="login" data-time="today">
                     <div class="activity-icon">
                         <i class="fas fa-sign-in-alt"></i>
                     </div>
@@ -557,7 +524,7 @@
                     </div>
                 </div>
                 
-                <div class="activity-item d-flex">
+                <div class="activity-item d-flex" data-activity-type="edit" data-time="yesterday">
                     <div class="activity-icon">
                         <i class="fas fa-edit"></i>
                     </div>
@@ -568,7 +535,7 @@
                     </div>
                 </div>
                 
-                <div class="activity-item d-flex">
+                <div class="activity-item d-flex" data-activity-type="akses" data-time="week">
                     <div class="activity-icon">
                         <i class="fas fa-chart-bar"></i>
                     </div>
@@ -579,7 +546,7 @@
                     </div>
                 </div>
                 
-                <div class="activity-item d-flex">
+                <div class="activity-item d-flex" data-activity-type="profil" data-time="week">
                     <div class="activity-icon">
                         <i class="fas fa-user-edit"></i>
                     </div>
@@ -588,6 +555,12 @@
                         <div class="activity-description">Anda telah memperbarui informasi profil pengguna.</div>
                         <div class="activity-time">10 April 2025, 09:15</div>
                     </div>
+                </div>
+                
+                <!-- Pesan saat tidak ada aktivitas yang sesuai filter -->
+                <div id="noActivitiesMessage" class="text-center py-4 d-none">
+                    <i class="fas fa-info-circle text-muted mb-2" style="font-size: 2rem;"></i>
+                    <p class="text-muted">Tidak ada aktivitas yang sesuai dengan filter yang dipilih.</p>
                 </div>
             </div>
         </div>
@@ -716,7 +689,7 @@
                         showAlert(data.message || 'Profil berhasil diperbarui', 'success');
                         
                         // Tambahkan ke daftar aktivitas
-                        addActivityItem('Memperbarui profil', 'Anda telah memperbarui informasi profil pengguna.', 'fas fa-user-edit');
+                        addActivityItem('Memperbarui profil', 'Anda telah memperbarui informasi profil pengguna.', 'fas fa-user-edit', 'profil', 'today');
                     } else {
                         showAlert(data.message || 'Gagal memperbarui profil', 'error');
                     }
@@ -768,7 +741,7 @@
         }
         
         // Function to add activity item
-        function addActivityItem(title, description, iconClass) {
+        function addActivityItem(title, description, iconClass, activityType = 'profil', timeCategory = 'today') {
             const activityList = document.querySelector('#activity');
             if (activityList) {
                 const now = new Date();
@@ -779,6 +752,8 @@
                 // Create new activity item
                 const newActivity = document.createElement('div');
                 newActivity.className = 'activity-item d-flex';
+                newActivity.setAttribute('data-activity-type', activityType);
+                newActivity.setAttribute('data-time', timeCategory);
                 newActivity.innerHTML = `
                     <div class="activity-icon">
                         <i class="${iconClass}"></i>
@@ -800,80 +775,7 @@
             }
         }
         
-        // Security form submission
-        const saveSecurityBtn = document.getElementById('saveSecurityBtn');
-        if (saveSecurityBtn) {
-            saveSecurityBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Get CSRF token
-                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                
-                const currentPassword = document.getElementById('current_password').value;
-                const newPassword = document.getElementById('new_password').value;
-                const confirmPassword = document.getElementById('confirm_password').value;
-                
-                // Basic validation
-                if (!currentPassword) {
-                    showAlert('Masukkan password saat ini', 'error');
-                    return;
-                }
-                
-                if (!newPassword) {
-                    showAlert('Masukkan password baru', 'error');
-                    return;
-                }
-                
-                if (newPassword !== confirmPassword) {
-                    showAlert('Password baru dan konfirmasi password tidak cocok', 'error');
-                    return;
-                }
-                
-                // Set loading state
-                saveSecurityBtn.disabled = true;
-                saveSecurityBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memperbarui...';
-                
-                // Send data to server
-                fetch('/profile/update-password', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': token
-                    },
-                    body: JSON.stringify({
-                        current_password: currentPassword,
-                        new_password: newPassword,
-                        new_password_confirmation: confirmPassword
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Clear form fields
-                        document.getElementById('current_password').value = '';
-                        document.getElementById('new_password').value = '';
-                        document.getElementById('confirm_password').value = '';
-                        
-                        // Show success alert
-                        showAlert(data.message || 'Password berhasil diperbarui', 'success');
-                        
-                        // Add to activity list
-                        addActivityItem('Mengubah password', 'Anda telah mengubah password akun.', 'fas fa-key');
-                    } else {
-                        showAlert(data.message || 'Gagal memperbarui password', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showAlert('Terjadi kesalahan saat memperbarui password', 'error');
-                })
-                .finally(() => {
-                    // Reset button state
-                    saveSecurityBtn.disabled = false;
-                    saveSecurityBtn.innerHTML = 'Perbarui Password';
-                });
-            });
-        }
+        // Removed the filter initialization and related functions
     });
 </script>
 @endsection
