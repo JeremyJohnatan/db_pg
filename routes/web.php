@@ -49,10 +49,4 @@ Route::middleware(['auth'])->group(function () {
         });
     
     });
-    
-    // Profile routes
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::post('/profile/update', [ProfileController::class, 'update'])
-    ->name('profile.update')
-    ->middleware('auth');
-});
+

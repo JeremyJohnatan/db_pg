@@ -56,26 +56,26 @@ class UserController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'division' => 'required|string|max:100',
-            'role' => 'required|string|max:100',
-        ]);
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'username' => 'required|string|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+        'division' => 'required|string|max:100',
+        'role' => 'required|string|max:100',
+    ]);
 
-        User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'division' => $validated['division'],
-            'role' => $validated['role'],
-        ]);
+    User::create([
+        'name' => $validated['name'],
+        'username' => $validated['username'],
+        'password' => Hash::make($validated['password']),
+        'division' => $validated['division'],
+        'role' => $validated['role'],
+    ]);
 
-        return redirect()->route('dashboard.users')
-            ->with('success', 'User berhasil ditambahkan!');
-    }
+    return redirect()->route('dashboard.users')
+        ->with('success', 'User berhasil ditambahkan!');
+}
 
     /**
      * Show the form for editing the specified user.

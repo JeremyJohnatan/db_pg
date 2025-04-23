@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard | PG Rajawali I')
+@section('title', 'Tambah User | PG Rajawali I')
 
 @section('styles')
 <style>
@@ -84,10 +84,6 @@
         pointer-events: none; /* Ensures icon doesn't interfere with input */
         z-index: 10;
     }
-    .navbar .user-info {
-        display: flex;
-        align-items: center;
-    }
     .navbar .user-avatar {
         width: 32px;
         height: 32px;
@@ -114,55 +110,34 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         margin-bottom: 20px;
     }
-    .card-title {
-        color: #6c757d;
-        font-size: 0.9rem;
-        margin-bottom: 8px;
+    .form-card {
+        margin-top: 20px;
+        padding: 25px;
     }
-    .card-value {
+    .form-card .card-title {
+        color: #004a94;
         font-size: 1.5rem;
         font-weight: bold;
-        margin-bottom: 0;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e0e0e0;
     }
-    .chart-container {
-        height: 250px;
-        background-color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #a0a0a0;
-        border-radius: 8px;
-    }
-    /* Styling untuk tabel pengguna */
-    .user-table {
-        width: 100%;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-    }
-    .user-table thead th {
-        background-color: #f5f7fb;
-        color: #6c757d;
-        border-bottom: 1px solid #dee2e6;
-        padding: 12px 15px;
-    }
-    .user-table tbody td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #f0f0f0;
-    }
-    .add-user-btn {
+    .btn-primary {
         background-color: #004a94;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
+        border-color: #004a94;
     }
-    .add-user-btn:hover {
+    .btn-primary:hover {
         background-color: #003d87;
+        border-color: #003d87;
+    }
+    .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+    }
+    .btn-outline-secondary:hover {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
     }
 </style>
 @endsection
@@ -248,39 +223,94 @@
         </div>
     </nav>
 
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover user-table mb-0">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Divisi</th>
-                            <th>Role</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($users as $user)
-                            <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->division }}</td>
-                                <td>{{ $user->role }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" class="text-center py-4">Tidak ada data pengguna</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('dashboard.users') }}">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah User</li>
+        </ol>
+    </nav>
 
-    <div class="d-flex justify-content-end mt-3">
-        <a href="{{ route('users.create') }}" class="add-user-btn">
-            <i class="fas fa-plus me-2"></i> Tambah User
-        </a>
+    <!-- Form Tambah User Card -->
+    <div class="card form-card">
+        <div class="card-body">
+            <h5 class="card-title">Tambah User Baru</h5>
+            
+            @if($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            <form action="{{ route('users.store') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="name" class="form-label">Nama</label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
+                        @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username') }}" required>
+                        @error('username')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                        @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="division" class="form-label">Divisi</label>
+                        <input type="text" class="form-control @error('division') is-invalid @enderror" id="division" name="division" value="{{ old('division') }}">
+                        @error('division')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-select @error('role') is-invalid @enderror" id="role" name="role">
+                            <option value="User" {{ old('role') == 'User' ? 'selected' : '' }}>User</option>
+                            <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="Supervisor" {{ old('role') == 'Supervisor' ? 'selected' : '' }}>Supervisor</option>
+                        </select>
+                        @error('role')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{{ route('dashboard.users') }}" class="btn btn-outline-secondary">Batal</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
