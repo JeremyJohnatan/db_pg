@@ -265,13 +265,24 @@
         top: 20px;
         right: 20px;
         padding: 15px 25px;
-        background-color: #4CAF50;
         color: white;
         border-radius: 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         z-index: 9999;
         display: none;
         animation: slideIn 0.5s forwards;
+    }
+    
+    .alert-success {
+        background-color: #4CAF50;
+    }
+    
+    .alert-warning {
+        background-color: #ff9800;
+    }
+    
+    .alert-error {
+        background-color: #f44336;
     }
     
     @keyframes slideIn {
@@ -306,8 +317,8 @@
 
 @section('content')
 <!-- Alert Popup -->
-<div id="alertPopup" class="alert-popup">
-    <i class="fas fa-check-circle me-2"></i> Data berhasil disimpan
+<div id="alertPopup" class="alert-popup alert-success">
+    <i class="fas fa-check-circle me-2"></i> <span id="alertMessage">Data berhasil disimpan</span>
 </div>
 
 <!-- Sidebar -->
@@ -398,24 +409,29 @@
         </div>
         <div class="profile-info d-flex flex-column justify-content-center">
             <h2>{{ Auth::user()->name }}</h2>
-            <p><i class="fas fa-envelope me-2"></i>{{ Auth::user()->email ?? 'email@example.com' }}</p>
+            <p><i class="fas fa-envelope me-2"></i>{{ Auth::user()->username ?? 'admin' }}</p>
             <p><i class="fas fa-id-badge me-2"></i>Administrator</p>
         </div>
     </div>
 
     <!-- Profile Content -->
     <div class="profile-content">
-        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true">Informasi Akun</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">Keamanan</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false">Aktivitas</button>
-            </li>
-        </ul>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <ul class="nav nav-tabs mb-0" id="profileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true">Informasi Akun</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">Keamanan</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false">Aktivitas</button>
+                </li>
+            </ul>
+            <button class="btn btn-sm btn-primary" onclick="window.history.back()">
+                <i class="fas fa-arrow-left me-1"></i> Kembali
+            </button>
+        </div>
 
         <div class="tab-content" id="profileTabsContent">
             <!-- Informasi Akun Tab -->
@@ -430,8 +446,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" value="{{ Auth::user()->email ?? 'email@example.com' }}">
+                                <label for="username" class="form-label">username</label>
+                                <input type="username" class="form-control" id="username" value="{{ Auth::user()->username ?? 'username@example.com' }}">
                             </div>
                         </div>
                     </div>
@@ -439,13 +455,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phone" class="form-label">Nomor Telepon</label>
-                                <input type="text" class="form-control" id="phone" value="+62 812 3456 7890">
+                                <input type="text" class="form-control" id="phone" value="{{ Auth::user()->phone ?? '+62 812 3456 7890' }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="position" class="form-label">Jabatan</label>
-                                <input type="text" class="form-control" id="position" value="Administrator">
+                                <input type="text" class="form-control" id="position" value="{{ Auth::user()->position ?? 'Administrator' }}">
                             </div>
                         </div>
                     </div>
@@ -453,7 +469,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="address" class="form-label">Alamat</label>
-                                <textarea class="form-control" id="address" rows="3">Jl. Raya Timur No. 123, Surabaya, Jawa Timur</textarea>
+                                <textarea class="form-control" id="address" rows="3">{{ Auth::user()->address ?? 'Jl. Raya Timur No. 123, Surabaya, Jawa Timur' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -515,9 +531,6 @@
                     <div>
                         <button class="btn btn-sm btn-outline-secondary me-2">
                             <i class="fas fa-filter me-1"></i> Filter
-                        </button>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="window.history.back()">
-                            <i class="fas fa-arrow-left me-1"></i> Kembali
                         </button>
                     </div>
                 </div>
@@ -597,8 +610,22 @@
         });
         
         // Function to show popup alert
-        function showAlert() {
+        function showAlert(message = 'Data berhasil disimpan', type = 'success') {
             const alertPopup = document.getElementById('alertPopup');
+            
+            // Update alert message and icon based on type
+            if (type === 'success') {
+                alertPopup.className = 'alert-popup alert-success';
+                alertPopup.innerHTML = `<i class="fas fa-check-circle me-2"></i> ${message}`;
+            } else if (type === 'warning') {
+                alertPopup.className = 'alert-popup alert-warning';
+                alertPopup.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> ${message}`;
+            } else if (type === 'error') {
+                alertPopup.className = 'alert-popup alert-error';
+                alertPopup.innerHTML = `<i class="fas fa-times-circle me-2"></i> ${message}`;
+            }
+            
+            // Show alert
             alertPopup.classList.add('show');
             
             // Hide alert after 3 seconds
@@ -617,69 +644,160 @@
             saveProfileBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Simulate saving data (replace with AJAX call to save data)
+                // Tambahkan token CSRF ke header request
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
+                // Dapatkan data original untuk perbandingan
+                const originalData = {
+                    name: document.getElementById('name').defaultValue || document.getElementById('name').getAttribute('value'),
+                    username: document.getElementById('username').defaultValue || document.getElementById('username').getAttribute('value'),
+                    phone: document.getElementById('phone').defaultValue || document.getElementById('phone').getAttribute('value'),
+                    position: document.getElementById('position').defaultValue || document.getElementById('position').getAttribute('value'),
+                    address: document.getElementById('address').defaultValue || document.getElementById('address').textContent.trim()
+                };
+                
+                // Dapatkan data terbaru dari form
                 const profileData = {
                     name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
+                    username: document.getElementById('username').value,
                     phone: document.getElementById('phone').value,
                     position: document.getElementById('position').value,
                     address: document.getElementById('address').value
                 };
                 
-                // You can send this data to server using AJAX
-                console.log('Saving profile data:', profileData);
+                // Periksa apakah ada perubahan data
+                const hasChanges = Object.keys(profileData).some(key => 
+                    profileData[key] !== originalData[key]
+                );
                 
-                // Update header name if it's changed
-                const nameHeader = document.querySelector('.profile-info h2');
-                if (nameHeader) {
-                    nameHeader.textContent = profileData.name;
+                if (!hasChanges) {
+                    showAlert('Tidak ada perubahan yang dilakukan pada data profil', 'warning');
+                    return;
                 }
                 
-                // Update avatar initial if name changed
-                const avatarInitial = profileData.name.charAt(0);
-                const profileAvatar = document.querySelector('.profile-avatar');
-                if (profileAvatar) {
-                    profileAvatar.textContent = avatarInitial;
+                // Basic validation
+                if (!profileData.name) {
+                    showAlert('Nama tidak boleh kosong', 'error');
+                    return;
                 }
                 
-                // Update dropdown name
-                const dropdownName = document.querySelector('.profile-dropdown .me-2');
-                if (dropdownName) {
-                    dropdownName.textContent = 'Halo, ' + profileData.name;
+                if (!profileData.username) {
+                    showAlert('Username tidak boleh kosong', 'error');
+                    return;
                 }
                 
-                // Show success alert
-                showAlert();
+                // Tampilkan loading state
+                saveProfileBtn.disabled = true;
+                saveProfileBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
                 
-                // Add to activity list
-                const activityList = document.querySelector('#activity');
-                if (activityList) {
-                    const now = new Date();
-                    const hours = now.getHours().toString().padStart(2, '0');
-                    const minutes = now.getMinutes().toString().padStart(2, '0');
-                    const timeString = `Hari ini, ${hours}:${minutes}`;
-                    
-                    // Create new activity item
-                    const newActivity = document.createElement('div');
-                    newActivity.className = 'activity-item d-flex';
-                    newActivity.innerHTML = `
-                        <div class="activity-icon">
-                            <i class="fas fa-user-edit"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Memperbarui profil</div>
-                            <div class="activity-description">Anda telah memperbarui informasi profil pengguna.</div>
-                            <div class="activity-time">${timeString}</div>
-                        </div>
-                    `;
-                    
-                    // Insert at the top of the activity list
-                    const firstActivity = activityList.querySelector('.activity-item');
-                    if (firstActivity) {
-                        activityList.insertBefore(newActivity, firstActivity);
+                // Kirim data ke server
+                fetch('/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify(profileData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update UI dengan data yang diterima dari server
+                        updateUIWithData(data.user);
+                        
+                        // Update default values untuk perbandingan selanjutnya
+                        document.getElementById('name').defaultValue = data.user.name;
+                        document.getElementById('username').defaultValue = data.user.username;
+                        document.getElementById('phone').defaultValue = data.user.phone;
+                        document.getElementById('position').defaultValue = data.user.position;
+                        document.getElementById('address').defaultValue = data.user.address;
+                        
+                        // Tampilkan pesan sukses
+                        showAlert(data.message || 'Profil berhasil diperbarui', 'success');
+                        
+                        // Tambahkan ke daftar aktivitas
+                        addActivityItem('Memperbarui profil', 'Anda telah memperbarui informasi profil pengguna.', 'fas fa-user-edit');
+                    } else {
+                        showAlert(data.message || 'Gagal memperbarui profil', 'error');
                     }
-                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('Terjadi kesalahan saat menyimpan data', 'error');
+                })
+                .finally(() => {
+                    // Reset tombol
+                    saveProfileBtn.disabled = false;
+                    saveProfileBtn.innerHTML = 'Simpan Perubahan';
+                });
             });
+        }
+        
+        // Function to update UI with user data
+        function updateUIWithData(user) {
+            // Update header name
+            const nameHeader = document.querySelector('.profile-info h2');
+            if (nameHeader) {
+                nameHeader.textContent = user.name;
+            }
+            
+            // Update avatar initial
+            const avatarInitial = user.name.charAt(0);
+            const profileAvatar = document.querySelector('.profile-avatar');
+            if (profileAvatar) {
+                profileAvatar.textContent = avatarInitial;
+            }
+            
+            // Update user avatar in navbar
+            const userAvatar = document.querySelector('.user-avatar');
+            if (userAvatar) {
+                userAvatar.textContent = avatarInitial;
+            }
+            
+            // Update dropdown name
+            const dropdownName = document.querySelector('.profile-dropdown .me-2');
+            if (dropdownName) {
+                dropdownName.textContent = 'Halo, ' + user.name;
+            }
+            
+            // Update username info
+            const emailInfo = document.querySelector('.profile-info p:nth-child(2)');
+            if (emailInfo) {
+                emailInfo.innerHTML = `<i class="fas fa-envelope me-2"></i>${user.username}`;
+            }
+        }
+        
+        // Function to add activity item
+        function addActivityItem(title, description, iconClass) {
+            const activityList = document.querySelector('#activity');
+            if (activityList) {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const timeString = `Hari ini, ${hours}:${minutes}`;
+                
+                // Create new activity item
+                const newActivity = document.createElement('div');
+                newActivity.className = 'activity-item d-flex';
+                newActivity.innerHTML = `
+                    <div class="activity-icon">
+                        <i class="${iconClass}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${title}</div>
+                        <div class="activity-description">${description}</div>
+                        <div class="activity-time">${timeString}</div>
+                    </div>
+                `;
+                
+                // Insert at the top of the activity list
+                const firstActivity = activityList.querySelector('.activity-item');
+                if (firstActivity) {
+                    activityList.insertBefore(newActivity, firstActivity);
+                } else {
+                    activityList.appendChild(newActivity);
+                }
+            }
         }
         
         // Security form submission
@@ -688,65 +806,72 @@
             saveSecurityBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 
+                // Get CSRF token
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
                 const currentPassword = document.getElementById('current_password').value;
                 const newPassword = document.getElementById('new_password').value;
                 const confirmPassword = document.getElementById('confirm_password').value;
                 
                 // Basic validation
                 if (!currentPassword) {
-                    alert('Masukkan password saat ini');
+                    showAlert('Masukkan password saat ini', 'error');
                     return;
                 }
                 
                 if (!newPassword) {
-                    alert('Masukkan password baru');
+                    showAlert('Masukkan password baru', 'error');
                     return;
                 }
                 
                 if (newPassword !== confirmPassword) {
-                    alert('Password baru dan konfirmasi password tidak cocok');
+                    showAlert('Password baru dan konfirmasi password tidak cocok', 'error');
                     return;
                 }
                 
-                // Simulate saving security settings
-                console.log('Updating password...');
+                // Set loading state
+                saveSecurityBtn.disabled = true;
+                saveSecurityBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memperbarui...';
                 
-                // Clear form fields
-                document.getElementById('current_password').value = '';
-                document.getElementById('new_password').value = '';
-                document.getElementById('confirm_password').value = '';
-                
-                // Show success alert
-                showAlert();
-                
-                // Add to activity list
-                const activityList = document.querySelector('#activity');
-                if (activityList) {
-                    const now = new Date();
-                    const hours = now.getHours().toString().padStart(2, '0');
-                    const minutes = now.getMinutes().toString().padStart(2, '0');
-                    const timeString = `Hari ini, ${hours}:${minutes}`;
-                    
-                    // Create new activity item
-                    const newActivity = document.createElement('div');
-                    newActivity.className = 'activity-item d-flex';
-                    newActivity.innerHTML = `
-                        <div class="activity-icon">
-                            <i class="fas fa-key"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Mengubah password</div>
-                            <div class="activity-description">Anda telah mengubah password akun.</div>
-                            <div class="activity-time">${timeString}</div>
-                        </div>
-                    `;
-                    
-                    // Insert at the top of the activity list
-                    const firstActivity = activityList.querySelector('.activity-item');
-                    if (firstActivity) {
-                        activityList.insertBefore(newActivity, firstActivity);
+                // Send data to server
+                fetch('/profile/update-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({
+                        current_password: currentPassword,
+                        new_password: newPassword,
+                        new_password_confirmation: confirmPassword
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Clear form fields
+                        document.getElementById('current_password').value = '';
+                        document.getElementById('new_password').value = '';
+                        document.getElementById('confirm_password').value = '';
+                        
+                        // Show success alert
+                        showAlert(data.message || 'Password berhasil diperbarui', 'success');
+                        
+                        // Add to activity list
+                        addActivityItem('Mengubah password', 'Anda telah mengubah password akun.', 'fas fa-key');
+                    } else {
+                        showAlert(data.message || 'Gagal memperbarui password', 'error');
                     }
-                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('Terjadi kesalahan saat memperbarui password', 'error');
+                })
+                .finally(() => {
+                    // Reset button state
+                    saveSecurityBtn.disabled = false;
+                    saveSecurityBtn.innerHTML = 'Perbarui Password';
+                });
             });
         }
     });
