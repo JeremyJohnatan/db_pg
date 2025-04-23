@@ -207,16 +207,19 @@
 </div>
 
 <div class="main-content">
-    <nav class="navbar navbar-expand-lg navbar-light mb-4">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light mb-4">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
-                <select class="form-select form-select-sm me-3">
-                    <option selected>Tanggal</option>
-                    <option value="today">Hari Ini</option>
-                    <option value="yesterday">Kemarin</option>
-                    <option value="last_week">Minggu Lalu</option>
-                    <option value="last_month">Bulan Lalu</option>
-                </select>
+                <div class="input-group me-3">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                    <input type="date" class="form-control" id="tanggal-mulai" name="tanggal_mulai" value="{{ $tanggalMulai ?? '' }}">
+                </div>
+                <div class="input-group me-3">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                    <input type="date" class="form-control" id="tanggal-akhir" name="tanggal_akhir" value="{{ $tanggalAkhir ?? '' }}">
+                </div>
+                <button class="btn btn-primary btn-sm" id="filter-tanggal">Filter</button>
             </div>
             <div class="d-flex align-items-center">
                 <div class="search-bar me-3">
@@ -270,7 +273,7 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td>Laporan Produksi Harian</td>
+                            <td>Laporan Produksi Per Kategori</td>
                             <td>14 April 2025</td>
                             <td>Selesai</td>
                             <td>
@@ -280,10 +283,7 @@
                                     </button>
                                     <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="1">
                                         <i class="fas fa-download"></i> Unduh
-                                    </a>
-                                    <button class="btn btn-sm btn-outline-secondary print-btn" data-report="1">
-                                        <i class="fas fa-print"></i> Cetak
-                                    </button>
+                                    </a>                                 
                                 </div>
                             </td>
                         </tr>
@@ -300,9 +300,6 @@
                                     <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="2">
                                         <i class="fas fa-download"></i> Unduh
                                     </a>
-                                    <button class="btn btn-sm btn-outline-secondary print-btn" data-report="2">
-                                        <i class="fas fa-print"></i> Cetak
-                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -319,10 +316,7 @@
                                     <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="3">
                                         <i class="fas fa-download"></i> Unduh
                                     </a>
-                                    <button class="btn btn-sm btn-outline-secondary print-btn" data-report="3">
-                                        <i class="fas fa-print"></i> Cetak
-                                    </button>
-                                </div>
+                               </div>
                             </td>
                         </tr>
                         <tr>
@@ -358,6 +352,10 @@
 @endsection
 
 @section('scripts')
+<script>
+    const routeLaporan = "{{ route('dashboard.laporan') }}";
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 <script>
@@ -371,6 +369,21 @@
                 this.classList.add('active');
             });
         });
+
+        const filterTanggalBtn = document.getElementById('filter-tanggal');
+        if (filterTanggalBtn) {
+            filterTanggalBtn.addEventListener('click', function () {
+                const tanggalMulai = document.getElementById('tanggal-mulai').value;
+                const tanggalAkhir = document.getElementById('tanggal-akhir').value;
+
+                if (!tanggalMulai || !tanggalAkhir) {
+                    alert('Silakan pilih tanggal mulai dan tanggal akhir');
+                    return;
+                }
+
+                window.location.href = `${routeLaporan}?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
+            });
+        }
 
         // Preview button functionality
         document.querySelectorAll('.preview-btn').forEach(btn => {
