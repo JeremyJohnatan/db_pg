@@ -51,5 +51,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', function () {
         return view('dashboard.profile');
     })->name('profile');
-    
+    Route::get('/dashboard/users/create', [UserController::class, 'create'])->name('users.create');  
 });
