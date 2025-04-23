@@ -18,13 +18,15 @@
     }
     .sidebar .logo {
         padding: 15px;
+        font-weight: bold;
+        font-size: 1.2rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        background-color: white;
+        background-color: #004a94;
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    /* Menambahkan style untuk logo agar terlihat dapat diklik */
+    /* Style untuk logo agar terlihat dapat diklik */
     .sidebar .logo a {
         display: block;
         width: 100%;
@@ -33,6 +35,10 @@
     }
     .sidebar .logo a:hover {
         opacity: 0.9;
+    }
+    .sidebar .logo img {
+        max-width: 100%;
+        padding: 10px;
     }
     .sidebar .nav-link {
         color: white;
@@ -154,15 +160,15 @@
 
 @section('content')
 <!-- Sidebar -->
+<!-- Sidebar -->
 <div class="sidebar d-flex flex-column">
     <div class="logo d-flex align-items-center justify-content-center" style="background-color: #004a94;">
-        <!-- Menambahkan link ke logo untuk kembali ke dashboard -->
         <a href="{{ route('dashboard') }}" title="Kembali ke Dashboard">
-            <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I">
         </a>
     </div>
     <div class="nav flex-column mt-4">
-        <a href="{{ route('dashboard') }}" class="nav-link">
+        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <div class="d-flex align-items-center">
                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                     <i class="fas fa-home text-primary"></i>
@@ -170,7 +176,7 @@
                 <span>Dashboard</span>
             </div>
         </a>
-        <a href="{{ route('dashboard.analisis-produk') }}" class="nav-link active">
+        <a href="{{ route('dashboard.analisis-produk') }}" class="nav-link {{ request()->routeIs('dashboard.analisis-produk') ? 'active' : '' }}">
             <div class="d-flex align-items-center">
                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                     <i class="fas fa-box text-primary"></i>
@@ -178,7 +184,7 @@
                 <span>Analisis Produk</span>
             </div>
         </a>
-        <a href="{{ route('dashboard.analisis-pabrik') }}" class="nav-link">
+        <a href="{{ route('dashboard.analisis-pabrik') }}" class="nav-link {{ request()->routeIs('dashboard.analisis-pabrik') ? 'active' : '' }}">
             <div class="d-flex align-items-center">
                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                     <i class="fas fa-industry text-primary"></i>
@@ -186,7 +192,7 @@
                 <span>Analisis Pabrik</span>
             </div>
         </a>
-        <a href="{{ route('dashboard.laporan') }}" class="nav-link">
+        <a href="{{ route('dashboard.laporan') }}" class="nav-link {{ request()->routeIs('dashboard.laporan') ? 'active' : '' }}">
             <div class="d-flex align-items-center">
                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                     <i class="fas fa-file-alt text-primary"></i>
@@ -194,8 +200,15 @@
                 <span>Laporan</span>
             </div>
         </a>
+        <a href="{{ route('dashboard.users') }}" class="nav-link {{ request()->routeIs('dashboard.users') ? 'active' : '' }}">
+            <div class="d-flex align-items-center">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                    <i class="fas fa-users text-primary"></i>
+                </div>
+                <span>Users</span>
+            </div>
+        </a>
     </div>
-    <!-- Log out link removed from sidebar -->
 </div>
 
 <!-- Main Content -->
