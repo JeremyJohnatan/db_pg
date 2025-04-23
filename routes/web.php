@@ -47,6 +47,17 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/production-analysis', 'getProductionAnalysis');
             Route::get('/product-trends', 'getProductTrends');
         });
-    
+        Route::get('/profile', function () {
+            return view('dashboard.profile');
+        })->name('profile');
+        Route::get('/dashboard/users/create', [UserController::class, 'create'])->name('users.create');  
     });
+        
+        // Profile routes
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+        Route::post('/profile/update', [ProfileController::class, 'update'])
+        ->name('profile.update')
+        ->middleware('auth');
+    });
+  
 
