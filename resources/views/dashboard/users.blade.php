@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard | PG Rajawali I')
+@section('title', 'Users | PG Rajawali I')
 
 @section('styles')
 <style>
@@ -163,6 +163,31 @@
     }
     .add-user-btn:hover {
         background-color: #003d87;
+        text-decoration: none;
+        color: white;
+    }
+    .btn-primary {
+        background-color: #004a94;
+        border-color: #004a94;
+    }
+    .btn-primary:hover {
+        background-color: #003d87;
+        border-color: #003d87;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+    .action-buttons form {
+        display: inline;
     }
 </style>
 @endsection
@@ -248,6 +273,21 @@
         </div>
     </nav>
 
+    <!-- Alert Messages -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -255,20 +295,40 @@
                     <thead>
                         <tr>
                             <th>Nama</th>
+                            <th>Username</th>
                             <th>Divisi</th>
                             <th>Role</th>
+                            <th style="width: 200px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($users as $user)
                             <tr>
                                 <td>{{ $user->name }}</td>
+                                <td>{{ $user->username }}</td>
                                 <td>{{ $user->division }}</td>
                                 <td>{{ $user->role }}</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <a href="{{ route('users.password', $user) }}" class="btn btn-sm btn-secondary">
+                                            <i class="fas fa-key"></i> Password
+                                        </a>
+                                        <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center py-4">Tidak ada data pengguna</td>
+                                <td colspan="5" class="text-center py-4">Tidak ada data pengguna</td>
                             </tr>
                         @endforelse
                     </tbody>
