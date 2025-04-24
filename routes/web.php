@@ -58,6 +58,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/profile/update', [ProfileController::class, 'update'])
         ->name('profile.update')
         ->middleware('auth');
+    
+        // Tambahkan route untuk password
+    Route::get('/users/{user}/password', [UserController::class, 'password'])->name('users.password');
+    Route::put('/users/{user}/update-password', [UserController::class, 'updatePassword'])->name('users.update-password');
     });
   
 

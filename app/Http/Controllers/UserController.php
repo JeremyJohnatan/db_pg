@@ -56,26 +56,26 @@ class UserController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'username' => 'required|string|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
-        'division' => 'required|string|max:100',
-        'role' => 'required|string|max:100',
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'division' => 'required|string|max:100',
+            'role' => 'required|string|max:100',
+        ]);
 
-    User::create([
-        'name' => $validated['name'],
-        'username' => $validated['username'],
-        'password' => Hash::make($validated['password']),
-        'division' => $validated['division'],
-        'role' => $validated['role'],
-    ]);
+        User::create([
+            'name' => $validated['name'],
+            'username' => $validated['username'],
+            'password' => Hash::make($validated['password']),
+            'division' => $validated['division'],
+            'role' => $validated['role'],
+        ]);
 
-    return redirect()->route('dashboard.users')
-        ->with('success', 'User berhasil ditambahkan!');
-}
+        return redirect()->route('dashboard.users')
+            ->with('success', 'User berhasil ditambahkan!');
+    }
 
     /**
      * Show the form for editing the specified user.
@@ -98,9 +98,8 @@ class UserController extends Controller
         // List of roles for the dropdown
         $roles = [
             'Admin',
-            'Manager',
-            'Staff',
-            'Operator'
+            'Staff'
+            
         ];
         
         return view('dashboard.users.edit', compact('user', 'divisions', 'roles'));
@@ -117,26 +116,20 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => [
+            'username' => [
                 'required', 
                 'string', 
-                'email', 
                 'max:255',
                 Rule::unique('users')->ignore($user->id),
             ],
             'division' => 'required|string|max:100',
             'role' => 'required|string|max:100',
-            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $user->name = $validated['name'];
-        $user->email = $validated['email'];
+        $user->username = $validated['username'];
         $user->division = $validated['division'];
         $user->role = $validated['role'];
-        
-        if (!empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
-        }
         
         $user->save();
 
@@ -159,8 +152,40 @@ class UserController extends Controller
         }
         
         $user->delete();
-
+        
         return redirect()->route('dashboard.users')
             ->with('success', 'User berhasil dihapus!');
+    }
+
+    /**
+     * Menampilkan form untuk mengubah password user
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\View\View
+     */
+    public function password(User $user)
+    {
+        return view('dashboard.users.password', compact('user'));
+    }
+
+    /**
+     * Update password user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updatePassword(Request $request, User $user)
+    {
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+        
+        return redirect()->route('dashboard.users')
+            ->with('success', 'Password user berhasil diperbarui!');
     }
 }
