@@ -8,6 +8,7 @@ use App\Http\Controllers\AnalisisProdukController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 
 // Redirect root ke dashboard
 Route::get('/', function () {
@@ -38,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
     // Route::get("/dashboard/laporan/preview", [LaporanController::class, 'previewLaporan'])->name('laporan.preview');
     Route::get('/laporan/preview/{id}', [LaporanController::class, 'previewLaporan']);
 
+
+
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users');
     Route::resource('users', UserController::class)->except(['show']);
 
@@ -61,6 +64,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update'])
         ->name('profile.update')
         ->middleware('auth');
-});
+    });
+
+    // Settings routes
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
+    });
+
+   
+    
+
+
 
 
