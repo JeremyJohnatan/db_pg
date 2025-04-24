@@ -122,8 +122,10 @@
 <!-- Sidebar -->
 <div class="sidebar d-flex flex-column">
     <div class="logo d-flex align-items-center">
-        <!-- Updated logo with Laravel asset() helper -->
-        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
+        <!-- Logo yang diperbarui dengan Laravel asset() helper dan ditambahkan fungsi refresh -->
+        <a href="{{ route('dashboard') }}" style="cursor: pointer;">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
+        </a>
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link active">
