@@ -25,9 +25,9 @@ class LaporanController extends Controller
             'created_at as tanggal_dibuat',
             DB::raw("'Selesai' as status") // Asumsi status default
         )
-        ->distinct()
-        ->orderByDesc('created_at')
-        ->get();
+            ->distinct()
+            ->orderByDesc('created_at')
+            ->get();
 
         // Ambil data laporan analisis pabrik
         $laporanPabrik = DB::table('analisis_pabrik')
@@ -115,5 +115,13 @@ class LaporanController extends Controller
             ->orWhereBetween('tanggal_akhir', [$tanggal_awal, $tanggal_akhir])
             ->get();
         return view('dashboard.laporan.print.analisis_pabrik', compact('data', 'tanggal_awal', 'tanggal_akhir'));
+    }
+
+    public function previewLaporan($id)
+    {
+        $data = DB::table('tblProduksi')->where('idProduksi', $id)->first();
+        // $data = DB::table('tblProduksi')->get();
+
+        return response()->json($data);
     }
 }

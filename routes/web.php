@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AnalisisPabrikController;
@@ -20,27 +21,29 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected routes — hanya bisa diakses setelah login
 Route::middleware(['auth'])->group(function () {
-    
+
     // Dashboard utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Analisis Produk dan Pabrik
     Route::get('/dashboard/analisis-produk', [AnalisisProdukController::class, 'index'])
         ->name('dashboard.analisis-produk');
     Route::get('/dashboard/analisis-pabrik', [AnalisisPabrikController::class, 'index'])
         ->name('dashboard.analisis-pabrik');
-    
+
     // Laporan
     Route::get('/dashboard/laporan', function () {
         return view('dashboard.laporan');
     })->name('dashboard.laporan');
-    
+    // Route::get("/dashboard/laporan/preview", [LaporanController::class, 'previewLaporan'])->name('laporan.preview');
+    Route::get('/laporan/preview/{id}', [LaporanController::class, 'previewLaporan']);
+
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users');
     Route::resource('users', UserController::class)->except(['show']);
-    
+
     // API routes untuk AJAX data
     Route::prefix('api')->group(function () {
-        
+
         Route::controller(AnalisisProdukController::class)->group(function () {
             Route::get('/detail-produk', 'getDetailProduk');
             Route::get('/search-product', 'searchProduct');
@@ -50,18 +53,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/profile', function () {
             return view('dashboard.profile');
         })->name('profile');
-        Route::get('/dashboard/users/create', [UserController::class, 'create'])->name('users.create');  
+        Route::get('/dashboard/users/create', [UserController::class, 'create'])->name('users.create');
     });
-        
-        // Profile routes
-        Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-        Route::post('/profile/update', [ProfileController::class, 'update'])
+
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])
         ->name('profile.update')
         ->middleware('auth');
-    
-        // Tambahkan route untuk password
-    Route::get('/users/{user}/password', [UserController::class, 'password'])->name('users.password');
-    Route::put('/users/{user}/update-password', [UserController::class, 'updatePassword'])->name('users.update-password');
-    });
-  
+
 
