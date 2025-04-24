@@ -61,6 +61,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update'])
         ->name('profile.update')
         ->middleware('auth');
-});
 
 
