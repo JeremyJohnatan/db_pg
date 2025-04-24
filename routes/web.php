@@ -64,17 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update'])
         ->name('profile.update')
         ->middleware('auth');
+
     });
-
-    // Settings routes
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
-        Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
-    });
-
-   
-    
-
-
 
 
