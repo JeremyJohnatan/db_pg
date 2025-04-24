@@ -20,7 +20,8 @@ Route::post('/login', [AuthController::class, 'loginAction'])->name('login.actio
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected routes — hanya bisa diakses setelah login
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () 
+{
 
     // Dashboard utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -62,4 +63,9 @@ Route::middleware(['auth'])->group(function () {
         ->name('profile.update')
         ->middleware('auth');
 
-
+    });
+     
+    // Tambahkan route untuk password
+    Route::get('/users/{user}/password', [UserController::class, 'password'])->name('users.password');
+    Route::put('/users/{user}/update-password', [UserController::class, 'updatePassword'])->name('users.update-password');
+;
