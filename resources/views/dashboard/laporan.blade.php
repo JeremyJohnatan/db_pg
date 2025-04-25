@@ -356,7 +356,9 @@
                                             <button class="btn btn-sm btn-outline-primary preview-btn">
                                                 <i class="fas fa-eye"></i> Preview
                                             </button>
-                                            <button class="btn btn-sm btn-outline-primary btn-detail" id="10" data-bs-toggle="modal" data-bs-target="#previewModal">Detail</button>
+                                            <a href="#" class="btn btn-sm btn-outline-success download-btn" id="10">
+                                                <i class="fas fa-download"></i> Unduh
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -474,19 +476,28 @@
             // Panggil fungsi saat halaman dimuat
             toggleNoDataMessage();
 
-            document.querySelectorAll('.btn-detail').forEach(button => {
-                button.addEventListener('click', function () {
-                    const id = this.id;
+            document.querySelectorAll('.download-btn').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const id = this.id || this.getAttribute('data-report');
                     console.log('id dari button : ', id)
 
-                    fetch("/laporan/preview/" + id)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('data : ', data)   
-                        // console.log(data[0].Produksi)
-                        document.getElementById('produksi').textContent = data.Produksi;
-                        // document.getElementById('detail-jenis').textContent = data.jenis;
-                    });
+                    // In a real application, you would initiate a download here
+                    alert(`Mengunduh laporan #${id}...`);
+                    // Example: window.location.href = `/reports/${id}/download`;
+                    
+                    // Or you could fetch data as was done with the detail button previously
+                    // fetch("/laporan/download/" + id)
+                    // .then(response => response.blob())
+                    // .then(blob => {
+                    //     const url = window.URL.createObjectURL(blob);
+                    //     const a = document.createElement('a');
+                    //     a.href = url;
+                    //     a.download = `Laporan-${id}.pdf`;
+                    //     document.body.appendChild(a);
+                    //     a.click();
+                    //     a.remove();
+                    // });
                 });
             });
 
@@ -527,17 +538,6 @@
                     // previewFrame.setAttribute('data-report-id', reportId);
 
                     previewModal.show();
-                });
-            });
-
-            // Download button functionality
-            document.querySelectorAll('.download-btn').forEach(btn => {
-                btn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const reportId = this.getAttribute('data-report');
-                    // In a real application, you would initiate a download here
-                    alert(`Mengunduh laporan #${reportId}...`);
-                    // Example: window.location.href = `/reports/${reportId}/download`;
                 });
             });
 
