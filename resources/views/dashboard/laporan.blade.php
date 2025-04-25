@@ -325,54 +325,78 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Laporan Produksi Per Kategori</td>
-                                <td>14 April 2025</td>
-                                <td>Selesai</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-outline-primary preview-btn">
-                                            <i class="fas fa-eye"></i> Preview
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-primary btn-detail" id="10" data-bs-toggle="modal" data-bs-target="#previewModal">Detail</button>
-                                        
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Laporan Analisis Produk Mingguan</td>
-                                <td>12 April 2025</td>
-                                <td>Selesai</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-outline-primary preview-btn" data-report="2">
-                                            <i class="fas fa-eye"></i> Preview
-                                        </button>
-                                        <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="2">
-                                            <i class="fas fa-download"></i> Unduh
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Laporan Stok Barang Bulanan</td>
-                                <td>10 April 2025</td>
-                                <td>Selesai</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-outline-primary preview-btn" data-report="3">
-                                            <i class="fas fa-eye"></i> Preview
-                                        </button>
-                                        <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="3">
-                                            <i class="fas fa-download"></i> Unduh
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
+                            @if(isset($reports) && count($reports) > 0)
+                                @foreach($reports as $index => $report)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $report->jenis_laporan }}</td>
+                                        <td>{{ $report->created_at->format('d F Y') }}</td>
+                                        <td>{{ $report->status }}</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-sm btn-outline-primary preview-btn" data-report="{{ $report->id }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ route('reports.download', $report->id) }}" class="btn btn-sm btn-outline-success download-btn">
+                                                    <i class="fas fa-download"></i> Unduh
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <!-- Data statis sebagai contoh jika $reports tidak ada -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>Laporan Produksi Per Kategori</td>
+                                    <td>14 April 2025</td>
+                                    <td>Selesai</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary preview-btn">
+                                                <i class="fas fa-eye"></i> Preview
+                                            </button>
+                                            <a href="#" class="btn btn-sm btn-outline-success download-btn" id="10">
+                                                <i class="fas fa-download"></i> Unduh
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Laporan Analisis Produk Mingguan</td>
+                                    <td>12 April 2025</td>
+                                    <td>Selesai</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary preview-btn" data-report="2">
+                                                <i class="fas fa-eye"></i> Preview
+                                            </button>
+                                            <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="2">
+                                                <i class="fas fa-download"></i> Unduh
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Laporan Stok Barang Bulanan</td>
+                                    <td>10 April 2025</td>
+                                    <td>Selesai</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary preview-btn" data-report="3">
+                                                <i class="fas fa-eye"></i> Preview
+                                            </button>
+                                            <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="3">
+                                                <i class="fas fa-download"></i> Unduh
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
+                            <!-- Pesan "Tidak ada data" dengan class no-data-row untuk JavaScript -->
+                            <tr class="no-data-row" style="display: none;">
                                 <td colspan="5" class="text-center no-data">Tidak ada data laporan yang tersedia.</td>
                             </tr>
                         </tbody>
@@ -423,19 +447,57 @@
                 });
             });
 
-            document.querySelectorAll('.btn-detail').forEach(button => {
-                button.addEventListener('click', function () {
-                    const id = this.id;
+            // Fungsi untuk memeriksa apakah ada baris laporan dan mengatur pesan "tidak ada data"
+            function toggleNoDataMessage() {
+                const reportTable = document.querySelector('.report-table tbody');
+                const reportRows = reportTable.querySelectorAll('tr:not(.no-data-row)');
+                const noDataRow = reportTable.querySelector('tr.no-data-row');
+                
+                // Jika ada baris laporan (selain baris "tidak ada data")
+                if (reportRows.length > 0) {
+                    // Sembunyikan pesan "tidak ada data" jika ada
+                    if (noDataRow) {
+                        noDataRow.style.display = 'none';
+                    }
+                } else {
+                    // Tampilkan pesan "tidak ada data" jika ada
+                    if (noDataRow) {
+                        noDataRow.style.display = 'table-row';
+                    } else {
+                        // Buat baris "tidak ada data" jika belum ada
+                        const newNoDataRow = document.createElement('tr');
+                        newNoDataRow.className = 'no-data-row';
+                        newNoDataRow.innerHTML = '<td colspan="5" class="text-center no-data">Tidak ada data laporan yang tersedia.</td>';
+                        reportTable.appendChild(newNoDataRow);
+                    }
+                }
+            }
+            
+            // Panggil fungsi saat halaman dimuat
+            toggleNoDataMessage();
+
+            document.querySelectorAll('.download-btn').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const id = this.id || this.getAttribute('data-report');
                     console.log('id dari button : ', id)
 
-                    fetch("/laporan/preview/" + id)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('data : ', data)   
-                        // console.log(data[0].Produksi)
-                        document.getElementById('produksi').textContent = data.Produksi;
-                        // document.getElementById('detail-jenis').textContent = data.jenis;
-                    });
+                    // In a real application, you would initiate a download here
+                    alert(`Mengunduh laporan #${id}...`);
+                    // Example: window.location.href = `/reports/${id}/download`;
+                    
+                    // Or you could fetch data as was done with the detail button previously
+                    // fetch("/laporan/download/" + id)
+                    // .then(response => response.blob())
+                    // .then(blob => {
+                    //     const url = window.URL.createObjectURL(blob);
+                    //     const a = document.createElement('a');
+                    //     a.href = url;
+                    //     a.download = `Laporan-${id}.pdf`;
+                    //     document.body.appendChild(a);
+                    //     a.click();
+                    //     a.remove();
+                    // });
                 });
             });
 
@@ -479,17 +541,6 @@
                 });
             });
 
-            // Download button functionality
-            document.querySelectorAll('.download-btn').forEach(btn => {
-                btn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const reportId = this.getAttribute('data-report');
-                    // In a real application, you would initiate a download here
-                    alert(`Mengunduh laporan #${reportId}...`);
-                    // Example: window.location.href = `/reports/${reportId}/download`;
-                });
-            });
-
             // Print button functionality
             document.querySelectorAll('.print-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
@@ -509,7 +560,7 @@
 
             // Print from preview
             document.getElementById('printFromPreview').addEventListener('click', function () {
-                const reportId = document.getElementById('previewFrame').getAttribute('data-report-id');
+                const reportId = document.getElementById('previewFrame')?.getAttribute('data-report-id');
                 alert(`Mencetak laporan #${reportId} dari preview...`);
                 // In a real application, you would print the iframe content
                 // Example: document.getElementById('previewFrame').contentWindow.print();
@@ -517,7 +568,7 @@
 
             // Download from preview
             document.getElementById('downloadFromPreview').addEventListener('click', function () {
-                const reportId = document.getElementById('previewFrame').getAttribute('data-report-id');
+                const reportId = document.getElementById('previewFrame')?.getAttribute('data-report-id');
                 alert(`Mengunduh laporan #${reportId} dari preview...`);
                 // In a real application, you would initiate download
                 // Example: window.location.href = `/reports/${reportId}/download`;
