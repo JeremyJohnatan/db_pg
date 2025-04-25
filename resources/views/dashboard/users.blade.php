@@ -195,7 +195,10 @@
 @section('content')
 <div class="sidebar d-flex flex-column">
     <div class="logo-container">
-        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid">
+        <!-- Logo yang diperbarui untuk navigasi ke dashboard -->
+        <a href="{{ route('dashboard') }}" style="cursor: pointer;">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid">
+        </a>
     </div>
     <div class="nav flex-column mt-4">
         <a href="{{ route('dashboard') }}" class="nav-link">
