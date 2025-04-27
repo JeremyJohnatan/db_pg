@@ -8,6 +8,7 @@ use App\Http\Controllers\AnalisisProdukController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StaffController;
 
 // Redirect root ke dashboard
 Route::get('/', function () {
@@ -25,7 +26,8 @@ Route::middleware(['auth'])->group(function ()
 
     // Dashboard utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
+    Route::get('/staff', [StaffController::class, 'dashboard'])->name('staff');
+    
     // Analisis Produk dan Pabrik
     Route::get('/dashboard/analisis-produk', [AnalisisProdukController::class, 'index'])
         ->name('dashboard.analisis-produk');

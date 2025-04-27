@@ -1,4 +1,4 @@
-
+@section('styles')
 <style>
     body {
         background-color: #f5f7fb;
@@ -186,7 +186,7 @@
         font-weight: 500;
     }
 </style>
-
+@endsection
 
 <!-- resources/views/components/sidebar.blade.php -->
 <div class="sidebar d-flex flex-column">
