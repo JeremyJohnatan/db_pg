@@ -24,7 +24,11 @@ class AuthController extends Controller
             'password' => $credentials['password']
         ], $request->remember)) {
             $request->session()->regenerate();
-            return redirect()->route('dashboard');
+            if(Auth::user()->role == 'Admin') {
+                return redirect()->route('dashboard');
+            }
+           
+            return redirect()->route('staff');
         }
 
         return back()->with('error', 'Username atau Password salah!');
