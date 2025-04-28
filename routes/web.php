@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\PengaturanController;
 
 // Redirect root ke dashboard
 Route::get('/', function () {
@@ -67,11 +68,9 @@ Route::middleware(['auth'])->group(function ()
 
     });
 
-    //pengaturan route
-    use App\Http\Controllers\PengaturanController;
-
-Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
-Route::post('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    //pengaturan route    
+        Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
+        Route::post('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');  
 
      
     // Tambahkan route untuk password

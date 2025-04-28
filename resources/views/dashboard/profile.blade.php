@@ -338,55 +338,7 @@
     <i class="fas fa-check-circle me-2"></i> <span id="alertMessage">Data berhasil disimpan</span>
 </div>
 
-<!-- Sidebar -->
-<div class="sidebar d-flex flex-column">
-    <div class="logo d-flex align-items-center justify-content-center" style="background-color: #004a94;">
-        <a href="{{ route('dashboard') }}" title="Kembali ke Dashboard">
-            <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I">
-        </a>
-    </div>
-    <div class="nav flex-column mt-4">
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-home text-primary"></i>
-                </div>
-                <span>Dashboard</span>
-            </div>
-        </a>
-        <a href="{{ route('dashboard.analisis-produk') }}" class="nav-link {{ request()->routeIs('dashboard.analisis-produk') ? 'active' : '' }}">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-box text-primary"></i>
-                </div>
-                <span>Analisis Produk</span>
-            </div>
-        </a>
-        <a href="{{ route('dashboard.analisis-pabrik') }}" class="nav-link {{ request()->routeIs('dashboard.analisis-pabrik') ? 'active' : '' }}">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-industry text-primary"></i>
-                </div>
-                <span>Analisis Pabrik</span>
-            </div>
-        </a>
-        <a href="{{ route('dashboard.laporan') }}" class="nav-link {{ request()->routeIs('dashboard.laporan') ? 'active' : '' }}">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-file-alt text-primary"></i>
-                </div>
-                <span>Laporan</span>
-            </div>
-        </a>
-        <a href="{{ route('dashboard.users') }}" class="nav-link {{ request()->routeIs('dashboard.users') ? 'active' : '' }}">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-users text-primary"></i>
-                </div>
-                <span>Users</span>
-            </div>
-        </a>
-    </div>
+
 </div>
 
 <!-- Main Content -->

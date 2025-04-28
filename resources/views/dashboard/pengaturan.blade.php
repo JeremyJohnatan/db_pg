@@ -89,29 +89,7 @@
         margin: 0;
     }
 
-    .navbar .search-bar {
-        position: relative;
-        flex-grow: 1;
-        margin-left: 20px;
-    }
-
-    .navbar .search-bar input {
-        padding-left: 40px;
-        border-radius: 20px;
-        border: 1px solid #e0e0e0;
-        background-color: #f5f7fb;
-        width: 300px;
-    }
-
-    .navbar .search-bar .search-icon {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #a0a0a0;
-    }
-
-    .profile-dropdown {
+       .profile-dropdown {
         margin-left: 20px;
     }
 
@@ -222,10 +200,6 @@
 <!-- Navbar -->
 <div class="navbar">
     <h5>Pengaturan</h5>
-    <div class="search-bar">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" placeholder="Search">
-    </div>
     <div class="dropdown profile-dropdown">
         <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
             <span class="me-2">Halo, {{ Auth::user()->name }}</span>
