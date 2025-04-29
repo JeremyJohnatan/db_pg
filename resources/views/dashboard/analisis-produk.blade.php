@@ -4,7 +4,107 @@
 
 @section('styles')
 <style>
-
+    body {
+        background-color: #f5f7fb;
+        font-family: Arial, sans-serif;
+    }
+        /.main-content {
+        margin-left: 250px;
+        padding-top: 80px; /* Sesuaikan dengan tinggi navbar */
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+    }   
+    .navbar {
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: fixed; /* Membuat navbar tetap berada di posisinya */
+        top: 0; /* Posisi di bagian atas */
+        right: 0; /* Posisi di bagian kanan */
+        left: 250px; /* Sesuaikan dengan lebar sidebar (250px) */
+        z-index: 1030; /* Nilai z-index yang lebih tinggi untuk memastikan navbar di atas semua konten */
+        width: calc(100% - 250px); /* Lebar navbar harus dikurangi lebar sidebar */
+        transition: box-shadow 0.3s ease; /* Transisi yang halus saat scroll */
+    }
+    .navbar.scrolled {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Efek bayangan saat di-scroll */
+    }
+    .navbar .search-bar {
+        position: relative;
+    }
+    .navbar .search-bar input {
+        padding-left: 40px; /* Space for the icon */
+        border-radius: 20px;
+        border: 1px solid #e0e0e0;
+        background-color: #f5f7fb;
+    }
+    .navbar .search-bar .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 48%;
+        transform: translateY(-50%);
+        color: #a0a0a0;
+        pointer-events: none; /* Ensures icon doesn't interfere with input */
+        z-index: 10;
+    }
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: #004a94;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    /* Tambahan style untuk dropdown profile */
+    .profile-dropdown {
+        position: relative;
+    }
+    .profile-dropdown .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
+    
+    /* Analisis Produk specific styles */
+    .page-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .content-box {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .product-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .product-table th {
+        text-align: left;
+        padding: 15px 20px;
+        border-bottom: 1px solid #b0c4de;
+        font-weight: bold;
+        color: #333;
+    }
+    .product-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #b0c4de;
+    }
+    .product-table tr:last-child td {
+        border-bottom: none;
+    }
+    .bar-container {
+        width: 100%;
+        background-color: #8a8a8a;
+        height: 30px;
+        border-radius: 4px;
+    }
 </style>
 @endsection
 

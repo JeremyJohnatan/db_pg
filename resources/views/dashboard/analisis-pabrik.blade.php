@@ -4,7 +4,142 @@
 
 @section('styles')
 <style>
- 
+       body {
+        background-color: #f5f7fb;
+        font-family: Arial, sans-serif;
+    }
+
+    .main-content {
+        margin-left: 250px;
+        padding-top: 80px; /* Sesuaikan dengan tinggi navbar */
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+    }
+    .navbar {
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: fixed; /* Membuat navbar tetap berada di posisinya */
+        top: 0; /* Posisi di bagian atas */
+        right: 0; /* Posisi di bagian kanan */
+        left: 250px; /* Sesuaikan dengan lebar sidebar (250px) */
+        z-index: 1030; /* Nilai z-index yang lebih tinggi untuk memastikan navbar di atas semua konten */
+        width: calc(100% - 250px); /* Lebar navbar harus dikurangi lebar sidebar */
+    }
+    .navbar .search-bar {
+        position: relative;
+    }
+    .navbar .search-bar input {
+        padding-left: 40px; /* Space for the icon */
+        border-radius: 20px;
+        border: 1px solid #e0e0e0;
+        background-color: #f5f7fb;
+    }
+    .navbar .search-bar .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 48%;
+        transform: translateY(-50%);
+        color: #a0a0a0;
+        pointer-events: none; /* Ensures icon doesn't interfere with input */
+        z-index: 10;
+    }
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+    .card-title {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .card-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0;
+    }
+    .chart-container {
+        height: 250px;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a0a0a0;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: #004a94;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    /* Tambahan style untuk dropdown profile */
+    .profile-dropdown {
+        position: relative;
+    }
+    .profile-dropdown .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
+
+    /* Style khusus untuk analisis pabrik */
+    .factory-card {
+        background-color: white;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .factory-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 20px;
+        border-bottom: 1px solid #e0e0e0;
+        font-weight: bold;
+        background-color: #f8f9fa;
+        border-radius: 10px 10px 0 0;
+    }
+    .factory-content {
+        padding: 5px 20px;
+    }
+    .factory-row {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+    }
+    .factory-row:not(:last-child) {
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .factory-name {
+        width: 80px;
+        font-weight: 500;
+    }
+    .progress-container {
+        flex-grow: 1;
+        height: 25px;
+        background-color: #e9ecef;
+        margin: 0 20px;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .progress-bar {
+        height: 100%;
+        background-color: #004a94;
+        border-radius: 5px;
+    }
+    .factory-value {
+        width: 100px;
+        text-align: right;
+        font-weight: 500;
+    }
 </style>
 @endsection
 

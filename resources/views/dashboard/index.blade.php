@@ -4,7 +4,51 @@
 
 @section('styles')
 <style>
-
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+    .card-title {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .card-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0;
+    }
+    .chart-container {
+        height: 250px;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a0a0a0;
+        border-radius: 8px;
+    }
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: #004a94;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    /* Tambahan style untuk dropdown profile */
+    .profile-dropdown {
+        position: relative;
+    }
+    .profile-dropdown .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
 </style>
 @endsection
 
