@@ -21,7 +21,7 @@
             margin-left: var(--sidebar-width);
             padding: 20px;
         }
-        
+                
         /* Top Bar */
         .top-bar {
             background-color: white;
@@ -192,48 +192,7 @@
 
 
 @section('content')
-    <!-- Sidebar -->
-    <!--<div class="sidebar">
-        <div class="sidebar-brand">
-            PG Rajawali I<br>
-            <small>Unit PG Notfet Bam</small>
-        </div>
-        
-        <nav class="sidebar-nav">
-            <div class="nav-item">
-                <a href="#" class="nav-link active">
-                    <i class="fas fa-home"></i>
-                    Dashboard
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-box"></i>
-                    Analisis Produk
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-industry"></i>
-                    Analisis Pabrik
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-file-alt"></i>
-                    Laporan
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    Users
-                </a>
-            </div>
-        </nav>
-    </div>-->
-
-    <!-- Main Content -->
+       <!-- Main Content -->
     <div class="main-content">
         <!-- Top Bar with Date, Time, and User Info -->
         <div class="top-bar">
