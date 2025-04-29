@@ -123,107 +123,67 @@
 @endsection
 
 @section('content')
-  
-
-        <div class="content-area">
-            <div class="report-card">
-                <div class="report-card-header">
-                    <h5 class="report-card-title">Laporan</h5>
-                    <div class="report-actions">
-                        <button class="btn btn-primary" id="downloadAllReports">Download Semua Laporan</button>
-                    </div>
-                </div>
-                <div class="report-table-container">
-                    <table class="report-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Jenis Laporan</th>
-                                <th>Tanggal Dibuat</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if(isset($reports) && count($reports) > 0)
-                                @foreach($reports as $index => $report)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $report->jenis_laporan }}</td>
-                                        <td>{{ $report->created_at->format('d F Y') }}</td>
-                                        <td>{{ $report->status }}</td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <button class="btn btn-sm btn-outline-primary preview-btn" data-report="{{ $report->id }}">
-                                                    <i class="fas fa-eye"></i> Preview
-                                                </button>
-                                                <a href="{{ route('reports.download', $report->id) }}" class="btn btn-sm btn-outline-success download-btn">
-                                                    <i class="fas fa-download"></i> Unduh
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <!-- Data statis sebagai contoh jika $reports tidak ada -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>Laporan Produksi Per Kategori</td>
-                                    <td>14 April 2025</td>
-                                    <td>Selesai</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-sm btn-outline-primary preview-btn">
-                                                <i class="fas fa-eye"></i> Preview
-                                            </button>
-                                            <a href="#" class="btn btn-sm btn-outline-success download-btn" id="10">
-                                                <i class="fas fa-download"></i> Unduh
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Laporan Analisis Produk Mingguan</td>
-                                    <td>12 April 2025</td>
-                                    <td>Selesai</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-sm btn-outline-primary preview-btn" data-report="2">
-                                                <i class="fas fa-eye"></i> Preview
-                                            </button>
-                                            <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="2">
-                                                <i class="fas fa-download"></i> Unduh
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Laporan Stok Barang Bulanan</td>
-                                    <td>10 April 2025</td>
-                                    <td>Selesai</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-sm btn-outline-primary preview-btn" data-report="3">
-                                                <i class="fas fa-eye"></i> Preview
-                                            </button>
-                                            <a href="#" class="btn btn-sm btn-outline-success download-btn" data-report="3">
-                                                <i class="fas fa-download"></i> Unduh
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endif
-                            <!-- Pesan "Tidak ada data" dengan class no-data-row untuk JavaScript -->
-                            <tr class="no-data-row" style="display: none;">
-                                <td colspan="5" class="text-center no-data">Tidak ada data laporan yang tersedia.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <div class="content-area">
+        <div class="report-card">
+            <div class="report-card-header">
+                <h5 class="report-card-title">Laporan</h5>
+                <div class="report-actions">
+                    <button class="btn btn-success" id="createReportBtn" data-bs-toggle="modal" data-bs-target="#createReportModal">
+                        <i class="fas fa-plus-circle"></i> Buat Laporan
+                    </button>
+                    <button class="btn btn-primary" id="downloadAllReports">
+                        <i class="fas fa-download"></i> Download Semua Laporan
+                    </button>
                 </div>
             </div>
+            <div class="report-table-container">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Jenis Laporan</th>
+                            <th>Tanggal Dibuat</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(isset($reports) && count($reports) > 0)
+                        @foreach($reports as $index => $report)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $report->jenis_laporan }}</td>
+                            <td>{{ $report->created_at->format('d F Y') }}</td>
+                            <td>{{ $report->status }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline-primary preview-btn" data-report="{{ $report->id }}">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
+                                    <a href="{{ route('laporan.download', $report->id) }}" class="btn btn-sm btn-outline-success download-btn">
+                                        <i class="fas fa-download"></i> Unduh
+                                    </a>
+                                    <form action="{{ route('laporan.destroy', $report->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus laporan ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                        @endif
+                        <!-- Pesan "Tidak ada data" dengan class no-data-row untuk JavaScript -->
+                        <tr class="no-data-row" style="display: none;">
+                            <td colspan="5" class="text-center no-data">Tidak ada data laporan yang tersedia.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
 
     <!-- Preview Modal -->
     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
@@ -234,7 +194,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <span id="produksi"></span>
+                    <div id="reportPreviewContent"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -245,11 +205,53 @@
         </div>
     </div>
 
+    <!-- Create Report Modal -->
+    <div class="modal fade" id="createReportModal" tabindex="-1" aria-labelledby="createReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createReportModalLabel">Buat Laporan Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createReportForm" method="POST" action="{{ route('laporan.store') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="reportType" class="form-label">Jenis Laporan</label>
+                            <select class="form-select" id="reportType" name="jenis_laporan" required>
+                                <option value="" selected disabled>Pilih Jenis Laporan</option>
+                                <option value="Laporan Produksi Per Kategori">Laporan Produksi Per Kategori</option>
+                                <option value="Laporan Analisis Produk Mingguan">Laporan Analisis Produk Mingguan</option>
+                                <option value="Laporan Stok Barang Bulanan">Laporan Stok Barang Bulanan</option>
+                                <option value="Laporan Penjualan Bulanan">Laporan Penjualan Bulanan</option>
+                                <option value="Laporan Kinerja Produksi">Laporan Kinerja Produksi</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="startDate" class="form-label">Tanggal Mulai</label>
+                            <input type="date" class="form-control" id="startDate" name="tanggal_mulai" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDate" class="form-label">Tanggal Akhir</label>
+                            <input type="date" class="form-control" id="endDate" name="tanggal_akhir" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="submitCreateReport">Buat Laporan</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
     <script>
         const routeLaporan = "{{ route('dashboard.laporan') }}";
+        // Ubah definisi route berikut
+        const routePreviewReport = "{{ url('laporan/preview') }}";
+        const routeDownloadReport = "{{ url('laporan/download') }}";
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -258,6 +260,14 @@
         document.addEventListener('DOMContentLoaded', function () {
             const navLinks = document.querySelectorAll('.sidebar .nav-link');
             const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+            const createReportModal = new bootstrap.Modal(document.getElementById('createReportModal'));
+            
+            // Set default date values for create report form
+            const today = new Date();
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            document.getElementById('endDate').valueAsDate = today;
+            document.getElementById('startDate').valueAsDate = firstDayOfMonth;
 
             navLinks.forEach(link => {
                 link.addEventListener('click', function () {
@@ -295,103 +305,311 @@
             // Panggil fungsi saat halaman dimuat
             toggleNoDataMessage();
 
-            document.querySelectorAll('.download-btn').forEach(button => {
-                button.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const id = this.id || this.getAttribute('data-report');
-                    console.log('id dari button : ', id)
-
-                    // In a real application, you would initiate a download here
-                    alert(`Mengunduh laporan #${id}...`);
-                    // Example: window.location.href = `/reports/${id}/download`;
-                    
-                    // Or you could fetch data as was done with the detail button previously
-                    // fetch("/laporan/download/" + id)
-                    // .then(response => response.blob())
-                    // .then(blob => {
-                    //     const url = window.URL.createObjectURL(blob);
-                    //     const a = document.createElement('a');
-                    //     a.href = url;
-                    //     a.download = `Laporan-${id}.pdf`;
-                    //     document.body.appendChild(a);
-                    //     a.click();
-                    //     a.remove();
-                    // });
-                });
+            // Submit create report form
+            document.getElementById('submitCreateReport').addEventListener('click', function() {
+                const form = document.getElementById('createReportForm');
+                
+                // Validasi form sebelum submit
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                
+                // Submit form
+                form.submit();
             });
-
-            const filterTanggalBtn = document.getElementById('filter-tanggal');
-            if (filterTanggalBtn) {
-                filterTanggalBtn.addEventListener('click', function () {
-                    const tanggalMulai = document.getElementById('tanggal-mulai').value;
-                    const tanggalAkhir = document.getElementById('tanggal-akhir').value;
-
-                    if (!tanggalMulai || !tanggalAkhir) {
-                        alert('Silakan pilih tanggal mulai dan tanggal akhir');
-                        return;
-                    }
-
-                    window.location.href = `${routeLaporan}?tanggal_mulai=${tanggalMulai}&tanggal_akhir=${tanggalAkhir}`;
-                });
-            }
 
             // Preview button functionality
             document.querySelectorAll('.preview-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
-                
                     const reportId = this.getAttribute('data-report');
-
-                    // dd($data)
-
-                    // In a real application, you would fetch the report content here
-                    // For demo purposes, we'll use a placeholder
-                    // const reportContent = `<h1>Preview Laporan #${reportId}</h1><p>Ini adalah konten preview untuk laporan ${reportId}.</p>`;
-
-                    // const previewFrame = document.getElementById('previewFrame');
-                    // previewFrame.srcdoc = reportContent;
-
-                    // Set the modal title
-                    // document.getElementById('previewModalLabel').textContent = `Preview Laporan #${reportId}`;
-
-                    // Set data attributes for print and download from preview
-                    // previewFrame.setAttribute('data-report-id', reportId);
-
+                    
+                    // Tampilkan loading indicator
+                    document.getElementById('reportPreviewContent').innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><p>Memuat preview laporan...</p></div>';
+                    
+                    // Fetch report preview content - PERBAIKAN URL disini
+                    fetch(`${routePreviewReport}/${reportId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Gagal memuat preview laporan');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Set the modal content
+                            let previewContent = '';
+                            
+                            // Buat konten preview berdasarkan jenis laporan
+                            if (data.jenis_laporan === 'Laporan Produksi Per Kategori') {
+                                previewContent = createProductionCategoryPreview(data);
+                            } else if (data.jenis_laporan === 'Laporan Analisis Produk Mingguan') {
+                                previewContent = createWeeklyProductAnalysisPreview(data);
+                            } else if (data.jenis_laporan === 'Laporan Stok Barang Bulanan') {
+                                previewContent = createMonthlyStockPreview(data);
+                            } else if (data.jenis_laporan === 'Laporan Penjualan Bulanan') {
+                                previewContent = createMonthlySalesPreview(data);
+                            } else if (data.jenis_laporan === 'Laporan Kinerja Produksi') {
+                                previewContent = createProductionPerformancePreview(data);
+                            } else {
+                                previewContent = '<div class="alert alert-info">Tipe laporan tidak dikenali.</div>';
+                            }
+                            
+                            document.getElementById('reportPreviewContent').innerHTML = previewContent;
+                            
+                            // Set data attributes for buttons
+                            document.getElementById('downloadFromPreview').setAttribute('data-report-id', reportId);
+                            document.getElementById('printFromPreview').setAttribute('data-report-id', reportId);
+                        })
+                        .catch(error => {
+                            document.getElementById('reportPreviewContent').innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+                        });
+                    
                     previewModal.show();
                 });
             });
 
-            // Print button functionality
-            document.querySelectorAll('.print-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const reportId = this.getAttribute('data-report');
-                    // In a real application, you would open a print dialog for the report
-                    alert(`Mencetak laporan #${reportId}...`);
-                    // Example: window.open(`/reports/${reportId}/print`, '_blank');
-                });
-            });
+            // Rest of your JS code remains the same
+            // ...
 
-            // Download all reports button
-            document.getElementById('downloadAllReports').addEventListener('click', function () {
-                alert('Mengunduh semua laporan dalam format ZIP...');
-                // In a real application, you would initiate a bulk download
-                // Example: window.location.href = '/reports/download-all';
+            // Download from preview
+            document.getElementById('downloadFromPreview').addEventListener('click', function () {
+                const reportId = this.getAttribute('data-report-id');
+                // PERBAIKAN URL disini
+                window.location.href = `${routeDownloadReport}/${reportId}`;
             });
 
             // Print from preview
             document.getElementById('printFromPreview').addEventListener('click', function () {
-                const reportId = document.getElementById('previewFrame')?.getAttribute('data-report-id');
-                alert(`Mencetak laporan #${reportId} dari preview...`);
-                // In a real application, you would print the iframe content
-                // Example: document.getElementById('previewFrame').contentWindow.print();
+                const reportId = this.getAttribute('data-report-id');
+                
+                // Open print window - PERBAIKAN URL disini
+                const printWindow = window.open(`{{ url('laporan/print') }}/${reportId}`, '_blank');
+                
+                // Focus on the new window
+                if (printWindow) {
+                    printWindow.focus();
+                }
             });
 
-            // Download from preview
-            document.getElementById('downloadFromPreview').addEventListener('click', function () {
-                const reportId = document.getElementById('previewFrame')?.getAttribute('data-report-id');
-                alert(`Mengunduh laporan #${reportId} dari preview...`);
-                // In a real application, you would initiate download
-                // Example: window.location.href = `/reports/${reportId}/download`;
-            });
+            // Helper functions untuk membuat preview content
+            function createProductionCategoryPreview(data) {
+                return `
+                    <div class="report-header mb-4">
+                        <h4>${data.jenis_laporan}</h4>
+                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Kategori</th>
+                                    <th>Total Produksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.data.map(item => `
+                                    <tr>
+                                        <td>${item.kategori}</td>
+                                        <td>${item.total_produksi}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            function createWeeklyProductAnalysisPreview(data) {
+                return `
+                    <div class="report-header mb-4">
+                        <h4>${data.jenis_laporan}</h4>
+                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
+                    </div>
+                    ${Object.keys(data.data).map(week => `
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>${week}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Produk</th>
+                                                <th>Total Produksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${Object.keys(data.data[week]).map(product => `
+                                                <tr>
+                                                    <td>${product}</td>
+                                                    <td>${data.data[week][product]}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+            
+            function createMonthlyStockPreview(data) {
+                return `
+                    <div class="report-header mb-4">
+                        <h4>${data.jenis_laporan}</h4>
+                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Produk</th>
+                                    <th>Total Produksi</th>
+                                    <th>Total Pengambilan</th>
+                                    <th>Stok Akhir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.data.map(item => `
+                                    <tr>
+                                        <td>${item.produk}</td>
+                                        <td>${item.total_produksi}</td>
+                                        <td>${item.total_pengambilan}</td>
+                                        <td>${item.stok_akhir}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            function createMonthlySalesPreview(data) {
+                return `
+                    <div class="report-header mb-4">
+                        <h4>${data.jenis_laporan}</h4>
+                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
+                    </div>
+                    ${Object.keys(data.data).map(month => `
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>${month}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Berdasarkan Produk</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produk</th>
+                                                        <th>Total Pengambilan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${Object.keys(data.data[month].produk).map(product => `
+                                                        <tr>
+                                                            <td>${product}</td>
+                                                            <td>${data.data[month].produk[product]}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Berdasarkan Pembeli</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Pembeli</th>
+                                                        <th>Total Pengambilan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${Object.keys(data.data[month].pembeli).map(buyer => `
+                                                        <tr>
+                                                            <td>${buyer}</td>
+                                                            <td>${data.data[month].pembeli[buyer]}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+            
+            function createProductionPerformancePreview(data) {
+                return `
+                    <div class="report-header mb-4">
+                        <h4>${data.jenis_laporan}</h4>
+                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Total Hari</h5>
+                                    <h2>${data.total_hari}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Hari Produksi</h5>
+                                    <h2>${data.hari_produksi}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Efisiensi</h5>
+                                    <h2>${data.efisiensi}%</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Rata-rata Produksi</h5>
+                                    <h2>${data.rata_produksi}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <h5>Produksi per Gudang</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Gudang</th>
+                                    <th>Total Produksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.produksi_gudang.map(item => `
+                                    <tr>
+                                        <td>${item.gudang}</td>
+                                        <td>${item.total_produksi}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
         });
     </script>
 @endsection
