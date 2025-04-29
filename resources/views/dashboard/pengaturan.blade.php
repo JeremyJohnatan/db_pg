@@ -106,57 +106,7 @@
     }
 
     /* Main Content */
-    .main-content {
-        margin-left: 250px;
-        padding: 80px 20px 20px 20px;
-    }
-
-    .pengaturan-container {
-        background-color: #fff;
-        padding: 2rem;
-        border-radius: 1rem;
-        max-width: 600px;
-        margin: 2rem auto;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .pengaturan-container h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        font-size: 1.8rem;
-        font-weight: bold;
-    }
-
-    .form-group {
-        margin-bottom: 1.2rem;
-    }
-
-    .form-group label {
-        font-weight: 600;
-        display: block;
-        margin-bottom: 0.5rem;
-    }
-
-    .form-group input {
-        width: 100%;
-        padding: 0.6rem;
-        border: 1px solid #ccc;
-        border-radius: 0.5rem;
-    }
-
-    .form-group button {
-        background-color: #007bff;
-        color: white;
-        padding: 0.6rem 1.5rem;
-        border: none;
-        border-radius: 0.5rem;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .form-group button:hover {
-        background-color: #0056b3;
-    }
+ 
 </style>
 @endsection
 
