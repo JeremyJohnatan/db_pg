@@ -113,6 +113,7 @@
     .form-group button:hover {
         background-color: #0b5ed7;
     } */
+
 </style>
 @endsection
 
@@ -121,7 +122,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light mb-4">
         <div class="container-fluid d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Pengaturan</h5>
+            <h5 class="mb-0">Profil Pengguna</h5>
             <div class="d-flex align-items-center">
                 <div class="search-bar me-3">
                     <i class="fas fa-search search-icon"></i>
@@ -149,7 +150,7 @@
                 </div>
             </div>
         </div>
-    </nav>
+    </nav> 
 
     <div class="main-content">
         <div class="row justify-content-center">

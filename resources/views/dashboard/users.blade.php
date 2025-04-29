@@ -4,7 +4,192 @@
 
 @section('styles')
 <style>
-
+    body {
+        background-color: #f5f7fb;
+        font-family: Arial, sans-serif;
+    }
+    /*.sidebar {
+        background-color: #004a94;
+        color: white;
+        min-height: 100vh;
+        position: fixed;
+        width: 250px;
+        padding-top: 20px;
+    }
+    .sidebar .logo-container {
+        padding: 15px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+    }
+    .sidebar .logo-container img {
+        max-width: 100%;
+        height: auto;
+        padding: 10px;
+    }
+    .sidebar .nav-link {
+        color: white;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s;
+    }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+    }
+    .sidebar .nav-link i {
+        width: 20px;
+        text-align: center;
+    }
+    .sidebar .nav-link .text-primary {
+        color: #004a94 !important;
+    }
+    .main-content {
+        margin-left: 250px;
+        padding: 80px 20px 20px 20px; /* Tambahkan padding-top yang lebih besar 
+    }
+*/
+    .navbar {
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: fixed; /* Membuat navbar tetap berada di posisinya */
+        top: 0; /* Posisi di bagian atas */
+        right: 0; /* Posisi di bagian kanan */
+        left: 250px; /* Sesuaikan dengan lebar sidebar (250px) */
+        z-index: 1000; /* Memastikan navbar berada di atas konten lain */
+        padding: 10px 20px;
+    }
+    .navbar-content {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .navbar .search-bar {
+        position: relative;
+    }
+    .navbar .search-bar input {
+        padding-left: 40px; /* Space for the icon */
+        border-radius: 20px;
+        border: 1px solid #e0e0e0;
+        background-color: #f5f7fb;
+    }
+    .navbar .search-bar .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0a0a0;
+        pointer-events: none; /* Ensures icon doesn't interfere with input */
+        z-index: 10;
+    }
+    .navbar .user-info {
+        display: flex;
+        align-items: center;
+    }
+    .navbar .user-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: #004a94;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    /* Styling untuk Dropdown Profile */
+    .profile-dropdown {
+        position: relative;
+    }
+    .profile-dropdown .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+    .card-title {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .card-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0;
+    }
+    .chart-container {
+        height: 250px;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a0a0a0;
+        border-radius: 8px;
+    }
+    /* Styling untuk tabel pengguna */
+    .user-table {
+        width: 100%;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+    .user-table thead th {
+        background-color: #f5f7fb;
+        color: #6c757d;
+        border-bottom: 1px solid #dee2e6;
+        padding: 12px 15px;
+    }
+    .user-table tbody td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .add-user-btn {
+        background-color: #004a94;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .add-user-btn:hover {
+        background-color: #003d87;
+        text-decoration: none;
+        color: white;
+    }
+    .btn-primary {
+        background-color: #004a94;
+        border-color: #004a94;
+    }
+    .btn-primary:hover {
+        background-color: #003d87;
+        border-color: #003d87;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+    .action-buttons form {
+        display: inline;
+    }
 </style>
 @endsection
 
