@@ -1,0 +1,163 @@
+/* public/css/laporan.css */
+
+.content-area {
+    padding: 20px;
+    background-color: #f8f9fc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.report-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    margin-bottom: 30px;
+}
+
+.report-card-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.report-card-title {
+    font-weight: 700;
+    color: #444;
+    margin: 0;
+}
+
+.report-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.report-table-container {
+    padding: 15px 20px;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.report-table th, 
+.report-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.report-table th {
+    color: #6e707e;
+    font-weight: 600;
+    background-color: #f8f9fc;
+}
+
+.report-table tr:last-child td {
+    border-bottom: none;
+}
+
+.report-table tr:hover {
+    background-color: #f8f9fc;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.preview-btn, .download-btn, .print-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.no-data {
+    font-style: italic;
+    color: #888;
+}
+
+.modal-preview {
+    max-width: 800px;
+}
+
+.modal-preview .modal-body {
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* CSS untuk preview laporan */
+.report-container {
+    padding: 15px;
+}
+
+.report-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.report-header h2 {
+    margin-bottom: 5px;
+    color: #4e73df;
+}
+
+.chart-container {
+    margin: 20px 0;
+    height: 300px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    padding: 12px 20px;
+    border-bottom: 1px solid #e3e6f0;
+    background-color: #f8f9fc;
+}
+
+.card-body {
+    padding: 15px 20px;
+}
+
+.card-title {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Tombol Buat Laporan */
+#createReportBtn {
+    margin-right: 10px;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+@media print {
+    body {
+        background-color: #fff;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .content-area,
+    .report-card {
+        box-shadow: none;
+        border: none;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
