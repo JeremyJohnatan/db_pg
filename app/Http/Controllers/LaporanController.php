@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Carbon\Carbon;
-use App\Models\AnalisisProduk; // Pastikan Anda mengimpor model AnalisisProduk
+use App\Models\AnalisisProduk;
+use ZipArchive;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class LaporanController extends Controller
 {
@@ -17,111 +20,329 @@ class LaporanController extends Controller
      */
     public function indexDashboard()
     {
-        // Ambil data laporan analisis produk
-        $laporanProduk = AnalisisProduk::select(
-            'tanggal as tanggal_awal',
-            DB::raw("DATE_ADD(tanggal, INTERVAL 6 DAY) as tanggal_akhir"), // Contoh perkiraan tanggal akhir (mingguan)
-            DB::raw("'Analisis Produk' as jenis_laporan"),
-            'created_at as tanggal_dibuat',
-            DB::raw("'Selesai' as status") // Asumsi status default
-        )
-            ->distinct()
-            ->orderByDesc('created_at')
+        // Ambil semua laporan dari tabel pkl.laporan
+        $reports = DB::table('pkl.laporan')
+            ->orderBy('created_at', 'desc')
             ->get();
-
-        // Ambil data laporan analisis pabrik
-        $laporanPabrik = DB::table('analisis_pabrik')
-            ->select(
-                'tanggal_awal',
-                'tanggal_akhir',
-                DB::raw("'Analisis Pabrik' as jenis_laporan"),
-                'created_at as tanggal_dibuat',
-                DB::raw("'Selesai' as status") // Asumsi status default
-            )
-            ->distinct()
-            ->orderByDesc('created_at')
-            ->get();
-
-        // Gabungkan kedua jenis laporan
-        $daftarLaporan = $laporanProduk->concat($laporanPabrik)->sortByDesc('tanggal_dibuat');
-
-        // Kirim data ke view 'dashboard.laporan.index'
-        return view('dashboard.laporan.index', compact('daftarLaporan'));
+        
+        // Convert string dates to Carbon objects for proper formatting in view
+        foreach ($reports as $report) {
+            $report->created_at = Carbon::parse($report->created_at);
+            $report->tanggal_mulai = Carbon::parse($report->tanggal_mulai);
+            $report->tanggal_akhir = Carbon::parse($report->tanggal_akhir);
+        }
+        
+        return view('dashboard.laporan', compact('reports'));
     }
 
     /**
-     * Menampilkan preview laporan analisis produk berdasarkan rentang tanggal.
+     * Menyimpan laporan baru
      *
-     * @param string $tanggal_awal
-     * @param string $tanggal_akhir
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function previewAnalisisProduk($tanggal_awal, $tanggal_akhir)
+    public function store(Request $request)
     {
-        $data = AnalisisProduk::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
-        return view('dashboard.laporan.preview.analisis_produk', compact('data', 'tanggal_awal', 'tanggal_akhir'));
+        // Validasi request
+        $validated = $request->validate([
+            'jenis_laporan' => 'required|string',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_mulai',
+        ]);
+        
+        // Buat laporan baru
+        $laporan = [
+            'jenis_laporan' => $validated['jenis_laporan'],
+            'tanggal_mulai' => $validated['tanggal_mulai'],
+            'tanggal_akhir' => $validated['tanggal_akhir'],
+            'status' => 'Selesai',
+            'created_at' => now(),
+            'updated_at' => now()
+        ];
+        
+        // Insert ke database
+        $id = DB::table('pkl.laporan')->insertGetId($laporan);
+        
+        return redirect()->route('dashboard.laporan')->with('success', 'Laporan berhasil dibuat');
     }
 
     /**
-     * Mengunduh laporan analisis produk dalam format PDF berdasarkan rentang tanggal.
+     * Menampilkan preview laporan.
      *
-     * @param string $tanggal_awal
-     * @param string $tanggal_akhir
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function preview($id)
+    {
+        $report = DB::table('pkl.laporan')->where('id', $id)->first();
+        
+        if (!$report) {
+            return response()->json(['error' => 'Laporan tidak ditemukan'], 404);
+        }
+        
+        // Generate content berdasarkan jenis laporan
+        $content = $this->generateReportContent($report);
+        
+        // Tambahkan informasi laporan ke content
+        $content['id'] = $report->id;
+        $content['jenis_laporan'] = $report->jenis_laporan;
+        $content['tanggal_mulai'] = Carbon::parse($report->tanggal_mulai)->format('d F Y');
+        $content['tanggal_akhir'] = Carbon::parse($report->tanggal_akhir)->format('d F Y');
+        
+        return response()->json($content);
+    }
+
+    /**
+     * Mengunduh laporan dalam format PDF.
+     *
+     * @param  int  $id
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function downloadAnalisisProduk($tanggal_awal, $tanggal_akhir)
+    public function download($id)
     {
-        $data = AnalisisProduk::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
-        $pdf = PDF::loadView('dashboard.laporan.pdf.analisis_produk', compact('data', 'tanggal_awal', 'tanggal_akhir'));
-        return $pdf->download('laporan-analisis-produk-' . $tanggal_awal . '-' . $tanggal_akhir . '.pdf');
+        $report = DB::table('pkl.laporan')->where('id', $id)->first();
+        
+        if (!$report) {
+            abort(404, 'Laporan tidak ditemukan');
+        }
+        
+        // Generate content berdasarkan jenis laporan
+        $content = $this->generateReportContent($report);
+        
+        // Tambahkan informasi laporan ke content
+        $content['jenis_laporan'] = $report->jenis_laporan;
+        $content['tanggal_mulai'] = Carbon::parse($report->tanggal_mulai)->format('d F Y');
+        $content['tanggal_akhir'] = Carbon::parse($report->tanggal_akhir)->format('d F Y');
+        
+        // Generate PDF
+        $pdf = PDF::loadView('laporan.pdf', compact('report', 'content'));
+        
+        return $pdf->download('Laporan-' . $id . '.pdf');
     }
 
     /**
-     * Menampilkan halaman untuk mencetak laporan analisis produk berdasarkan rentang tanggal.
+     * Menampilkan halaman untuk mencetak laporan.
      *
-     * @param string $tanggal_awal
-     * @param string $tanggal_akhir
+     * @param  int  $id
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function printAnalisisProduk($tanggal_awal, $tanggal_akhir)
+    public function print($id)
     {
-        $data = AnalisisProduk::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
-        return view('dashboard.laporan.print.analisis_produk', compact('data', 'tanggal_awal', 'tanggal_akhir'));
+        $report = DB::table('pkl.laporan')->where('id', $id)->first();
+        
+        if (!$report) {
+            abort(404, 'Laporan tidak ditemukan');
+        }
+        
+        // Generate content berdasarkan jenis laporan
+        $content = $this->generateReportContent($report);
+        
+        // Tambahkan informasi laporan ke content
+        $content['jenis_laporan'] = $report->jenis_laporan;
+        $content['tanggal_mulai'] = Carbon::parse($report->tanggal_mulai)->format('d F Y');
+        $content['tanggal_akhir'] = Carbon::parse($report->tanggal_akhir)->format('d F Y');
+        
+        return view('laporan.print', compact('report', 'content'));
     }
 
-    public function previewAnalisisPabrik($tanggal_awal, $tanggal_akhir)
+    /**
+     * Mengunduh semua laporan dalam format ZIP.
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function downloadAll()
     {
-        $data = DB::table('analisis_pabrik')
-            ->whereBetween('tanggal_awal', [$tanggal_awal, $tanggal_akhir])
-            ->orWhereBetween('tanggal_akhir', [$tanggal_awal, $tanggal_akhir])
-            ->get();
-        return view('dashboard.laporan.preview.analisis_pabrik', compact('data', 'tanggal_awal', 'tanggal_akhir'));
+        $reports = DB::table('pkl.laporan')->get();
+        
+        // Create temporary directory for PDFs
+        $tempDir = storage_path('app/temp/reports-' . time());
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        
+        // Generate PDFs for all reports
+        foreach ($reports as $report) {
+            $content = $this->generateReportContent($report);
+            
+            // Tambahkan informasi laporan ke content
+            $content['jenis_laporan'] = $report->jenis_laporan;
+            $content['tanggal_mulai'] = Carbon::parse($report->tanggal_mulai)->format('d F Y');
+            $content['tanggal_akhir'] = Carbon::parse($report->tanggal_akhir)->format('d F Y');
+            
+            $pdf = PDF::loadView('laporan.pdf', compact('report', 'content'));
+            $pdf->save($tempDir . '/Laporan-' . $report->id . '.pdf');
+        }
+        
+        // Create ZIP archive
+        $zipFileName = 'Semua-Laporan-' . date('Y-m-d') . '.zip';
+        $zipFilePath = storage_path('app/temp/' . $zipFileName);
+        
+        $zip = new ZipArchive();
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($tempDir),
+                \RecursiveIteratorIterator::LEAVES_ONLY
+            );
+            
+            foreach ($files as $file) {
+                if (!$file->isDir()) {
+                    $filePath = $file->getRealPath();
+                    $relativePath = basename($filePath);
+                    $zip->addFile($filePath, $relativePath);
+                }
+            }
+            
+            $zip->close();
+        }
+        
+        // Clean up temporary files
+        $this->cleanTempFiles($tempDir);
+        
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
 
-    public function downloadAnalisisPabrik($tanggal_awal, $tanggal_akhir)
+    /**
+     * Pembersihan file temporary.
+     *
+     * @param  string  $dir
+     * @return void
+     */
+    private function cleanTempFiles($dir)
     {
-        $data = DB::table('analisis_pabrik')
-            ->whereBetween('tanggal_awal', [$tanggal_awal, $tanggal_akhir])
-            ->orWhereBetween('tanggal_akhir', [$tanggal_awal, $tanggal_akhir])
-            ->get();
-        $pdf = PDF::loadView('dashboard.laporan.pdf.analisis_pabrik', compact('data', 'tanggal_awal', 'tanggal_akhir'));
-        return $pdf->download('laporan-analisis-pabrik-' . $tanggal_awal . '-' . $tanggal_akhir . '.pdf');
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir. DIRECTORY_SEPARATOR .$object)) {
+                        $this->cleanTempFiles($dir. DIRECTORY_SEPARATOR .$object);
+                    } else {
+                        unlink($dir. DIRECTORY_SEPARATOR .$object);
+                    }
+                }
+            }
+            rmdir($dir);
+        }
     }
 
-    public function printAnalisisPabrik($tanggal_awal, $tanggal_akhir)
+    /**
+     * Generate report content berdasarkan jenis laporan.
+     *
+     * @param  object  $report
+     * @return array
+     */
+    private function generateReportContent($report)
     {
-        $data = DB::table('analisis_pabrik')
-            ->whereBetween('tanggal_awal', [$tanggal_awal, $tanggal_akhir])
-            ->orWhereBetween('tanggal_akhir', [$tanggal_awal, $tanggal_akhir])
-            ->get();
-        return view('dashboard.laporan.print.analisis_pabrik', compact('data', 'tanggal_awal', 'tanggal_akhir'));
+        $startDate = Carbon::parse($report->tanggal_mulai);
+        $endDate = Carbon::parse($report->tanggal_akhir);
+        
+        switch ($report->jenis_laporan) {
+            case 'Laporan Produksi Per Kategori':
+                return $this->generateProduksiPerKategori($startDate, $endDate);
+                
+            case 'Laporan Analisis Produk Mingguan':
+                return $this->generateAnalisisProdukMingguan($startDate, $endDate);
+                
+            case 'Laporan Stok Barang Bulanan':
+                return $this->generateStokBarangBulanan($startDate, $endDate);
+                
+            case 'Laporan Penjualan Bulanan':
+                return $this->generatePenjualanBulanan($startDate, $endDate);
+                
+            case 'Laporan Kinerja Produksi':
+                return $this->generateKinerjaProduksi($startDate, $endDate);
+                
+            default:
+                return ['title' => 'Laporan Tidak Tersedia', 'data' => []];
+        }
     }
 
+    /**
+     * Generate Produksi Per Kategori report content.
+     *
+     * @param  \Carbon\Carbon  $startDate
+     * @param  \Carbon\Carbon  $endDate
+     * @return array
+     */
+    private function generateProduksiPerKategori($startDate, $endDate)
+    {
+        try {
+            $data = DB::table('dbo.tblProduksi')
+                ->join('dbo.tblJenisProduk', 'dbo.tblProduksi.id_jenis', '=', 'dbo.tblJenisProduk.id')
+                ->select('dbo.tblJenisProduk.nama as kategori', DB::raw('SUM(dbo.tblProduksi.jumlah) as total_produksi'))
+                ->whereBetween('dbo.tblProduksi.tanggal', [$startDate, $endDate])
+                ->groupBy('dbo.tblJenisProduk.nama')
+                ->get();
+            
+            $chartData = [];
+            foreach ($data as $item) {
+                $chartData[] = [
+                    'kategori' => $item->kategori,
+                    'total' => $item->total_produksi
+                ];
+            }
+            
+            return [
+                'title' => 'Laporan Produksi Per Kategori',
+                'data' => $data,
+                'chart_data' => $chartData
+            ];
+        } catch (\Exception $e) {
+            // Handle error dan kembalikan dummy data jika terjadi error
+            return [
+                'title' => 'Laporan Produksi Per Kategori',
+                'data' => [],
+                'chart_data' => [],
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+ * Menghapus laporan.
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\RedirectResponse
+ */
+public function destroy($id)
+{
+    try {
+        // Hapus laporan dari database
+        $deleted = DB::table('pkl.laporan')->where('id', $id)->delete();
+        
+        if ($deleted) {
+            return redirect()->route('dashboard.laporan')->with('success', 'Laporan berhasil dihapus');
+        } else {
+            return redirect()->route('dashboard.laporan')->with('error', 'Laporan tidak ditemukan');
+        }
+    } catch (\Exception $e) {
+        // Log error jika terjadi masalah
+        Log::error('Gagal menghapus laporan: ' . $e->getMessage());
+        return redirect()->route('dashboard.laporan')->with('error', 'Gagal menghapus laporan');
+    }
+}
+    /**
+     * Function untuk preview laporan yang dipanggil dari dashboard
+     */
     public function previewLaporan($id)
     {
-        $data = DB::table('tblProduksi')->where('idProduksi', $id)->first();
-        // $data = DB::table('tblProduksi')->get();
-
-        return response()->json($data);
+        // Di sini kita gunakan untuk preview laporan melalui modal
+        $report = DB::table('pkl.laporan')->where('id', $id)->first();
+        
+        if (!$report) {
+            return response()->json(['error' => 'Laporan tidak ditemukan'], 404);
+        }
+        
+        // Generate content berdasarkan jenis laporan
+        $content = $this->generateReportContent($report);
+        
+        // Tambahkan informasi laporan ke content
+        $content['id'] = $report->id;
+        $content['jenis_laporan'] = $report->jenis_laporan;
+        $content['tanggal_mulai'] = Carbon::parse($report->tanggal_mulai)->format('d F Y');
+        $content['tanggal_akhir'] = Carbon::parse($report->tanggal_akhir)->format('d F Y');
+        
+        return response()->json($content);
+    
     }
+
 }

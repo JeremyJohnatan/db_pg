@@ -76,4 +76,14 @@ Route::middleware(['auth'])->group(function ()
     // Tambahkan route untuk password
     Route::get('/users/{user}/password', [UserController::class, 'password'])->name('users.password');
     Route::put('/users/{user}/update-password', [UserController::class, 'updatePassword'])->name('users.update-password');
-;
+// Tambahkan atau update routes berikut di routes/web.php
+
+// Laporan routes
+    Route::get('/dashboard/laporan', [LaporanController::class, 'indexDashboard'])->name('dashboard.laporan');
+    Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+    Route::get('/laporan/preview/{id}', [LaporanController::class, 'preview'])->name('laporan.preview');
+    Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
+    Route::get('/laporan/print/{id}', [LaporanController::class, 'print'])->name('laporan.print');
+    Route::get('/laporan/download-all', [LaporanController::class, 'downloadAll'])->name('laporan.download-all');
+    Route::delete('/laporan/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
+    ;
