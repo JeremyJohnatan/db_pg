@@ -56,8 +56,8 @@
         color: #004a94 !important;
     }
     .main-content {
-        margin-left: 250px;
-        padding-top: 30px;
+        margin-left: 250px; 
+        padding-top: 30px !important;
         padding-left: 20px;
         padding-right: 20px;
         padding-bottom: 20px;

@@ -49,7 +49,7 @@
     }
     .main-content {
         margin-left: 250px;
-        padding: 30px 20px 20px 20px; /* Tambahkan padding-top yang lebih besar */
+        padding: 80px 20px 20px 20px; /* Tambahkan padding-top yang lebih besar */
     }
     .navbar {
         background-color: white;

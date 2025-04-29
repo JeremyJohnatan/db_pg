@@ -47,8 +47,8 @@
         color: #004a94 !important;
     }
     .main-content {
-        margin-left: 150px;
-        padding: 30px 20px 20px 20px;
+        margin-left: 150px !important;
+        padding: 50px 20px 20px 20px !important;
     }
     .navbar {
         background-color: white;
