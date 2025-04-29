@@ -4,7 +4,7 @@
 
 @section('styles')
 <style>
-    /*.main-content {
+    .main-content {
         padding: 20px;
     }
 
@@ -112,7 +112,7 @@
 
     .form-group button:hover {
         background-color: #0b5ed7;
-    } */
+    } 
 
 </style>
 @endsection
@@ -153,7 +153,7 @@
     </nav> 
 
     <div class="main-content">
-        <div class="row justify-content-center">
+        <!--<div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="account-info-container">
                     <h2>Informasi Akun</h2>
@@ -178,7 +178,11 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
+
+        <!-- Notifikasi -->   
+
+
     </div>
 </div>
 @endsection
