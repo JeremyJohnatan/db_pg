@@ -47,8 +47,8 @@
         color: #004a94 !important;
     }
     .main-content {
-        margin-left: 250px;
-        padding: 80px 20px 20px 20px;
+        margin-left: 150px !important;
+        padding: 30px 20px 20px 20px !important;
     }
     .navbar {
         background-color: white;
@@ -99,54 +99,6 @@
 @endsection
 
 @section('content')
-<div class="sidebar d-flex flex-column">
-    <div class="logo-container">
-        <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid">
-    </div>
-    <div class="nav flex-column mt-4">
-        <a href="{{ route('dashboard') }}" class="nav-link">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-home text-primary"></i>
-                </div>
-                <span>Dashboard</span>
-            </div>
-        </a>
-        <a href="{{ route('dashboard.analisis-produk') }}" class="nav-link">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-box text-primary"></i>
-                </div>
-                <span>Analisis Produk</span>
-            </div>
-        </a>
-        <a href="{{ route('dashboard.analisis-pabrik') }}" class="nav-link">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-industry text-primary"></i>
-                </div>
-                <span>Analisis Pabrik</span>
-            </div>
-        </a>
-        <a href="{{ route('dashboard.laporan') }}" class="nav-link">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-file-alt text-primary"></i>
-                </div>
-                <span>Laporan</span>
-            </div>
-        </a>
-        <a href="{{ route('dashboard.users') }}" class="nav-link active">
-            <div class="d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-users text-primary"></i>
-                </div>
-                <span>Users</span>
-            </div>
-        </a>
-    </div>
-</div>
-
 <div class="main-content">
     <nav class="navbar">
         <div class="navbar-content">

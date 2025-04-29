@@ -8,6 +8,7 @@
         background-color: #f5f7fb;
         font-family: Arial, sans-serif;
     }
+<<<<<<< HEAD
     /*.sidebar {
         background-color: #004a94;
         color: white;
@@ -51,6 +52,9 @@
         padding: 80px 20px 20px 20px; /* Tambahkan padding-top yang lebih besar 
     }
 */
+=======
+
+>>>>>>> fc99b9000c0482c9a5f70952411972644aa07ce8
     .navbar {
         background-color: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);

@@ -47,73 +47,10 @@
         align-items: center;
         justify-content: center;
         font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.2s;
     }
 
-    .user-avatar:hover {
-        background-color: #0b5ed7;
-    }
-
-    .dropdown-menu {
-        display: none;
-        right: 0;
-        top: 40px;
-        z-index: 1000;
-    }
-
-    .dropdown-menu.show {
-        display: block;
-    }
-
-    .account-info-container {
-        max-width: 600px;
-        margin: 30px auto;
-        background-color: #fff;
-        border-radius: 8px;
-        padding: 30px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        position: relative;
-        top: -20px;
-    }
-
-    .account-info-container h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #333;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-    }
-
-    .form-group input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-    }
-
-    .form-group button {
-        background-color: #0d6efd;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: 500;
-    }
-
-    .form-group button:hover {
-        background-color: #0b5ed7;
-    } 
-
+    /* Main Content */
+ 
 </style>
 @endsection
 
