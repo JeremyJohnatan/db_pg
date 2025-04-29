@@ -90,6 +90,19 @@
         padding: 8px 16px;
         border-radius: 4px;
     }
+    .navbar .user-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: #004a94;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
 </style>
 @endsection
 
@@ -97,10 +110,12 @@
 <div class="main-content">
     <nav class="navbar">
         <div class="navbar-content">
-            <div>
-                <h4 class="mb-0">Edit User</h4>
-            </div>
+            <div></div>
             <div class="d-flex align-items-center">
+                <div class="search-bar me-3">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
                 <div class="dropdown profile-dropdown">
                     <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="me-2">Halo, {{ Auth::user()->name }}</span>
