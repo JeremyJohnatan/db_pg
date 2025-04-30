@@ -267,10 +267,10 @@ class LaporanController extends Controller
     {
         try {
             $data = DB::table('dbo.tblProduksi')
-                ->join('dbo.tblJenisProduk', 'dbo.tblProduksi.id_jenis', '=', 'dbo.tblJenisProduk.id')
-                ->select('dbo.tblJenisProduk.nama as kategori', DB::raw('SUM(dbo.tblProduksi.jumlah) as total_produksi'))
+                ->join('dbo.tblJenisProduk', 'dbo.tblProduksi.KdJenis', '=', 'dbo.tblJenisProduk.KdJenis')
+                ->select('dbo.tblJenisProduk.Jenis as kategori', DB::raw('SUM(dbo.tblProduksi.Produksi) as total_produksi'))
                 ->whereBetween('dbo.tblProduksi.tanggal', [$startDate, $endDate])
-                ->groupBy('dbo.tblJenisProduk.nama')
+                ->groupBy('dbo.tblJenisProduk.Jenis')
                 ->get();
             
             $chartData = [];
