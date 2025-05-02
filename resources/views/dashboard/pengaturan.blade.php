@@ -2,26 +2,126 @@
 
 @section('title', 'Pengaturan Akun | PG Rajawali I')
 
+@section('styles')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #004a94;
             --secondary: #f5f7fb;
-            --sidebar-width: 250px;
         }
         
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: var(--secondary);
-        }
-        
+        background-color: #f5f7fb;
+        font-family: Arial, sans-serif;
+    }
+    .sidebar {
+        background-color: #004a94;
+        color: white;
+        min-height: 100vh;
+        position: fixed;
+        width: 250px;
+        z-index: 1020;
+    }
+    .sidebar .logo {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: #004a94;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .sidebar .logo a {
+        display: block;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+    }
+    .sidebar .logo a:hover {
+        opacity: 0.9;
+    }
+    .sidebar .logo img {
+        max-width: 100%;
+        padding: 10px;
+    }
+    .sidebar .nav-link {
+        color: white;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s;
+    }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+    }
+    .sidebar .nav-link i {
+        width: 20px;
+        text-align: center;
+    }
+    .sidebar .nav-link .text-primary {
+        color: #004a94 !important;
+    }
+    .main-content {
+        margin-left: 250px;
+        padding-top: 80px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+    }
+    .navbar {
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 250px;
+        z-index: 1030;
+        width: calc(100% - 250px);
+    }
+    .navbar .search-bar {
+        position: relative;
+    }
+    .navbar .search-bar input {
+        padding-left: 40px;
+        border-radius: 20px;
+        border: 1px solid #e0e0e0;
+        background-color: #f5f7fb;
+    }
+    .navbar .search-bar .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 48%;
+        transform: translateY(-50%);
+        color: #a0a0a0;
+        pointer-events: none;
+        z-index: 10;
+    }
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: #004a94;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .profile-dropdown {
+        position: relative;
+    }
+    .profile-dropdown .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
         /* Main Content */
         .main-content {
-            margin-left: var(--sidebar-width);
             padding: 20px;
+            padding-top: 80px;
         }
-                
+        
         /* Top Bar */
         .top-bar {
             background-color: white;
@@ -44,47 +144,49 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-direction: row;
         }
         
         .notification-badge {
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .notification-count {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: #ff4757;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    position: relative;
+    font-size: 1.5rem; /* Ukuran icon bell diperbesar */
+    cursor: pointer;
+}
+
+.notification-badge i {
+    font-size: inherit; /* Ikuti ukuran parent */
+}
+
+.notification-count {
+    position: absolute;
+    top: -10px; /* Posisi disesuaikan */
+    right: -10px;
+    background-color: #ff4757;
+    color: white;
+    border-radius: 50%;
+    width: 18px; /* Lebar diperbesar */
+    height: 18px; /* Tinggi diperbesar */
+    font-size: 0.9rem; /* Ukuran angka diperbesar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
         
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0px;
             cursor: pointer;
+            order: 1; /* Profil akan di kiri */
+            margin-right: 15px; /* Jarak antara profil dan notifikasi */
+
         }
-        
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+     
+        .user-profile .user-avatar {
+         margin-left: 8px; /* Memberikan jarak antara avatar dan teks */
         }
-        
+
+
         /* Quick Access */
         .quick-access {
             display: grid;
@@ -168,100 +270,136 @@
             padding: 0.5rem 1rem;
             border-radius: 4px;
         }
-        
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-                z-index: 1000;
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-            
-            .menu-toggle {
-                display: block !important;
-            }
+               
+        /* Navbar */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 250px;
+            z-index: 1030;
+            width: calc(100% - 250px);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 20px;
         }
-    </style>
 
+        .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: white;
+    }
 
-@section('content')
-       <!-- Main Content -->
+        .page-title {
+            flex: 1; /* Mengambil ruang tersisa */
+            margin-right: 20px;
+        }
+
+        .page-title h4 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .datetime {
+            margin-right: auto; /* Mendukung responsive layout */
+        }
+
+        @media (max-width: 768px) {
+    .page-title h4 {
+        font-size: 1rem;
+    }
+}        
+        
+     @endsection
+
+@section('content')   
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="user-actions">
+            <!-- Notifications -->
+            <div class="notification-badge" data-bs-toggle="dropdown">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count">3</span>
+                
+                <!-- Notification Dropdown -->
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><h6 class="dropdown-header">Notifikasi Terbaru</h6></li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <small>Laporan produksi telah selesai</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <small>Pembaruan sistem tersedia</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <small>Meeting hari ini pukul 14:00</small>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-center" href="#">Lihat Semua</a></li>
+                </ul>
+            </div>
+            
+            <!-- title -->
+            <div class="top-bar">
+            <!-- Tambahkan ini sebagai elemen pertama -->
+            <div class="page-title">
+                <h6>Pengaturan Akun</h6>
+            </div>
+    
+
+            <!-- User Profile -->
+            <div class="user-profile dropdown">
+                <div data-bs-toggle="dropdown" class="d-flex align-items-center">
+                    <div class="user-avatar me-2">A</div>
+
+                </div>
+                
+                <!-- Profile Dropdown -->
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="{{ route('profile') }}">
+                            <i class="fas fa-user me-2"></i> Profil Pengguna
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('pengaturan') }}">
+                            <i class="fas fa-cog me-2"></i> Pengaturan
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-sticky-note me-2"></i> Catatan Saya
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="{{ route('logout') }}">
+                            <i class="fas fa-sign-out-alt me-2"></i> Keluar
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
     <div class="main-content">
-        <!-- Top Bar with Date, Time, and User Info -->
+        <!-- Date and Time -->
         <div class="top-bar">
             <div class="datetime">
                 <span id="current-date"></span>
                 <span id="current-time" class="ms-2"></span>
-            </div>
-            
-            <div class="user-actions">
-                <!-- Notifications -->
-                <div class="notification-badge" data-bs-toggle="dropdown">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-count">3</span>
-                    
-                    <!-- Notification Dropdown -->
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><h6 class="dropdown-header">Notifikasi Terbaru</h6></li>
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <small>Laporan produksi telah selesai</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <small>Pembaruan sistem tersedia</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <small>Meeting hari ini pukul 14:00</small>
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-center" href="#">Lihat Semua</a></li>
-                    </ul>
-                </div>
-                
-                <!-- User Profile -->
-                <div class="user-profile dropdown">
-                    <div data-bs-toggle="dropdown">
-                        <div class="user-avatar">A</div>
-                        <span>Halo, Admin</span>
-                    </div>
-                    
-                    <!-- Profile Dropdown -->
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-user me-2"></i> Profil Pengguna
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-cog me-2"></i> Pengaturan
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-sticky-note me-2"></i> Catatan Saya
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="#">
-                                <i class="fas fa-sign-out-alt me-2"></i> Keluar
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
         
@@ -300,7 +438,6 @@
             </div>
             <div class="notes-content">
                 <p class="text-muted">Klik untuk menambahkan catatan pribadi...</p>
-                <!-- Example note would go here -->
             </div>
         </div>
         
@@ -339,11 +476,8 @@
             </div>
         </div>
     </div>
-@endsection    
+@endsection
 
-
-
-<!-- JavaScript -->
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -373,10 +507,5 @@
         // Update immediately and then every second
         updateDateTime();
         setInterval(updateDateTime, 1000);
-        
-        // Mobile menu toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            // This would be used for mobile menu toggle if implemented
-        });
     </script>
 @endsection
