@@ -10,7 +10,7 @@
     }
     
     /* Card Styling */
-    .settings-card {
+    /*.settings-card {
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         border: none;
@@ -93,29 +93,30 @@
 
 @section('content')
 <div class="container py-4">
-    <!-- Quick Actions -->
-    <h5 class="mb-3">Pintasan Cepat</h5>
-    <div class="quick-actions">
-        <div class="quick-action-card">
-            <i class="fas fa-user-edit"></i>
-            <div>Edit Profil</div>
-        </div>
-        <div class="quick-action-card">
+        <!-- Quick Actions -->
+        <h5 class="mb-3">Pintasan Cepat</h5>
+        <div class="quick-actions">
+            <a href="{{ route('profile') }}" class="quick-action-card text-decoration-none text-dark">
+                <i class="fas fa-user-edit"></i>
+                <div>Edit Profil</div>
+            </a>
+            <a href="#" class="quick-action-card text-decoration-none text-dark">
             <i class="fas fa-lock"></i>
             <div>Keamanan</div>
+            </a>
+            <a href="#" class="quick-action-card text-decoration-none text-dark">
+                <i class="fas fa-bell"></i>
+                <div>Notifikasi</div>
+            </a>
+            <a href="#" class="quick-action-card text-decoration-none text-dark">
+                <i class="fas fa-palette"></i>
+                <div>Tema</div>
+            </a>
         </div>
-        <div class="quick-action-card">
-            <i class="fas fa-bell"></i>
-            <div>Notifikasi</div>
-        </div>
-        <div class="quick-action-card">
-            <i class="fas fa-palette"></i>
-            <div>Tema</div>
-        </div>
-    </div>
 
+        
     <!-- Main Settings Card -->
-    <div class="card settings-card mb-4">
+    <!--<div class="card settings-card mb-4">
         <div class="card-header">
             <h4 class="mb-0"><i class="fas fa-cog me-2"></i>Pengaturan Akun</h4>
         </div>
@@ -159,7 +160,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div>-->
 
     <!-- Personal Notes -->
     <div class="notes-container">
