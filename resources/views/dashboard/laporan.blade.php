@@ -97,7 +97,7 @@
 
         /* Modal styles for preview */
         .modal-preview {
-            max-width: 90%;
+            max-width: 100%;
         }
 
         .modal-preview .modal-body {
@@ -119,6 +119,13 @@
             right: 0;
             left: auto;
         }
+        .pagination {
+            font-size: 0.9rem;
+        }
+        .page-item .page-link {
+            padding: 0.375rem 0.75rem;
+        }
+
     </style>
 @endsection
 
@@ -140,7 +147,7 @@
                 <table class="report-table">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>No</th>
                             <th>Jenis Laporan</th>
                             <th>Tanggal Dibuat</th>
                             <th>Status</th>
@@ -151,7 +158,7 @@
                         @if(isset($reports) && count($reports) > 0)
                         @foreach($reports as $index => $report)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $reports->firstItem() + $index }}</td>
                             <td>{{ $report->jenis_laporan }}</td>
                             <td>{{ $report->created_at->format('d F Y') }}</td>
                             <td>{{ $report->status }}</td>
@@ -181,13 +188,16 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $reports->links() }}
+                </div>                
             </div>
         </div>
     </div>
 
     <!-- Preview Modal -->
     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-preview">
+        <div class="modal-dialog modal-lg modal-preview modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="previewModalLabel">Preview Laporan</h5>
@@ -420,40 +430,41 @@
             }
             
             function createWeeklyProductAnalysisPreview(data) {
-                return `
-                    <div class="report-header mb-4">
-                        <h4>${data.jenis_laporan}</h4>
-                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
+    return `
+        <div class="report-header mb-4">
+            <h4>${data.jenis_laporan}</h4>
+            <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
+        </div>
+        ${Object.keys(data.data).map(week => `
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>${week}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Produk</th>
+                                    <th>Total Produksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${Object.keys(data.data[week]).map(product => `
+                                    <tr>
+                                        <td>${product}</td>
+                                        <td>${data.data[week][product]}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
                     </div>
-                    ${Object.keys(data.data).map(week => `
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5>${week}</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Produk</th>
-                                                <th>Total Produksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${Object.keys(data.data[week]).map(product => `
-                                                <tr>
-                                                    <td>${product}</td>
-                                                    <td>${data.data[week][product]}</td>
-                                                </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                `;
-            }
+                </div>
+            </div>
+        `).join('')}
+    `;
+}
+
             
             function createMonthlyStockPreview(data) {
                 return `
