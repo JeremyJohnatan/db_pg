@@ -15,6 +15,14 @@
             text-align: center;
             margin-bottom: 30px;
         }
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
         .report-header h2 {
             margin-bottom: 5px;
         }
@@ -86,6 +94,7 @@
 </head>
 <body>
     <div class="report-header">
+         <img src="{{ base_path('public/assets/images/logo1.png') }}" alt="Company Logo" class="logo">
         <h2>{{ $content['title'] }}</h2>
         <p>Periode: {{ $content['tanggal_mulai'] }} - {{ $content['tanggal_akhir'] }}</p>
     </div>
@@ -137,26 +146,24 @@
             @endforeach
             
         @elseif($report->jenis_laporan == 'Laporan Stok Barang Bulanan')
-            <table>
-                <thead>
-                    <tr>
-                        <th>Produk</th>
-                        <th>Total Produksi</th>
-                        <th>Total Pengambilan</th>
-                        <th>Stok Akhir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($content['data'] as $item)
+                <table>
+                    <thead>
                         <tr>
-                            <td>{{ $item['produk'] }}</td>
-                            <td>{{ number_format($item['total_produksi']) }}</td>
-                            <td>{{ number_format($item['total_pengambilan']) }}</td>
-                            <td>{{ number_format($item['stok_akhir']) }}</td>
+                            <th>Bulan</th>
+                            <th>Kategori</th>
+                            <th>Total</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($content['chart_data'] as $item)
+                        <tr>
+                            <td>{{ $item['bulan'] }}</td>
+                            <td>{{ $item['kategori'] }}</td>
+                            <td>{{ number_format($item['total']) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             
         @elseif($report->jenis_laporan == 'Laporan Penjualan Bulanan')
             @foreach($content['data'] as $month => $data)

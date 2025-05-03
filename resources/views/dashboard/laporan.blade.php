@@ -204,7 +204,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="reportPreviewContent"></div>
+                    <div id="reportPreviewContent">
+                        <!-- Konten akan diisi oleh JavaScript -->
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -259,9 +261,9 @@
 @section('scripts')
     <script>
         const routeLaporan = "{{ route('dashboard.laporan') }}";
-        // Ubah definisi route berikut
         const routePreviewReport = "{{ url('laporan/preview') }}";
         const routeDownloadReport = "{{ url('laporan/download') }}";
+        const logoUrl = "{{ url('assets/images/logo1.png') }}";
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -337,7 +339,7 @@
                     // Tampilkan loading indicator
                     document.getElementById('reportPreviewContent').innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><p>Memuat preview laporan...</p></div>';
                     
-                    // Fetch report preview content - PERBAIKAN URL disini
+                    // Fetch report preview content
                     fetch(`${routePreviewReport}/${reportId}`)
                         .then(response => {
                             if (!response.ok) {
@@ -378,13 +380,9 @@
                 });
             });
 
-            // Rest of your JS code remains the same
-            // ...
-
             // Download from preview
             document.getElementById('downloadFromPreview').addEventListener('click', function () {
                 const reportId = this.getAttribute('data-report-id');
-                // PERBAIKAN URL disini
                 window.location.href = `${routeDownloadReport}/${reportId}`;
             });
 
@@ -392,19 +390,53 @@
             document.getElementById('printFromPreview').addEventListener('click', function () {
                 const reportId = this.getAttribute('data-report-id');
                 
-                // Open print window - PERBAIKAN URL disini
-                const printWindow = window.open(`{{ url('laporan/print') }}/${reportId}`, '_blank');
+                // Buat window baru untuk cetak
+                const printContent = document.getElementById('reportPreviewContent').innerHTML;
+                const printWindow = window.open('', '_blank');
                 
-                // Focus on the new window
-                if (printWindow) {
-                    printWindow.focus();
-                }
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Cetak Laporan</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            .report-header { text-align: center; margin-bottom: 30px; }
+                            .logo { max-width: 150px; height: auto; margin-bottom: 15px; }
+                            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                            th { background-color: #f5f7fb; }
+                            .card { border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px; }
+                            .card-header { background-color: #f5f7fb; padding: 10px; border-bottom: 1px solid #ddd; }
+                            .card-body { padding: 15px; }
+                            .row { display: flex; flex-wrap: wrap; margin: 0 -15px; }
+                            .col-md-3, .col-md-6 { padding: 0 15px; box-sizing: border-box; }
+                            .col-md-3 { width: 25%; }
+                            .col-md-6 { width: 50%; }
+                            h5, h6, h2 { margin-top: 10px; margin-bottom: 10px; }
+                        </style>
+                    </head>
+                    <body>
+                        ${printContent}
+                    </body>
+                    </html>
+                `);
+                
+                printWindow.document.close();
+                
+                // Focus pada window baru dan print
+                printWindow.focus();
+                setTimeout(function() {
+                    printWindow.print();
+                    printWindow.close();
+                }, 1000);
             });
 
-            // Helper functions untuk membuat preview content
+            // Helper functions untuk membuat preview content - SEMUA FUNGSI INI DIPERBAIKI UNTUK MENAMPILKAN LOGO
             function createProductionCategoryPreview(data) {
                 return `
                     <div class="report-header mb-4">
+                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
                         <h4>${data.jenis_laporan}</h4>
                         <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
                     </div>
@@ -430,65 +462,64 @@
             }
             
             function createWeeklyProductAnalysisPreview(data) {
-    return `
-        <div class="report-header mb-4">
-            <h4>${data.jenis_laporan}</h4>
-            <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
-        </div>
-        ${Object.keys(data.data).map(week => `
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>${week}</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Produk</th>
-                                    <th>Total Produksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${Object.keys(data.data[week]).map(product => `
-                                    <tr>
-                                        <td>${product}</td>
-                                        <td>${data.data[week][product]}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                return `
+                    <div class="report-header mb-4">
+                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
+                        <h4>${data.jenis_laporan}</h4>
+                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
                     </div>
-                </div>
-            </div>
-        `).join('')}
-    `;
-}
-
+                    ${Object.keys(data.data).map(week => `
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>${week}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Produk</th>
+                                                <th>Total Produksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${Object.keys(data.data[week]).map(product => `
+                                                <tr>
+                                                    <td>${product}</td>
+                                                    <td>${data.data[week][product]}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
             
             function createMonthlyStockPreview(data) {
                 return `
                     <div class="report-header mb-4">
-                        <h4>${data.jenis_laporan}</h4>
+                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
+                        <h4>${data.title}</h4>
                         <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Produk</th>
-                                    <th>Total Produksi</th>
-                                    <th>Total Pengambilan</th>
-                                    <th>Stok Akhir</th>
+                                    <th>Bulan</th>
+                                    <th>Kategori Produk</th>
+                                    <th>Total Stok</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${data.data.map(item => `
                                     <tr>
-                                        <td>${item.produk}</td>
+                                        <td>${item.bulan}</td>
+                                        <td>${item.kategori}</td>
                                         <td>${item.total_produksi}</td>
-                                        <td>${item.total_pengambilan}</td>
-                                        <td>${item.stok_akhir}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -500,6 +531,7 @@
             function createMonthlySalesPreview(data) {
                 return `
                     <div class="report-header mb-4">
+                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
                         <h4>${data.jenis_laporan}</h4>
                         <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
                     </div>
@@ -562,6 +594,7 @@
             function createProductionPerformancePreview(data) {
                 return `
                     <div class="report-header mb-4">
+                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
                         <h4>${data.jenis_laporan}</h4>
                         <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
                     </div>

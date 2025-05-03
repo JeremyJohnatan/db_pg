@@ -297,7 +297,7 @@ class LaporanController extends Controller
         }
     }
 
-    //private function generateAnalisisProdukMingguan($startDate, $endDate)
+    //Analisis Produk Mingguan
     private function generateAnalisisProdukMingguan($startDate, $endDate)
 {
     try {
@@ -342,6 +342,58 @@ class LaporanController extends Controller
         ];
     }
 
+}
+
+    //Analisis Produk Mingguan
+    private function generateStokBarangBulanan($startDate, $endDate)
+{
+    try {
+        // Ambil data produksi per bulan dan kategori
+        $data = DB::table('dbo.tblProduksi')
+            ->join('dbo.tblJenisProduk', 'tblProduksi.KdJenis', '=', 'tblJenisProduk.KdJenis')
+            ->select(
+                DB::raw("FORMAT(tblProduksi.tanggal, 'yyyy-MM') as bulan"),
+                'tblJenisProduk.Jenis as kategori',
+                DB::raw('SUM(tblProduksi.Produksi) as total_produksi')
+            )
+            ->whereBetween('tblProduksi.tanggal', [$startDate, $endDate])
+            ->groupBy(
+                DB::raw("FORMAT(tblProduksi.tanggal, 'yyyy-MM')"),
+                'tblJenisProduk.Jenis'
+            )
+            ->orderBy('bulan', 'asc')
+            ->get();
+
+        // Siapkan data chart
+        $chartData = [];
+        foreach ($data as $item) {
+            $chartData[] = [
+                'bulan' => $item->bulan,
+                'kategori' => $item->kategori,
+                'total' => $item->total_produksi // <- perbaiki dari total_stok ke total_produksi
+            ];
+        }
+
+        // Return hasil
+        return [
+            'title' => 'Laporan Stok Barang Bulanan',
+            'jenis_laporan' => 'Laporan Stok Barang Bulanan',
+            'tanggal_mulai' => date('d F Y', strtotime($startDate)),
+            'tanggal_akhir' => date('d F Y', strtotime($endDate)),
+            'data' => $data,
+            'chart_data' => $chartData
+        ];
+
+    } catch (\Exception $e) {
+        // Jika error, kembalikan dengan pesan error
+        return [
+            'title' => 'Laporan Stok Barang Bulanan',
+            'data' => [],
+            'chart_data' => [],
+            'error' => $e->getMessage()
+        ];
+    
+}
 
 }
 
