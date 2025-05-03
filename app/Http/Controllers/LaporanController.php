@@ -23,7 +23,7 @@ class LaporanController extends Controller
         // Ambil semua laporan dari tabel pkl.laporan
         $reports = DB::table('pkl.laporan')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
         
         // Convert string dates to Carbon objects for proper formatting in view
         foreach ($reports as $report) {
@@ -297,9 +297,59 @@ class LaporanController extends Controller
         }
     }
 
+    //private function generateAnalisisProdukMingguan($startDate, $endDate)
+    private function generateAnalisisProdukMingguan($startDate, $endDate)
+{
+    try {
+        $data = DB::table('dbo.tblProduksi')
+            ->join('dbo.tblJenisProduk', 'dbo.tblProduksi.KdJenis', '=', 'dbo.tblJenisProduk.KdJenis')
+            ->select(
+                DB::raw("DATENAME(week, dbo.tblProduksi.tanggal) as minggu_ke"),
+                DB::raw("MIN(dbo.tblProduksi.tanggal) as awal_minggu"),
+                DB::raw("MAX(dbo.tblProduksi.tanggal) as akhir_minggu"),
+                'dbo.tblJenisProduk.Jenis as kategori',
+                DB::raw('SUM(dbo.tblProduksi.Produksi) as total_produksi')
+            )
+            ->whereBetween('dbo.tblProduksi.tanggal', [$startDate, $endDate])
+            ->groupBy(DB::raw("DATENAME(week, dbo.tblProduksi.tanggal)"), 'dbo.tblJenisProduk.Jenis')
+            ->orderBy(DB::raw("MIN(dbo.tblProduksi.tanggal)"))
+            ->get();
+
+        $formattedData = [];
+
+        foreach ($data as $item) {
+            $minggu = 'Minggu ke-' . $item->minggu_ke . ' (' . date('d M', strtotime($item->awal_minggu)) . ' - ' . date('d M', strtotime($item->akhir_minggu)) . ')';
+            $kategori = $item->kategori;
+            $total = $item->total_produksi;
+
+            if (!isset($formattedData[$minggu])) {
+                $formattedData[$minggu] = [];
+            }
+
+            $formattedData[$minggu][$kategori] = $total;
+        }
+
+        return [
+            'title' => 'Laporan Analisis Produk Mingguan',
+            'data' => $formattedData,
+            'chart_data' => $formattedData,
+        ];
+
+    } catch (\Exception $e) {
+        return [
+            'error' => true,
+            'message' => 'Gagal mengambil data: ' . $e->getMessage()
+        ];
+    }
+
+
+}
+
+    
     /**
  * Menghapus laporan.
  *
+ * /**
  * @param  int  $id
  * @return \Illuminate\Http\RedirectResponse
  */
@@ -320,29 +370,4 @@ public function destroy($id)
         return redirect()->route('dashboard.laporan')->with('error', 'Gagal menghapus laporan');
     }
 }
-    /**
-     * Function untuk preview laporan yang dipanggil dari dashboard
-     */
-    public function previewLaporan($id)
-    {
-        // Di sini kita gunakan untuk preview laporan melalui modal
-        $report = DB::table('pkl.laporan')->where('id', $id)->first();
-        
-        if (!$report) {
-            return response()->json(['error' => 'Laporan tidak ditemukan'], 404);
-        }
-        
-        // Generate content berdasarkan jenis laporan
-        $content = $this->generateReportContent($report);
-        
-        // Tambahkan informasi laporan ke content
-        $content['id'] = $report->id;
-        $content['jenis_laporan'] = $report->jenis_laporan;
-        $content['tanggal_mulai'] = Carbon::parse($report->tanggal_mulai)->format('d F Y');
-        $content['tanggal_akhir'] = Carbon::parse($report->tanggal_akhir)->format('d F Y');
-        
-        return response()->json($content);
-    
-    }
-
 }
