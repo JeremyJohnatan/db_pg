@@ -56,8 +56,8 @@
         color: #004a94 !important;
     }
     .main-content {
-        margin-left: 250px; 
-        padding-top: 30px !important;
+        margin-left: 250px;
+        padding-top: 80px;
         padding-left: 20px;
         padding-right: 20px;
         padding-bottom: 20px;
@@ -362,7 +362,7 @@
                     </div>
                     <ul class="dropdown-menu dropdown-menu-end shadow">
                         <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li><a class="dropdown-item" href="{{ route('pengaturan') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="{{ route('logout') }}" 

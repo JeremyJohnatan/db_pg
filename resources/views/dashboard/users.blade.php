@@ -8,7 +8,53 @@
         background-color: #f5f7fb;
         font-family: Arial, sans-serif;
     }
+<<<<<<< HEAD
+    /*.sidebar {
+        background-color: #004a94;
+        color: white;
+        min-height: 100vh;
+        position: fixed;
+        width: 250px;
+        padding-top: 20px;
+    }
+    .sidebar .logo-container {
+        padding: 15px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+    }
+    .sidebar .logo-container img {
+        max-width: 100%;
+        height: auto;
+        padding: 10px;
+    }
+    .sidebar .nav-link {
+        color: white;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s;
+    }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+    }
+    .sidebar .nav-link i {
+        width: 20px;
+        text-align: center;
+    }
+    .sidebar .nav-link .text-primary {
+        color: #004a94 !important;
+    }
+    .main-content {
+        margin-left: 250px;
+        padding: 80px 20px 20px 20px; /* Tambahkan padding-top yang lebih besar 
+    }
+*/
+=======
 
+>>>>>>> fc99b9000c0482c9a5f70952411972644aa07ce8
     .navbar {
         background-color: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -167,7 +213,7 @@
                     </div>
                     <ul class="dropdown-menu dropdown-menu-end shadow">
                         <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li><a class="dropdown-item" href="{{ route('pengaturan') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
