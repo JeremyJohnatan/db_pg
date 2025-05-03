@@ -94,7 +94,7 @@
 @section('content')
 <div class="container py-4">
         <!-- Quick Actions -->
-        <h5 class="mb-3">Pintasan Cepat</h5>
+        <h5 class="mb-3">Pengaturan</h5>
         <div class="quick-actions">
             <a href="{{ route('profile') }}" class="quick-action-card text-decoration-none text-dark">
                 <i class="fas fa-user-edit"></i>

@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function ()
     //pengaturan route    
         Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
         Route::post('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');  
-
+    
      
     // Tambahkan route untuk password
     Route::get('/users/{user}/password', [UserController::class, 'password'])->name('users.password');
