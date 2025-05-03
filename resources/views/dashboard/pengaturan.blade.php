@@ -259,14 +259,6 @@
         <i class="fas fa-database"></i>
         <span>Backup Data</span>
       </a>
-      <a href="#" class="quick-setting-item">
-        <i class="fas fa-shield-alt"></i>
-        <span>Privasi</span>
-      </a>
-      <a href="#" class="quick-setting-item">
-        <i class="fas fa-plug"></i>
-        <span>Integrasi</span>
-      </a>
     </div>
   </div>
 
