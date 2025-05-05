@@ -28,7 +28,7 @@
             font-weight: bold;
         }
 
-        .report-actions button.btn-primary {
+        .report-actions button.btn-primary, .report-actions a.btn-primary {
             background-color: #004a94;
             color: white;
             border: none;
@@ -37,9 +37,10 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: background-color 0.3s;
+            text-decoration: none;
         }
 
-        .report-actions button.btn-primary:hover {
+        .report-actions button.btn-primary:hover, .report-actions a.btn-primary:hover {
             background-color: #003366;
         }
 
@@ -95,21 +96,6 @@
             font-size: 0.8rem;
         }
 
-        /* Modal styles for preview */
-        .modal-preview {
-            max-width: 100%;
-        }
-
-        .modal-preview .modal-body {
-            height: 70vh;
-        }
-
-        .modal-preview iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
         /* Tambahan style untuk dropdown profile */
         .profile-dropdown {
             position: relative;
@@ -138,9 +124,9 @@
                     <button class="btn btn-success" id="createReportBtn" data-bs-toggle="modal" data-bs-target="#createReportModal">
                         <i class="fas fa-plus-circle"></i> Buat Laporan
                     </button>
-                    <button class="btn btn-primary" id="downloadAllReports">
+                    <a href="{{ route('laporan.download-all') }}" class="btn btn-primary" id="downloadAllReports">
                         <i class="fas fa-download"></i> Download Semua Laporan
-                    </button>
+                    </a>
                 </div>
             </div>
             <div class="report-table-container">
@@ -164,11 +150,8 @@
                             <td>{{ $report->status }}</td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="btn btn-sm btn-outline-primary preview-btn" data-report="{{ $report->id }}">
-                                        <i class="fas fa-eye"></i> Preview
-                                    </button>
-                                    <a href="{{ route('laporan.download', $report->id) }}" class="btn btn-sm btn-outline-success download-btn">
-                                        <i class="fas fa-download"></i> Unduh
+                                    <a href="{{ route('laporan.download', $report->id) }}" class="btn btn-sm btn-outline-primary download-btn">
+                                        <i class="fas fa-file-pdf"></i> Unduh PDF
                                     </a>
                                     <form action="{{ route('laporan.destroy', $report->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus laporan ini?')">
                                         @csrf
@@ -191,28 +174,6 @@
                 <div class="d-flex justify-content-center mt-4">
                     {{ $reports->links() }}
                 </div>                
-            </div>
-        </div>
-    </div>
-
-    <!-- Preview Modal -->
-    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-preview modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="previewModalLabel">Preview Laporan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="reportPreviewContent">
-                        <!-- Konten akan diisi oleh JavaScript -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" id="printFromPreview">Cetak</button>
-                    <button type="button" class="btn btn-success" id="downloadFromPreview">Unduh</button>
-                </div>
             </div>
         </div>
     </div>
@@ -261,7 +222,6 @@
 @section('scripts')
     <script>
         const routeLaporan = "{{ route('dashboard.laporan') }}";
-        const routePreviewReport = "{{ url('laporan/preview') }}";
         const routeDownloadReport = "{{ url('laporan/download') }}";
         const logoUrl = "{{ url('assets/images/logo1.png') }}";
     </script>
@@ -271,7 +231,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const navLinks = document.querySelectorAll('.sidebar .nav-link');
-            const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
             const createReportModal = new bootstrap.Modal(document.getElementById('createReportModal'));
             
             // Set default date values for create report form
@@ -331,329 +290,11 @@
                 form.submit();
             });
 
-            // Preview button functionality
-            document.querySelectorAll('.preview-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const reportId = this.getAttribute('data-report');
-                    
-                    // Tampilkan loading indicator
-                    document.getElementById('reportPreviewContent').innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><p>Memuat preview laporan...</p></div>';
-                    
-                    // Fetch report preview content
-                    fetch(`${routePreviewReport}/${reportId}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Gagal memuat preview laporan');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            // Set the modal content
-                            let previewContent = '';
-                            
-                            // Buat konten preview berdasarkan jenis laporan
-                            if (data.jenis_laporan === 'Laporan Produksi Per Kategori') {
-                                previewContent = createProductionCategoryPreview(data);
-                            } else if (data.jenis_laporan === 'Laporan Analisis Produk Mingguan') {
-                                previewContent = createWeeklyProductAnalysisPreview(data);
-                            } else if (data.jenis_laporan === 'Laporan Stok Barang Bulanan') {
-                                previewContent = createMonthlyStockPreview(data);
-                            } else if (data.jenis_laporan === 'Laporan Penjualan Bulanan') {
-                                previewContent = createMonthlySalesPreview(data);
-                            } else if (data.jenis_laporan === 'Laporan Kinerja Produksi') {
-                                previewContent = createProductionPerformancePreview(data);
-                            } else {
-                                previewContent = '<div class="alert alert-info">Tipe laporan tidak dikenali.</div>';
-                            }
-                            
-                            document.getElementById('reportPreviewContent').innerHTML = previewContent;
-                            
-                            // Set data attributes for buttons
-                            document.getElementById('downloadFromPreview').setAttribute('data-report-id', reportId);
-                            document.getElementById('printFromPreview').setAttribute('data-report-id', reportId);
-                        })
-                        .catch(error => {
-                            document.getElementById('reportPreviewContent').innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
-                        });
-                    
-                    previewModal.show();
-                });
+            // Tambahkan event listener untuk tombol "Download Semua Laporan"
+            document.getElementById('downloadAllReports').addEventListener('click', function(e) {
+                // Tampilkan loading message atau spinner jika diinginkan
+                alert('Sedang mengunduh semua laporan, harap tunggu...');
             });
-
-            // Download from preview
-            document.getElementById('downloadFromPreview').addEventListener('click', function () {
-                const reportId = this.getAttribute('data-report-id');
-                window.location.href = `${routeDownloadReport}/${reportId}`;
-            });
-
-            // Print from preview
-            document.getElementById('printFromPreview').addEventListener('click', function () {
-                const reportId = this.getAttribute('data-report-id');
-                
-                // Buat window baru untuk cetak
-                const printContent = document.getElementById('reportPreviewContent').innerHTML;
-                const printWindow = window.open('', '_blank');
-                
-                printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Cetak Laporan</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; margin: 20px; }
-                            .report-header { text-align: center; margin-bottom: 30px; }
-                            .logo { max-width: 150px; height: auto; margin-bottom: 15px; }
-                            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                            th { background-color: #f5f7fb; }
-                            .card { border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px; }
-                            .card-header { background-color: #f5f7fb; padding: 10px; border-bottom: 1px solid #ddd; }
-                            .card-body { padding: 15px; }
-                            .row { display: flex; flex-wrap: wrap; margin: 0 -15px; }
-                            .col-md-3, .col-md-6 { padding: 0 15px; box-sizing: border-box; }
-                            .col-md-3 { width: 25%; }
-                            .col-md-6 { width: 50%; }
-                            h5, h6, h2 { margin-top: 10px; margin-bottom: 10px; }
-                        </style>
-                    </head>
-                    <body>
-                        ${printContent}
-                    </body>
-                    </html>
-                `);
-                
-                printWindow.document.close();
-                
-                // Focus pada window baru dan print
-                printWindow.focus();
-                setTimeout(function() {
-                    printWindow.print();
-                    printWindow.close();
-                }, 1000);
-            });
-
-            // Helper functions untuk membuat preview content - SEMUA FUNGSI INI DIPERBAIKI UNTUK MENAMPILKAN LOGO
-            function createProductionCategoryPreview(data) {
-                return `
-                    <div class="report-header mb-4">
-                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
-                        <h4>${data.jenis_laporan}</h4>
-                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Kategori</th>
-                                    <th>Total Produksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${data.data.map(item => `
-                                    <tr>
-                                        <td>${item.kategori}</td>
-                                        <td>${item.total_produksi}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
-            
-            function createWeeklyProductAnalysisPreview(data) {
-                return `
-                    <div class="report-header mb-4">
-                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
-                        <h4>${data.jenis_laporan}</h4>
-                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
-                    </div>
-                    ${Object.keys(data.data).map(week => `
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5>${week}</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Produk</th>
-                                                <th>Total Produksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${Object.keys(data.data[week]).map(product => `
-                                                <tr>
-                                                    <td>${product}</td>
-                                                    <td>${data.data[week][product]}</td>
-                                                </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                `;
-            }
-            
-            function createMonthlyStockPreview(data) {
-                return `
-                    <div class="report-header mb-4">
-                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
-                        <h4>${data.title}</h4>
-                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Bulan</th>
-                                    <th>Kategori Produk</th>
-                                    <th>Total Stok</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${data.data.map(item => `
-                                    <tr>
-                                        <td>${item.bulan}</td>
-                                        <td>${item.kategori}</td>
-                                        <td>${item.total_produksi}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
-            
-            function createMonthlySalesPreview(data) {
-                return `
-                    <div class="report-header mb-4">
-                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
-                        <h4>${data.jenis_laporan}</h4>
-                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
-                    </div>
-                    ${Object.keys(data.data).map(month => `
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5>${month}</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6>Berdasarkan Produk</h6>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Produk</th>
-                                                        <th>Total Pengambilan</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    ${Object.keys(data.data[month].produk).map(product => `
-                                                        <tr>
-                                                            <td>${product}</td>
-                                                            <td>${data.data[month].produk[product]}</td>
-                                                        </tr>
-                                                    `).join('')}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6>Berdasarkan Pembeli</h6>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Pembeli</th>
-                                                        <th>Total Pengambilan</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    ${Object.keys(data.data[month].pembeli).map(buyer => `
-                                                        <tr>
-                                                            <td>${buyer}</td>
-                                                            <td>${data.data[month].pembeli[buyer]}</td>
-                                                        </tr>
-                                                    `).join('')}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                `;
-            }
-            
-            function createProductionPerformancePreview(data) {
-                return `
-                    <div class="report-header mb-4">
-                        <img src="${logoUrl}" alt="Company Logo" class="logo" style="max-width: 150px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
-                        <h4>${data.jenis_laporan}</h4>
-                        <p>Periode: ${data.tanggal_mulai} - ${data.tanggal_akhir}</p>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Total Hari</h5>
-                                    <h2>${data.total_hari}</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Hari Produksi</h5>
-                                    <h2>${data.hari_produksi}</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Efisiensi</h5>
-                                    <h2>${data.efisiensi}%</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Rata-rata Produksi</h5>
-                                    <h2>${data.rata_produksi}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <h5>Produksi per Gudang</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Gudang</th>
-                                    <th>Total Produksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${data.produksi_gudang.map(item => `
-                                    <tr>
-                                        <td>${item.gudang}</td>
-                                        <td>${item.total_produksi}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
         });
     </script>
 @endsection
