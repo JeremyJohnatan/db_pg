@@ -158,10 +158,10 @@
   <div class="container-fluid">
     <h5 class="mb-0">Pengaturan</h5>
     <div class="d-flex align-items-center">
-      <div class="position-relative me-3">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="form-control ps-5 search-bar" placeholder="Search">
-      </div>
+    <div class="search-bar me-3">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
       <div class="dropdown">
         <button class="btn border-0 bg-transparent d-flex align-items-center"
                 data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuButton">
@@ -214,10 +214,10 @@
       <div class="col-md-6">
         <div class="settings-card">
           <h6><i class="fas fa-sliders-h me-2"></i>Pengaturan Tampilan</h6>
-          <div class="form-check form-switch mb-3">
+          <!--<div class="form-check form-switch mb-3">
             <input class="form-check-input" type="checkbox" id="darkMode">
             <label class="form-check-label" for="darkMode">Mode Gelap</label>
-          </div>
+          </div>-->
           <div class="form-check form-switch mb-3">
             <input class="form-check-input" type="checkbox" id="compactMode" checked>
             <label class="form-check-label" for="compactMode">Tampilan Ringkas</label>
@@ -239,9 +239,9 @@
               <option>Harian</option>
             </select>
           </div>
-          <button class="btn btn-sm btn-outline-primary">
+          <!--<button class="btn btn-sm btn-outline-primary">
             <i class="fas fa-envelope me-1"></i>Test Notifikasi
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
