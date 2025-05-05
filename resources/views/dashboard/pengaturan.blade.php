@@ -19,10 +19,10 @@
     }
 
     body.dark {
-        --bg-color: #1a1a1a;
-        --text-color: #ffffff;
-        --box-bg: #2d2d2d;
-        --box-border: #444444;
+    --bg-color: #fffbe6; /* warna cream muda */
+    --text-color: #000000; /* teks tetap hitam agar kontras */
+    --box-bg: #fffdf2; /* latar belakang kontainer dalam mode gelap */
+    --box-border: #e0d9b9; /* border yang lebih soft */
     }
 
     body {
@@ -259,6 +259,14 @@
         <i class="fas fa-database"></i>
         <span>Backup Data</span>
       </a>
+      <!--<a href="#" class="quick-setting-item">
+        <i class="fas fa-shield-alt"></i>
+        <span>Privasi</span>
+      </a>
+      <a href="#" class="quick-setting-item">
+        <i class="fas fa-plug"></i>
+        <span>Integrasi</span>
+      </a> -->
     </div>
   </div>
 
@@ -301,8 +309,8 @@
             <span class="text-muted">24 dokumen</span>
           </div>
           <div class="d-flex justify-content-between small mb-2">
-            <span><i class="fas fa-users me-2"></i>Kontak Tersimpan</span>
-            <span class="text-muted">8 kontak</span>
+            <span><i class="fas fa-users me-2"></i>Users</span>
+            <span class="text-muted">8 users</span>
           </div>
           <div class="d-flex justify-content-between small">
             <span><i class="fas fa-hdd me-2"></i>Penyimpanan</span>
