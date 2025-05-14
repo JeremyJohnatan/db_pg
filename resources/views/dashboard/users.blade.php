@@ -8,91 +8,6 @@
         background-color: #f5f7fb;
         font-family: Arial, sans-serif;
     }
-<<<<<<< HEAD
-    /*.sidebar {
-        background-color: #004a94;
-        color: white;
-        min-height: 100vh;
-        position: fixed;
-        width: 250px;
-        padding-top: 20px;
-    }
-    .sidebar .logo-container {
-        padding: 15px;
-        font-weight: bold;
-        font-size: 1.2rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
-    }
-    .sidebar .logo-container img {
-        max-width: 100%;
-        height: auto;
-        padding: 10px;
-    }
-    .sidebar .nav-link {
-        color: white;
-        padding: 0.75rem 1rem;
-        display: flex;
-        align-items: center;
-        transition: all 0.3s;
-    }
-    .sidebar .nav-link:hover, .sidebar .nav-link.active {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-    }
-    .sidebar .nav-link i {
-        width: 20px;
-        text-align: center;
-    }
-    .sidebar .nav-link .text-primary {
-        color: #004a94 !important;
-    }
-    .main-content {
-        margin-left: 250px;
-        padding: 80px 20px 20px 20px; /* Tambahkan padding-top yang lebih besar 
-    }
-*/
-=======
-
->>>>>>> fc99b9000c0482c9a5f70952411972644aa07ce8
-    .navbar {
-        background-color: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        position: fixed; /* Membuat navbar tetap berada di posisinya */
-        top: 0; /* Posisi di bagian atas */
-        right: 0; /* Posisi di bagian kanan */
-        left: 250px; /* Sesuaikan dengan lebar sidebar (250px) */
-        z-index: 1000; /* Memastikan navbar berada di atas konten lain */
-        padding: 10px 20px;
-    }
-    .navbar-content {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .navbar .search-bar {
-        position: relative;
-    }
-    .navbar .search-bar input {
-        padding-left: 40px; /* Space for the icon */
-        border-radius: 20px;
-        border: 1px solid #e0e0e0;
-        background-color: #f5f7fb;
-    }
-    .navbar .search-bar .search-icon {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #a0a0a0;
-        pointer-events: none; /* Ensures icon doesn't interfere with input */
-        z-index: 10;
-    }
-    .navbar .user-info {
-        display: flex;
-        align-items: center;
-    }
     .navbar .user-avatar {
         width: 32px;
         height: 32px;
@@ -104,14 +19,6 @@
         justify-content: center;
         font-weight: bold;
         cursor: pointer;
-    }
-    /* Styling untuk Dropdown Profile */
-    .profile-dropdown {
-        position: relative;
-    }
-    .profile-dropdown .dropdown-menu {
-        right: 0;
-        left: auto;
     }
     .card {
         border: none;
@@ -198,37 +105,6 @@
 @endsection
 
 @section('content')
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div></div>
-            <div class="d-flex align-items-center">
-                <div class="search-bar me-3">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <div class="dropdown profile-dropdown">
-                    <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="me-2">Halo, {{ Auth::user()->name }}</span>
-                        <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
-                    </div>
-                    <ul class="dropdown-menu dropdown-menu-end shadow">
-                        <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('pengaturan') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-sign-out-alt me-2"></i> Log Out
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <!-- Alert Messages -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
