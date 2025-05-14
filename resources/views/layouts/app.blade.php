@@ -136,52 +136,87 @@
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light mb-4">
             <div class="container-fluid">
-                <div class="d-flex align-items-center">
-                    <div class="input-group me-3">
-                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                        <input type="date" class="form-control" id="tanggal-mulai" name="tanggal_mulai"
-                            value="{{ $tanggalMulai ?? '' }}">
-                    </div>
-                    <div class="input-group me-3">
-                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                        <input type="date" class="form-control" id="tanggal-akhir" name="tanggal_akhir"
-                            value="{{ $tanggalAkhir ?? '' }}">
-                    </div>
-                    <button class="btn btn-primary btn-sm" id="filter-tanggal">Filter</button>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="search-bar me-3">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="form-control" placeholder="Cari">
-                    </div>
-                    <!-- Profile dropdown menu -->
-                    <div class="dropdown profile-dropdown">
-                        <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="me-2">Halo, {{ Auth::user()->name }}</span>
-                            <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                @if(request()->routeIs('dashboard.users') || request()->routeIs('dashboard.laporan'))
+                    <!-- Khusus halaman users dan laporan - tanpa filter tanggal -->
+                    <div class="d-flex justify-content-end w-100">
+                        <div class="search-bar me-3">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="form-control" placeholder="Cari">
                         </div>
-                        <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i>
-                                    Profil</a></li>
-                            <li><a class="dropdown-item" href="{{ route('pengaturan') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fas fa-sign-out-alt me-2"></i> Log Out
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </li>
-                        </ul>
+                        <!-- Profile dropdown menu -->
+                        <div class="dropdown profile-dropdown">
+                            <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="me-2">Halo, {{ Auth::user()->name }}</span>
+                                <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                            </div>
+                            <ul class="dropdown-menu dropdown-menu-end shadow">
+                                <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i>
+                                        Profil</a></li>
+                                <li><a class="dropdown-item" href="{{ route('pengaturan') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Log Out
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                @else
+                    <!-- Struktur normal untuk halaman lain (dengan filter tanggal) -->
+                    <div class="d-flex align-items-center">
+                        <div class="input-group me-3">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="date" class="form-control" id="tanggal-mulai" name="tanggal_mulai"
+                                value="{{ $tanggalMulai ?? '' }}">
+                        </div>
+                        <div class="input-group me-3">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="date" class="form-control" id="tanggal-akhir" name="tanggal_akhir"
+                                value="{{ $tanggalAkhir ?? '' }}">
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="filter-tanggal">Filter</button>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="search-bar me-3">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="form-control" placeholder="Cari">
+                        </div>
+                        <!-- Profile dropdown menu -->
+                        <div class="dropdown profile-dropdown">
+                            <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="me-2">Halo, {{ Auth::user()->name }}</span>
+                                <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                            </div>
+                            <ul class="dropdown-menu dropdown-menu-end shadow">
+                                <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i>
+                                        Profil</a></li>
+                                <li><a class="dropdown-item" href="{{ route('pengaturan') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Log Out
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                @endif
             </div>
         </nav>
-    @yield('content')
+        @yield('content')
     
     </div>
     @yield('scripts')
