@@ -284,21 +284,20 @@
 
   {{-- Statistik Penggunaan --}}
   <div class="content-box">
+      <button onclick="window.location.reload()" class="btn btn-sm btn-primary">
+        <i class="fas fa-sync-alt"></i> Muat Ulang Data
+    </button>
   <h5 class="mb-3">Statistik Penggunaan</h5>
   <div class="row">
     <div class="col-md-6">
       <div class="settings-card">
         <div class="d-flex justify-content-between small mb-2">
           <span><i class="fas fa-sign-in-alt me-2"></i>Login Terakhir</span>
-          <span class="text-muted" id="lastLogin">Memuat...</span>
-        </div>
-        <div class="d-flex justify-content-between small mb-2">
-          <span><i class="fas fa-desktop me-2"></i>Perangkat Aktif</span>
-          <span class="text-muted" id="activeDevices">Memuat...</span>
+          <span class="text-muted">{{ $stats['last_login'] ?? '-' }}</span>
         </div>
         <div class="d-flex justify-content-between small">
           <span><i class="fas fa-calendar-alt me-2"></i>Bergabung Pada</span>
-          <span class="text-muted" id="joinDate">Memuat...</span>
+          <span class="text-muted">{{ $stats['join_date'] ?? '-' }}</span>
         </div>
       </div>
     </div>
@@ -306,17 +305,21 @@
       <div class="settings-card">
         <div class="d-flex justify-content-between small mb-2">
           <span><i class="fas fa-file-alt me-2"></i>Total Laporan</span>
-          <span class="text-muted" id="totalReports">Memuat...</span>
+          <span class="text-muted">{{ $stats['total_reports'] ?? '0' }} dokumen</span>
         </div>
-        <div class="d-flex justify-content-between small mb-2">
-          <span><i class="fas fa-users me-2"></i>Users</span>
-          <span class="text-muted" id="totalUsers">Memuat...</span>
-        </div>
-        <div class="d-flex justify-content-between small">
+        <!--<div class="d-flex justify-content-between small">
           <span><i class="fas fa-hdd me-2"></i>Penyimpanan</span>
-          <span class="text-muted" id="storageUsage">Memuat...</span>
+          <span class="text-muted">{{ $stats['storage_usage'] ?? '0%' }} terisi</span>
+        </div>
+      </div>-->
+
+            <div class="progress">
+        <div class="progress-bar" 
+            style="width: {{ $stats['storage_usage'] ?? 0 }}%">
+          {{ $stats['storage_usage'] ?? 0 }}%
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -327,42 +330,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
 <script>
-
-      // Fungsi untuk update statistik
-async function updateStats() {
-  try {
-    const response = await fetch('/api/user/stats');
-    const data = await response.json();
-    
-    // Update data
-    document.getElementById('lastLogin').textContent = data.last_login || '2 jam yang lalu';
-    document.getElementById('activeDevices').textContent = data.active_devices || '1 perangkat';
-    document.getElementById('joinDate').textContent = data.join_date || '15 Jan 2023';
-    document.getElementById('totalReports').textContent = data.total_reports || '24 dokumen';
-    document.getElementById('totalUsers').textContent = data.total_users || '8 users';
-    document.getElementById('storageUsage').textContent = data.storage_usage || '15% terisi';
-    
-  } catch (error) {
-    console.error('Gagal memuat statistik:', error);
-  }
-}
-
-// Polling setiap 30 detik
-setInterval(updateStats, 30000);
-
-// Jalankan pertama kali
-updateStats();
-
-// Opsional: Gunakan WebSocket untuk update instan
-const socket = new WebSocket('wss://yourserver.com/realtime');
-
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  if (data.type === 'stats_update') {
-    updateStats();
-  }
-};
-
   document.addEventListener('DOMContentLoaded', function () {
     // Toggle Theme
     const themeToggle = document.getElementById('theme-toggle');
