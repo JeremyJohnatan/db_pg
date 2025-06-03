@@ -179,7 +179,7 @@
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light mb-4">
             <div class="container-fluid">
-                @if(request()->routeIs('dashboard.users') || request()->routeIs('dashboard.laporan'))
+                @if(request()->routeIs('dashboard.users', 'dashboard.laporan', 'profile'))
                     <!-- Khusus halaman users dan laporan - tanpa filter tanggal -->
                     <div class="d-flex justify-content-end w-100">
                         <div class="search-bar me-3">
