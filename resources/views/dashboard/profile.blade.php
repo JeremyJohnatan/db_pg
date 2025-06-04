@@ -72,24 +72,16 @@
         z-index: 1030;
         width: calc(100% - 250px);
     }
-    .navbar .search-bar {
-        position: relative;
-    }
-    .navbar .search-bar input {
-        padding-left: 40px;
-        border-radius: 20px;
-        border: 1px solid #e0e0e0;
-        background-color: #f5f7fb;
-    }
-    .navbar .search-bar .search-icon {
-        position: absolute;
-        left: 15px;
-        top: 48%;
-        transform: translateY(-50%);
-        color: #a0a0a0;
-        pointer-events: none;
-        z-index: 10;
-    }
+  <nav class="navbar">
+    <!-- Search Bar Section -->
+    <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input type="text" placeholder="Search...">
+    </div>
+    
     .user-avatar {
         width: 32px;
         height: 32px;
