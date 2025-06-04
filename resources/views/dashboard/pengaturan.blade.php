@@ -4,12 +4,17 @@
 
 @section('styles')
 <style>
-    :root {
-        --primary: #004a94;
-        --secondary: #f5f7fb;
-        --button-bg: #004a94;
-        --button-text: #ffffff;
-    }
+   :root {
+  --primary: #004a94;
+  --primary-light: rgba(0, 74, 148, 0.1);
+  --secondary: #f5f7fb;
+  --button-bg: #004a94;
+  --button-text: #ffffff;
+  --success: #28a745;
+  --info: #004a94;
+  --info-light: rgba(23, 162, 184, 0.1);
+  --danger: #dc3545;
+}
 
     body.light {
         --bg-color: var(--secondary);
@@ -110,6 +115,124 @@
         color: var(--text-color);
         border: 1px solid var(--box-border);
     }
+/* Card Container Keamanan */
+#security-section {
+  border-left: 3px solid var(--primary); /* Garis aksen kiri */
+  position: relative;
+  overflow: hidden; /* Untuk efek visual */
+}
+
+#security-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0,74,148,0.03) 0%, transparent 100%);
+  z-index: -1;
+}
+
+/* Info Box Password Admin */
+.info-card {
+  background-color: var(--info-light);
+  border-left: 4px solid var(--info);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease; /* Animasi muncul */
+}
+
+.info-card h6 {
+  color: var(--info);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.info-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* Elemen Fitur Keamanan */
+.security-feature-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--box-border);
+}
+
+.security-feature-item:last-child {
+  border-bottom: none;
+}
+
+.security-feature-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--primary-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  color: var(--primary);
+}
+
+.security-feature-text h6 {
+  font-weight: 600;
+  margin-bottom: 3px;
+  color: var(--text-primary);
+}
+
+.security-feature-text p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+/* Tombol Logout All */
+#logout-all {
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background-color: transparent;
+}
+
+#logout-all:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  transform: translateY(-1px);
+}
+
+#logout-all i {
+  margin-right: 8px;
+}
+
+/* Animasi */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsif */
+@media (max-width: 576px) {
+  .security-feature-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .security-feature-icon {
+    margin-bottom: 10px;
+  }
+}
+
 </style>
 @endsection
 
@@ -155,13 +278,6 @@
       <a href="{{ route('profile') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-user-edit me-2"></i>Edit Profil
       </a>
-
-    
-      <a href="{{ route('profile') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
-        <i class="fas fa-user-edit me-2"></i>keamanan
-      </a>
-
-
       <!--<button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-lock me-2"></i>Keamanan
       </button>-->
@@ -175,6 +291,37 @@
   </div>
 
   
+{{-- Alert keamanan --}}
+<div class="content-box">
+  <h5>Keamanan Akun</h5>
+  
+  <div class="info-card">
+    <h6>Perubahan Password</h6>
+    <p>Untuk keamanan sistem, perubahan password hanya dapat dilakukan oleh administrator.</p>
+  </div>
+  
+  <div class="security-feature-item">
+    <div class="security-feature-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <div class="security-feature-text">
+      <h6>Verifikasi Email</h6>
+      <p>Email Anda telah terverifikasi</p>
+    </div>
+  </div>
+  
+  <div class="security-feature-item">
+    <div class="security-feature-icon">
+      <i class="fas fa-laptop"></i>
+    </div>
+    <div class="security-feature-text">
+      <h6>Sesi Aktif</h6>
+      <p>Anda login dari perangkat ini</p>
+    </div>
+  </div>
+
+</div>
+
 {{-- Kotak Catatan --}}
 <div class="content-box">
   <div class="d-flex justify-content-between align-items-center mb-3">
