@@ -15,7 +15,6 @@
         padding-right: 20px;
         padding-bottom: 20px;
     }
-<<<<<<< HEAD
     .navbar {
         background-color: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -26,18 +25,24 @@
         z-index: 1030;
         width: calc(100% - 250px);
     }
-  <nav class="navbar">
-    <!-- Search Bar Section -->
-    <div class="search-bar">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-        </svg>
-        <input type="text" placeholder="Search...">
-    </div>
-    
-=======
->>>>>>> 527396b72e4c528b69ba622a37652f32e11da1af
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0a0a0;
+    }
+
+    .search-bar input {
+        width: 250px;
+        padding-left: 40px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        border-radius: 20px;
+        border: 1px solid var(--box-border);
+        background-color: var(--box-bg);
+        color: var(--text-color);
+    }
     .user-avatar {
         width: 32px;
         height: 32px;
@@ -52,6 +57,7 @@
     }
     .profile-dropdown {
         position: relative;
+        margin-top: 4px;
     }
     .profile-dropdown .dropdown-menu {
         right: 0;
