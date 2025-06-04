@@ -193,6 +193,11 @@
   margin-bottom: 0;
 }
 
+.calendar-widget {
+  z-index: 1050; /* agar tampil di atas elemen lain */
+  width: 200px;
+}
+
 /* Tombol Logout All */
 #logout-all {
   border-radius: 8px;
@@ -245,6 +250,8 @@
         <i class="fas fa-search search-icon"></i>
         <input type="text" class="form-control ps-5 search-bar" placeholder="Search">
       </div>-->
+
+      
       <div class="dropdown">
         <button class="btn border-0 bg-transparent d-flex align-items-center"
                 data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuButton">
@@ -270,7 +277,14 @@
   </div>
 </nav>
 
-<div class="container mt-4">
+<div class="col-md-4">
+      <div class="calendar-widget border rounded p-3 shadow-sm">
+        <div id="currentDate" class="fw-bold mb-2"></div>
+        <div id="currentTime" style="font-size: 10;" class="mb-2"></div>
+        <div id="monthCalendar"></div>
+      </div>
+    </div>
+   
   {{-- Kotak Pintasan --}}
   <div class="content-box">
     <h5 class="mb-3">Pintasan</h5>
@@ -278,15 +292,25 @@
       <a href="{{ route('profile') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-user-edit me-2"></i>Edit Profil
       </a>
+
+      <a href="{{ route('dashboard.users') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+        <i class="fas fa-lock me-2"></i>Keamanan
+      </a>
+
+        <button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+        <i class="fas fa-calendar-alt me-2"></i>Kalender
+      </button>
+
+       
       <!--<button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-lock me-2"></i>Keamanan
-      </button>-->
-      <!--<button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+      </button>
+      <button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-bell me-2"></i>Notifikasi
-      </button>-->
+      </button>
       <button id="theme-toggle" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-palette me-2"></i>Tema
-      </button>
+      </button>-->
     </div>
   </div>
 
@@ -319,7 +343,6 @@
       <p>Anda login dari perangkat ini</p>
     </div>
   </div>
-
 </div>
 
 {{-- Kotak Catatan --}}
@@ -346,7 +369,43 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
 <script>
+   // Update waktu
+  function updateTime() {
+    const now = new Date();
+    document.getElementById('currentDate').textContent = 
+      now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('currentTime').textContent = 
+      now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  
+  // Kalender bulanan mini
+  function renderMiniCalendar() {
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    
+    let calendarHTML = `<table>`;
+    // ... logika render kalender (bisa pakai library kecil seperti 'tiny-calendar')
+    calendarHTML += `</table>`;
+    
+    document.getElementById('monthCalendar').innerHTML = calendarHTML;
+  }
+
+  setInterval(updateTime, 1000);
+  renderMiniCalendar();
+
+
  document.addEventListener('DOMContentLoaded', function () {
+
+    // remindeer
+    document.getElementById('reminder').value = 
+       localStorage.getItem('dailyReminder') || '';
+    function saveReminder() {
+      const reminder = document.getElementById('reminder').value;
+      localStorage.setItem('dailyReminder', reminder);
+      alert('Pengingat disimpan!');
+    }
+
     // Toggle Theme
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
