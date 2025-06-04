@@ -453,7 +453,7 @@ public function downloadAll()
             ->join('tblPembeli', 'tblKontrak.KdPembeli', '=', 'tblPembeli.KdPembeli')
             ->select(
                 DB::raw("FORMAT(tblKontrak.Tgl, 'MMMM yyyy') as bulan"),
-                'tblPembeli.Pembeli as pembeli',  // Column is Pembeli, not Nama
+                'tblPembeli.Pembeli as pembeli',  
                 DB::raw('SUM(tblKontrak.Jml) as total_pengambilan')
             )
             ->whereBetween('tblKontrak.Tgl', [$startDate, $endDate])
