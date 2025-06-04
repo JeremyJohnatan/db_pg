@@ -51,7 +51,7 @@
         background-color: white;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
+        margin-bottom: 20px; /* Pertahankan margin-bottom di sini untuk spasi di bawah tabel */
     }
     .user-table thead th {
         background-color: #f5f7fb;
@@ -105,7 +105,6 @@
 @endsection
 
 @section('content')
-    <!-- Alert Messages -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -119,6 +118,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
+    <div class="d-flex justify-content-end mb-3"> {{-- Ditambahkan mb-3 untuk spasi di bawah tombol --}}
+        <a href="{{ route('users.create') }}" class="add-user-btn">
+            <i class="fas fa-plus me-2"></i> Tambah User
+        </a>
+    </div>
 
     <div class="card shadow-sm">
         <div class="card-body p-0">
@@ -168,13 +173,6 @@
             </div>
         </div>
     </div>
-
-    <div class="d-flex justify-content-end mt-3">
-        <a href="{{ route('users.create') }}" class="add-user-btn">
-            <i class="fas fa-plus me-2"></i> Tambah User
-        </a>
-    </div>
-</div>
 @endsection
 
 @section('scripts')
@@ -182,7 +180,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // JavaScript for handling active menu items
+        // JavaScript untuk menangani item menu aktif
         const navLinks = document.querySelectorAll('.sidebar .nav-link');
         
         navLinks.forEach(link => {
