@@ -4,12 +4,17 @@
 
 @section('styles')
 <style>
-    :root {
-        --primary: #004a94;
-        --secondary: #f5f7fb;
-        --button-bg: #004a94;
-        --button-text: #ffffff;
-    }
+   :root {
+  --primary: #004a94;
+  --primary-light: rgba(0, 74, 148, 0.1);
+  --secondary: #f5f7fb;
+  --button-bg: #004a94;
+  --button-text: #ffffff;
+  --success: #28a745;
+  --info: #004a94;
+  --info-light: rgba(23, 162, 184, 0.1);
+  --danger: #dc3545;
+}
 
     body.light {
         --bg-color: var(--secondary);
@@ -31,32 +36,19 @@
     }
 
     .navbar {
-        background-color: var(--box-bg);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 250px;
-        z-index: 1030;
-        width: calc(100% - 250px);
-    }
-
-    .search-icon {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #a0a0a0;
-    }
-
-    .search-bar input {
-        padding-left: 40px;
-        border-radius: 20px;
-        border: 1px solid var(--box-border);
-        background-color: var(--box-bg);
-        color: var(--text-color);
-    }
-
+    background-color: var(--box-bg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 250px;
+    z-index: 1030;
+    width: calc(100% - 250px);
+    padding: 5px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
     .user-avatar {
         width: 32px;
         height: 32px;
@@ -89,7 +81,7 @@
     .shortcut-btn:hover {
         opacity: 0.9;
         transform: translateY(-2px);
-    }
+    }*/
 
     /* Fitur Tambahan */
     .settings-card {
@@ -113,34 +105,7 @@
         gap: 10px;
     }
 
-    .quick-setting-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 10px;
-        border-radius: 8px;
-        text-align: center;
-        color: var(--text-color);
-        transition: all 0.2s;
-        background-color: rgba(0, 74, 148, 0.1);
-    }
-
-    .quick-setting-item:hover {
-        background-color: rgba(0, 74, 148, 0.2);
-        transform: translateY(-2px);
-    }
-
-    .quick-setting-item i {
-        font-size: 1.2rem;
-        margin-bottom: 5px;
-        color: var(--primary);
-    }
-
-    .quick-setting-item span {
-        font-size: 0.75rem;
-    }
-
-    .form-check-input:checked {
+        .form-check-input:checked {
         background-color: var(--primary);
         border-color: var(--primary);
     }
@@ -150,6 +115,124 @@
         color: var(--text-color);
         border: 1px solid var(--box-border);
     }
+/* Card Container Keamanan */
+#security-section {
+  border-left: 3px solid var(--primary); /* Garis aksen kiri */
+  position: relative;
+  overflow: hidden; /* Untuk efek visual */
+}
+
+#security-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0,74,148,0.03) 0%, transparent 100%);
+  z-index: -1;
+}
+
+/* Info Box Password Admin */
+.info-card {
+  background-color: var(--info-light);
+  border-left: 4px solid var(--info);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease; /* Animasi muncul */
+}
+
+.info-card h6 {
+  color: var(--info);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.info-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* Elemen Fitur Keamanan */
+.security-feature-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--box-border);
+}
+
+.security-feature-item:last-child {
+  border-bottom: none;
+}
+
+.security-feature-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--primary-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  color: var(--primary);
+}
+
+.security-feature-text h6 {
+  font-weight: 600;
+  margin-bottom: 3px;
+  color: var(--text-primary);
+}
+
+.security-feature-text p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+/* Tombol Logout All */
+#logout-all {
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background-color: transparent;
+}
+
+#logout-all:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  transform: translateY(-1px);
+}
+
+#logout-all i {
+  margin-right: 8px;
+}
+
+/* Animasi */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsif */
+@media (max-width: 576px) {
+  .security-feature-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .security-feature-icon {
+    margin-bottom: 10px;
+  }
+}
+
 </style>
 @endsection
 
@@ -158,10 +241,10 @@
   <div class="container-fluid">
     <h5 class="mb-0">Pengaturan</h5>
     <div class="d-flex align-items-center">
-      <div class="position-relative me-3">
+      <!--<div class="position-relative me-3">
         <i class="fas fa-search search-icon"></i>
         <input type="text" class="form-control ps-5 search-bar" placeholder="Search">
-      </div>
+      </div>-->
       <div class="dropdown">
         <button class="btn border-0 bg-transparent d-flex align-items-center"
                 data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuButton">
@@ -195,129 +278,64 @@
       <a href="{{ route('profile') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-user-edit me-2"></i>Edit Profil
       </a>
-      <button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+      <!--<button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-lock me-2"></i>Keamanan
-      </button>
-      <button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+      </button>-->
+      <!--<button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-bell me-2"></i>Notifikasi
-      </button>
+      </button>-->
       <button id="theme-toggle" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
         <i class="fas fa-palette me-2"></i>Tema
       </button>
     </div>
   </div>
 
-  {{-- Preferensi Aplikasi --}}
-  <div class="content-box">
-    <h5 class="mb-3">Preferensi Aplikasi</h5>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="settings-card">
-          <h6><i class="fas fa-sliders-h me-2"></i>Pengaturan Tampilan</h6>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" id="darkMode">
-            <label class="form-check-label" for="darkMode">Mode Gelap</label>
-          </div>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" id="compactMode" checked>
-            <label class="form-check-label" for="compactMode">Tampilan Ringkas</label>
-          </div>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="notifSound" checked>
-            <label class="form-check-label" for="notifSound">Suara Notifikasi</label>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="settings-card">
-          <h6><i class="fas fa-bell me-2"></i>Pengaturan Notifikasi</h6>
-          <div class="mb-3">
-            <label class="form-label small">Frekuensi Notifikasi</label>
-            <select class="form-select form-select-sm">
-              <option>Real-time</option>
-              <option>Setiap 1 jam</option>
-              <option>Harian</option>
-            </select>
-          </div>
-          <button class="btn btn-sm btn-outline-primary">
-            <i class="fas fa-envelope me-1"></i>Test Notifikasi
-          </button>
-        </div>
-      </div>
+  
+{{-- Alert keamanan --}}
+<div class="content-box">
+  <h5>Keamanan Akun</h5>
+  
+  <div class="info-card">
+    <h6>Perubahan Password</h6>
+    <p>Untuk keamanan sistem, perubahan password hanya dapat dilakukan oleh administrator.</p>
+  </div>
+  
+  <div class="security-feature-item">
+    <div class="security-feature-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <div class="security-feature-text">
+      <h6>Verifikasi Email</h6>
+      <p>Email Anda telah terverifikasi</p>
+    </div>
+  </div>
+  
+  <div class="security-feature-item">
+    <div class="security-feature-icon">
+      <i class="fas fa-laptop"></i>
+    </div>
+    <div class="security-feature-text">
+      <h6>Sesi Aktif</h6>
+      <p>Anda login dari perangkat ini</p>
     </div>
   </div>
 
-  {{-- Quick Settings --}}
-  <div class="content-box">
-    <h5 class="mb-3">Pengaturan Cepat</h5>
-    <div class="quick-settings-grid">
-      <a href="#" class="quick-setting-item">
-        <i class="fas fa-language"></i>
-        <span>Bahasa</span>
-      </a>
-      <a href="#" class="quick-setting-item">
-        <i class="fas fa-database"></i>
-        <span>Backup Data</span>
-      </a>
-      <!--<a href="#" class="quick-setting-item">
-        <i class="fas fa-shield-alt"></i>
-        <span>Privasi</span>
-      </a>
-      <a href="#" class="quick-setting-item">
-        <i class="fas fa-plug"></i>
-        <span>Integrasi</span>
-      </a> -->
-    </div>
-  </div>
+</div>
 
-  {{-- Kotak Catatan --}}
-  <div class="content-box">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Catatan Pribadi</h5>
-      <button class="btn btn-primary btn-sm" id="add-note">
-        <i class="fas fa-plus me-1"></i>Tambah Catatan
-      </button>
-    </div>
-    <textarea class="form-control" id="personal-notes" rows="3"
-      placeholder="Klik untuk menambahkan catatan pribadi..."></textarea>
+{{-- Kotak Catatan --}}
+<div class="content-box">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Catatan Pribadi</h5>
+    <button class="btn btn-primary btn-sm" id="add-note">
+      <i class="fas fa-plus me-1"></i>Tambah Catatan
+    </button>
   </div>
+  <textarea class="form-control" id="personal-notes" rows="3"
+    placeholder="Ketik di sini... catatan akan tersimpan otomatis"></textarea>
+</div>
 
-  {{-- Statistik Penggunaan --}}
-  <div class="content-box">
-    <h5 class="mb-3">Statistik Penggunaan</h5>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="settings-card">
-          <div class="d-flex justify-content-between small mb-2">
-            <span><i class="fas fa-sign-in-alt me-2"></i>Login Terakhir</span>
-            <span class="text-muted">2 jam yang lalu</span>
-          </div>
-          <div class="d-flex justify-content-between small mb-2">
-            <span><i class="fas fa-desktop me-2"></i>Perangkat Aktif</span>
-            <span class="text-muted">1 perangkat</span>
-          </div>
-          <div class="d-flex justify-content-between small">
-            <span><i class="fas fa-calendar-alt me-2"></i>Bergabung Pada</span>
-            <span class="text-muted">15 Jan 2023</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="settings-card">
-          <div class="d-flex justify-content-between small mb-2">
-            <span><i class="fas fa-file-alt me-2"></i>Total Laporan</span>
-            <span class="text-muted">24 dokumen</span>
-          </div>
-          <div class="d-flex justify-content-between small mb-2">
-            <span><i class="fas fa-users me-2"></i>Users</span>
-            <span class="text-muted">8 users</span>
-          </div>
-          <div class="d-flex justify-content-between small">
-            <span><i class="fas fa-hdd me-2"></i>Penyimpanan</span>
-            <span class="text-muted">15% terisi</span>
-          </div>
-        </div>
-      </div>
+ 
+
     </div>
   </div>
 </div>
@@ -328,7 +346,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+ document.addEventListener('DOMContentLoaded', function () {
     // Toggle Theme
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
@@ -352,8 +370,7 @@
         localStorage.setItem('theme', 'light');
       }
     });
-
-    // Catatan Pribadi
+// Catatan Pribadi
     const personalNotes = document.getElementById('personal-notes');
     const addNoteBtn = document.getElementById('add-note');
 
@@ -375,5 +392,8 @@
       notifSound.checked = false;
     }
   });
+
+
 </script>
+
 @endsection
