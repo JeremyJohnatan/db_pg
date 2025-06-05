@@ -4,7 +4,7 @@
 
 @section('styles')
 <style>
-   :root {
+:root {
   --primary: #004a94;
   --primary-light: rgba(0, 74, 148, 0.1);
   --secondary: #f5f7fb;
@@ -16,26 +16,26 @@
   --danger: #dc3545;
 }
 
-    body.light {
-        --bg-color: var(--secondary);
-        --text-color: #000000;
-        --box-bg: #f8f9fc;
-        --box-border: #e0e0e0;
-    }
+body.light {
+    --bg-color: var(--secondary);
+    --text-color: #000000;
+    --box-bg: #f8f9fc;
+    --box-border: #e0e0e0;
+}
 
-    body.dark {
-    --bg-color: #fffbe6; /* warna cream muda */
-    --text-color: #000000; /* teks tetap hitam agar kontras */
-    --box-bg: #fffdf2; /* latar belakang kontainer dalam mode gelap */
-    --box-border: #e0d9b9; /* border yang lebih soft */
-    }
+body.dark {
+    --bg-color: #fffbe6;
+    --text-color: #000000;
+    --box-bg: #fffdf2;
+    --box-border: #e0d9b9;
+}
 
-    body {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-    }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
 
-    .navbar {
+.navbar {
     background-color: var(--box-bg);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     position: fixed;
@@ -49,318 +49,291 @@
     align-items: center;
     justify-content: space-between;
 }
-    .user-avatar {
-        width: 32px;
-        height: 32px;
-        background-color: var(--primary);
-        color: var(--button-text);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        margin-left: 8px;
-    }
 
-    .content-box {
-        background: var(--box-bg);
-        border: 1px solid var(--box-border);
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
 
-    .shortcut-btn {
-        background-color: var(--button-bg);
-        color: var(--button-text);
-        border-radius: 8px !important;
-        transition: all 0.3s ease;
-    }
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: var(--primary);
+    color: var(--button-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-left: 8px;
+}
 
-    .shortcut-btn:hover {
-        opacity: 0.9;
-        transform: translateY(-2px);
-    }*/
+.content-box {
+    background: var(--box-bg);
+    border: 1px solid var(--box-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
 
-    /* Fitur Tambahan */
-    .settings-card {
-        background: var(--box-bg);
-        border: 1px solid var(--box-border);
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 15px;
-    }
+.shortcut-btn {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-radius: 8px !important;
+    transition: all 0.3s ease;
+}
 
-    .settings-card h6 {
-        color: var(--primary);
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-    }
+.shortcut-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
 
-    .quick-settings-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
+/* Simple Date Time Widget */
 
-        .form-check-input:checked {
-        background-color: var(--primary);
-        border-color: var(--primary);
-    }
+.simple-datetime-widget h6 {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
 
-    .form-select {
-        background-color: var(--box-bg);
-        color: var(--text-color);
-        border: 1px solid var(--box-border);
-    }
+.datetime-display .current-date {
+    font-size: 0.85rem;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.datetime-display {
+    text-align: center; /* agar tetap di tengah */
+    white-space: nowrap; /* cegah pindah baris */
+}
+
+.datetime-display .current-time {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--primary);
+    font-family: 'Courier New', monospace;
+}
+
+.datetime-display {
+    justify-content: center; /* atau space-between jika ingin merenggang */
+    align-items: center;
+    gap: 0px; /* ini yang bisa kamu kecilkan agar lebih dekat */
+}
+
 /* Card Container Keamanan */
 #security-section {
-  border-left: 3px solid var(--primary); /* Garis aksen kiri */
-  position: relative;
-  overflow: hidden; /* Untuk efek visual */
+    border-left: 3px solid var(--primary);
+    position: relative;
+    overflow: hidden;
 }
 
 #security-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(0,74,148,0.03) 0%, transparent 100%);
-  z-index: -1;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,74,148,0.03) 0%, transparent 100%);
+    z-index: -1;
 }
 
-/* Info Box Password Admin */
 .info-card {
-  background-color: var(--info-light);
-  border-left: 4px solid var(--info);
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  animation: fadeIn 0.5s ease; /* Animasi muncul */
+    background-color: var(--info-light);
+    border-left: 4px solid var(--info);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease;
 }
 
 .info-card h6 {
-  color: var(--info);
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
+    color: var(--info);
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
 }
 
 .info-card p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0;
 }
 
-/* Elemen Fitur Keamanan */
 .security-feature-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px dashed var(--box-border);
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--box-border);
 }
 
 .security-feature-item:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .security-feature-icon {
-  width: 32px;
-  height: 32px;
-  background-color: var(--primary-light);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 15px;
-  color: var(--primary);
+    width: 32px;
+    height: 32px;
+    background-color: var(--primary-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: var(--primary);
 }
 
 .security-feature-text h6 {
-  font-weight: 600;
-  margin-bottom: 3px;
-  color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 3px;
+    color: var(--text-color);
 }
 
 .security-feature-text p {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: 0;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    margin-bottom: 0;
 }
 
-.calendar-widget {
-  z-index: 1050; /* agar tampil di atas elemen lain */
-  width: 200px;
-}
-
-/* Tombol Logout All */
-#logout-all {
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--danger);
-  color: var(--danger);
-  background-color: transparent;
-}
-
-#logout-all:hover {
-  background-color: rgba(220, 53, 69, 0.1);
-  transform: translateY(-1px);
-}
-
-#logout-all i {
-  margin-right: 8px;
-}
-
-/* Animasi */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsif */
+/* Responsive */
+@media (max-width: 768px) {
+    .content-box .d-flex {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .simple-datetime-widget {
+        align-self: stretch;
+    }
+    
+    .navbar {
+        right: 0;
+        left: 0;
+        width: 100%;
+    }
+}
+
 @media (max-width: 576px) {
-  .security-feature-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .security-feature-icon {
-    margin-bottom: 10px;
-  }
+    .security-feature-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .security-feature-icon {
+        margin-bottom: 10px;
+    }
 }
-
 </style>
 @endsection
 
 @section('content')
 <nav class="navbar navbar-expand-lg navbar-light">
-  <div class="container-fluid">
-    <h5 class="mb-0">Pengaturan</h5>
-    <div class="d-flex align-items-center">
-      <!--<div class="position-relative me-3">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="form-control ps-5 search-bar" placeholder="Search">
-      </div>-->
-
-      
-      <div class="dropdown">
-        <button class="btn border-0 bg-transparent d-flex align-items-center"
-                data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuButton">
-          <span class="me-2">Halo, {{ Auth::user()->name }}</span>
-          <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name,0,1)) }}</div>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i>Profil</a></li>
-          <li><a class="dropdown-item" href="{{ route('pengaturan') }}"><i class="fas fa-cog me-2"></i>Pengaturan</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li>
-            <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-              <i class="fas fa-sign-out-alt me-2"></i>Log Out
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-              @csrf
-            </form>
-          </li>
-        </ul>
-      </div>
+    <div class="container-fluid">
+        <h5 class="mb-0">Pengaturan</h5>
+        <div class="d-flex align-items-center">
+            <div class="dropdown">
+                <button class="btn border-0 bg-transparent d-flex align-items-center"
+                        data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuButton">
+                    <span class="me-2">Halo, {{ Auth::user()->name }}</span>
+                    <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name,0,1)) }}</div>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i>Profil</a></li>
+                    <li><a class="dropdown-item" href="{{ route('pengaturan') }}"><i class="fas fa-cog me-2"></i>Pengaturan</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt me-2"></i>Log Out
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </nav>
 
-<div class="col-md-4">
-      <div class="calendar-widget border rounded p-3 shadow-sm">
-        <div id="currentDate" class="fw-bold mb-2"></div>
-        <div id="currentTime" style="font-size: 10;" class="mb-2"></div>
-        <div id="monthCalendar"></div>
-      </div>
-    </div>
-   
-  {{-- Kotak Pintasan --}}
-  <div class="content-box">
-    <h5 class="mb-3">Pintasan</h5>
-    <div class="d-flex flex-wrap gap-3">
-      <a href="{{ route('profile') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
-        <i class="fas fa-user-edit me-2"></i>Edit Profil
-      </a>
+<div class="main-content-container">
+    <div class="left-content">
+        {{-- Kotak Pintasan --}}
+        <div class="content-box">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h5 class="mb-3">Pintasan</h5>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{{ route('profile') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+                            <i class="fas fa-user-edit me-2"></i>Edit Profil
+                        </a>
+                        <!--<a href="{{ route('dashboard.users') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+                            <i class="fas fa-lock me-2"></i>Keamanan
+                        </a>-->
+                    </div>
+                </div>
 
-      <a href="{{ route('dashboard.users') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
-        <i class="fas fa-lock me-2"></i>Keamanan
-      </a>
+                
+                
+                <!-- Simple Date Time Widget -->
+                 
+                <div class="simple-datetime-widget">
+                    <div class="datetime-display">
+                      <h6 class="text-primary mb-2">Tanggal</h6>
+                        <div id="currentDate" class="current-date">Loading...</div>
+                        <div id="currentTime" class="current-time">00:00:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
-        <i class="fas fa-calendar-alt me-2"></i>Kalender
-      </button>
+        {{-- Alert keamanan --}}
+        <div class="content-box" id="security-section">
+            <h5>Keamanan Akun</h5>
+            
+            <div class="info-card">
+                <h6><i class="fas fa-info-circle me-2"></i>Perubahan Password</h6>
+                <p>Untuk keamanan sistem, perubahan password hanya dapat dilakukan oleh administrator.</p>
+            </div>
+            
+            <div class="security-feature-item">
+                <div class="security-feature-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="security-feature-text">
+                    <h6>Verifikasi Email</h6>
+                    <p>Email Anda telah terverifikasi</p>
+                </div>
+            </div>
+            
+            <div class="security-feature-item">
+                <div class="security-feature-icon">
+                    <i class="fas fa-laptop"></i>
+                </div>
+                <div class="security-feature-text">
+                    <h6>Sesi Aktif</h6>
+                    <p>Anda login dari perangkat ini</p>
+                </div>
+            </div>
+        </div>
 
-       
-      <!--<button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
-        <i class="fas fa-lock me-2"></i>Keamanan
-      </button>
-      <button class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
-        <i class="fas fa-bell me-2"></i>Notifikasi
-      </button>
-      <button id="theme-toggle" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
-        <i class="fas fa-palette me-2"></i>Tema
-      </button>-->
+        {{-- Kotak Catatan --}}
+        <div class="content-box">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Catatan Pribadi</h5>
+                <button class="btn btn-primary btn-sm" id="add-note">
+                    <i class="fas fa-plus me-1"></i>Tambah Catatan
+                </button>
+            </div>
+            <textarea class="form-control" id="personal-notes" rows="3"
+                placeholder="Ketik di sini... catatan akan tersimpan otomatis"></textarea>
+        </div>
     </div>
-  </div>
-
-  
-{{-- Alert keamanan --}}
-<div class="content-box">
-  <h5>Keamanan Akun</h5>
-  
-  <div class="info-card">
-    <h6>Perubahan Password</h6>
-    <p>Untuk keamanan sistem, perubahan password hanya dapat dilakukan oleh administrator.</p>
-  </div>
-  
-  <div class="security-feature-item">
-    <div class="security-feature-icon">
-      <i class="fas fa-check-circle"></i>
-    </div>
-    <div class="security-feature-text">
-      <h6>Verifikasi Email</h6>
-      <p>Email Anda telah terverifikasi</p>
-    </div>
-  </div>
-  
-  <div class="security-feature-item">
-    <div class="security-feature-icon">
-      <i class="fas fa-laptop"></i>
-    </div>
-    <div class="security-feature-text">
-      <h6>Sesi Aktif</h6>
-      <p>Anda login dari perangkat ini</p>
-    </div>
-  </div>
-</div>
-
-{{-- Kotak Catatan --}}
-<div class="content-box">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">Catatan Pribadi</h5>
-    <button class="btn btn-primary btn-sm" id="add-note">
-      <i class="fas fa-plus me-1"></i>Tambah Catatan
-    </button>
-  </div>
-  <textarea class="form-control" id="personal-notes" rows="3"
-    placeholder="Ketik di sini... catatan akan tersimpan otomatis"></textarea>
-</div>
-
- 
-
-    </div>
-  </div>
 </div>
 @endsection
 
@@ -369,90 +342,65 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
 <script>
-   // Update waktu
-  function updateTime() {
-    const now = new Date();
-    document.getElementById('currentDate').textContent = 
-      now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('currentTime').textContent = 
-      now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  }
-  
-  // Kalender bulanan mini
-  function renderMiniCalendar() {
-    const now = new Date();
-    const month = now.getMonth();
-    const year = now.getFullYear();
-    
-    let calendarHTML = `<table>`;
-    // ... logika render kalender (bisa pakai library kecil seperti 'tiny-calendar')
-    calendarHTML += `</table>`;
-    
-    document.getElementById('monthCalendar').innerHTML = calendarHTML;
-  }
-
-  setInterval(updateTime, 1000);
-  renderMiniCalendar();
-
-
- document.addEventListener('DOMContentLoaded', function () {
-
-    // remindeer
-    document.getElementById('reminder').value = 
-       localStorage.getItem('dailyReminder') || '';
-    function saveReminder() {
-      const reminder = document.getElementById('reminder').value;
-      localStorage.setItem('dailyReminder', reminder);
-      alert('Pengingat disimpan!');
+document.addEventListener('DOMContentLoaded', function () {
+    // Update waktu real-time
+    function updateTime() {
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        
+        document.getElementById('currentDate').textContent = 
+            now.toLocaleDateString('id-ID', options);
+        document.getElementById('currentTime').textContent = 
+            now.toLocaleTimeString('id-ID', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
     }
 
     // Toggle Theme
-    const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
-
     const savedTheme = localStorage.getItem('theme');
+    
     if (savedTheme === 'dark') {
-      body.classList.remove('light');
-      body.classList.add('dark');
-    } else {
-      body.classList.add('light');
-    }
-
-    themeToggle.addEventListener('click', function () {
-      if (body.classList.contains('light')) {
         body.classList.remove('light');
         body.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        body.classList.remove('dark');
+    } else {
         body.classList.add('light');
-        localStorage.setItem('theme', 'light');
-      }
-    });
-// Catatan Pribadi
+    }
+
+    // Catatan Pribadi
     const personalNotes = document.getElementById('personal-notes');
     const addNoteBtn = document.getElementById('add-note');
 
-    addNoteBtn.addEventListener('click', function() {
-      const noteText = prompt('Masukkan catatan pribadi:');
-      if (noteText) {
-        personalNotes.value = noteText;
-      }
-    });
-
-    // Simpan preferensi notifikasi
-    const notifSound = document.getElementById('notifSound');
-    notifSound.addEventListener('change', function() {
-      localStorage.setItem('notifSound', this.checked);
-    });
-
-    // Load preferensi yang disimpan
-    if (localStorage.getItem('notifSound') === 'false') {
-      notifSound.checked = false;
+    // Load catatan yang tersimpan
+    if (localStorage.getItem('personalNotes')) {
+        personalNotes.value = localStorage.getItem('personalNotes');
     }
-  });
 
+    // Auto-save catatan
+    personalNotes.addEventListener('input', function() {
+        localStorage.setItem('personalNotes', this.value);
+    });
 
+    addNoteBtn.addEventListener('click', function() {
+        const noteText = prompt('Masukkan catatan pribadi:');
+        if (noteText) {
+            personalNotes.value = noteText;
+            localStorage.setItem('personalNotes', noteText);
+        }
+    });
+
+    // Inisialisasi
+    updateTime();
+    
+    // Update waktu setiap detik
+    setInterval(updateTime, 1000);
+});
 </script>
-
 @endsection
