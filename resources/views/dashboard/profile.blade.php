@@ -268,7 +268,6 @@
 @endsection
 
 @section('content')
-<!-- Alert Popup -->
 <div id="alertPopup" class="alert-popup alert-success">
     <i class="fas fa-check-circle me-2"></i> <span id="alertMessage">Data berhasil disimpan</span>
 </div>
@@ -276,9 +275,7 @@
 
 </div>
 
-<!-- Main Content -->
 <div class="main-content">
-    <!-- Profile Header -->
     <div class="profile-header d-flex">
         <div class="profile-avatar">
             {{ substr(Auth::user()->name, 0, 1) }}
@@ -286,18 +283,16 @@
         <div class="profile-info d-flex flex-column justify-content-center">
             <h2>{{ Auth::user()->name }}</h2>
             <p><i class="fas fa-envelope me-2"></i>{{ Auth::user()->username ?? 'admin' }}</p>
-            <p><i class="fas fa-id-badge me-2"></i>Administrator</p>
+            <p id="profilePosition"><i class="fas fa-id-badge me-2"></i>{{ Auth::user()->position ?? 'Administrator' }}</p>
         </div>
     </div>
 
-    <!-- Profile Content -->
     <div class="profile-content">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <ul class="nav nav-tabs mb-0" id="profileTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true">Informasi Akun</button>
                 </li>
-                <!-- Tab keamanan dihapus -->
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false">Aktivitas</button>
                 </li>
@@ -308,7 +303,6 @@
         </div>
 
         <div class="tab-content" id="profileTabsContent">
-            <!-- Informasi Akun Tab -->
             <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
                 <form id="profileForm">
                     <div class="row">
@@ -353,9 +347,6 @@
                 </form>
             </div>
 
-            <!-- Tab keamanan dihapus -->
-
-            <!-- Aktivitas Tab -->
             <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="mb-0">Aktivitas Terbaru</h6>
@@ -416,7 +407,6 @@
                     </div>
                 </div>
                 
-                <!-- Pesan saat tidak ada aktivitas yang sesuai filter -->
                 <div id="noActivitiesMessage" class="text-center py-4 d-none">
                     <i class="fas fa-info-circle text-muted mb-2" style="font-size: 2rem;"></i>
                     <p class="text-muted">Tidak ada aktivitas yang sesuai dengan filter yang dipilih.</p>
@@ -822,6 +812,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const emailInfo = document.querySelector('.profile-info p:nth-child(2)');
         if (emailInfo) {
             emailInfo.innerHTML = `<i class="fas fa-envelope me-2"></i>${user.username}`;
+        }
+
+        // Tambahkan ini untuk memperbarui Jabatan di profile header
+        const profilePosition = document.getElementById('profilePosition');
+        if (profilePosition) {
+            profilePosition.innerHTML = `<i class="fas fa-id-badge me-2"></i>${user.position}`;
         }
     }
     
