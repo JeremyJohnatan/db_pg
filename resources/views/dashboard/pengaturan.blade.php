@@ -275,11 +275,12 @@ body {
                         <!--<a href="{{ route('dashboard.users') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
                             <i class="fas fa-lock me-2"></i>Keamanan
                         </a>-->
+                        <a href="{{ asset('strukturorganisasi.jpg') }}" target="_blank" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+                            <i class="fas fa-sitemap me-2"></i> Struktur Organisasi
+                        </a>  
                     </div>
                 </div>
 
-                
-                
                 <!-- Simple Date Time Widget -->
                  
                 <div class="simple-datetime-widget">
