@@ -9,6 +9,17 @@ class PengaturanController extends Controller
 {
     public function index()
     {
+
+          $user = Auth::user();
+
+    if ($user->role === 'Admin') {
+        return view('dashboard.pengaturanadmin', compact('user'));
+    } elseif ($user->role === 'Staff') {
+        return view('dashboard.pengaturan', compact('user'));
+    } else {
+        abort(403, 'Role tidak dikenal');
+    }
+
         return view('dashboard.pengaturan');
     }
 
