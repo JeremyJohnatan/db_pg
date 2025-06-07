@@ -237,9 +237,8 @@
                     <div class="col-md-6 mb-3">
                         <label for="role" class="form-label">Role</label>
                         <select class="form-select @error('role') is-invalid @enderror" id="role" name="role">
-                            <option value="User" {{ old('role') == 'User' ? 'selected' : '' }}>User</option>
-                            <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="Supervisor" {{ old('role') == 'Supervisor' ? 'selected' : '' }}>Supervisor</option>
+                           <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="Supervisor" {{ old('role') == 'Staff' ? 'selected' : '' }}>Staff</option>
                         </select>
                         @error('role')
                         <div class="invalid-feedback">{{ $message }}</div>
