@@ -18,22 +18,25 @@ class LaporanController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function indexDashboard()
-    {
-        // Ambil semua laporan dari tabel pkl.laporan
-        $reports = DB::table('pkl.laporan')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        
-        // Convert string dates to Carbon objects for proper formatting in view
-        foreach ($reports as $report) {
-            $report->created_at = Carbon::parse($report->created_at);
-            $report->tanggal_mulai = Carbon::parse($report->tanggal_mulai);
-            $report->tanggal_akhir = Carbon::parse($report->tanggal_akhir);
+            public function indexDashboard(Request $request)
+        {
+            $query = DB::table('pkl.laporan');
+
+            if ($request->filled('search')) {
+                $query->where('jenis_laporan', 'like', '%' . $request->search . '%');
+            }
+
+            $reports = $query->orderBy('created_at', 'desc')->paginate(10);
+
+            // Format tanggal
+            foreach ($reports as $report) {
+                $report->created_at = Carbon::parse($report->created_at);
+                $report->tanggal_mulai = Carbon::parse($report->tanggal_mulai);
+                $report->tanggal_akhir = Carbon::parse($report->tanggal_akhir);
+            }
+
+            return view('dashboard.laporan', compact('reports'));
         }
-        
-        return view('dashboard.laporan', compact('reports'));
-    }
 
     /**
      * Menyimpan laporan baru

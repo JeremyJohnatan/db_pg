@@ -176,16 +176,20 @@
 @endif
 
     <div class="main-content">
+        
+        
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light mb-4">
             <div class="container-fluid">
                 @if(request()->routeIs('dashboard.users', 'dashboard.laporan', 'profile'))
                     <!-- Khusus halaman users dan laporan - tanpa filter tanggal -->
                     <div class="d-flex justify-content-end w-100">
-                        <div class="search-bar me-3">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" class="form-control" placeholder="Cari">
-                        </div>
+                        @if (Route::currentRouteName() === 'dashboard.laporan')
+                            <form action="{{ route('dashboard.laporan') }}" method="GET" class="search-bar me-3">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" name="search" class="form-control" placeholder="Cari laporan..." value="{{ request('search') }}">
+                            </form>
+                        @endif
                         <!-- Profile dropdown menu -->
                         <div class="dropdown profile-dropdown">
                             <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
@@ -229,10 +233,12 @@
                         <button class="btn btn-primary btn-sm" id="filter-tanggal">Filter</button>
                     </div>
                     <div class="d-flex align-items-center">
-                        <div class="search-bar me-3">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" class="form-control" placeholder="Cari">
-                        </div>
+                        @if (Route::currentRouteName() === 'dashboard.laporan')
+                            <form action="{{ route('dashboard.laporan') }}" method="GET" class="search-bar me-3">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" name="search" class="form-control" placeholder="Cari laporan..." value="{{ request('search') }}">
+                            </form>
+                        @endif
                         <!-- Profile dropdown menu -->
                         <div class="dropdown profile-dropdown">
                             <div class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
