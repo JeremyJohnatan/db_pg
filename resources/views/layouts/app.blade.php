@@ -80,6 +80,7 @@
     } 
         </style>
 @if(auth()->user()->role == 'Staff')
+
 <!-- Sidebar staff -->
                 <div class="sidebar d-flex flex-column">
                     <div class="logo d-flex align-items-center">
@@ -87,7 +88,7 @@
                         <img src="{{ asset('assets/images/logo.png') }}" alt="PG Rajawali I" class="img-fluid" style="max-width: 100%; padding: 10px;">
                     </div>
                     <div class="nav flex-column mt-4">
-                        <a href="{{ route('dashboard') }}" class="nav-link active">
+                        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                             <div class="d-flex align-items-center">
                                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                     <i class="fas fa-home text-primary"></i>
@@ -95,7 +96,7 @@
                                 <span>Dashboard</span>
                             </div>
                         </a>
-                        <a href="{{ route('dashboard.analisis-produk') }}" class="nav-link">
+                        <a href="{{ route('dashboard.analisis-produk') }}" class="nav-link {{ request()->routeIs('dashboard.analisis-produk') ? 'active' : '' }}">
                             <div class="d-flex align-items-center">
                                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                     <i class="fas fa-box text-primary"></i>
@@ -103,7 +104,7 @@
                                 <span>Analisis Produk</span>
                             </div>
                         </a>
-                        <a href="{{ route('dashboard.analisis-pabrik') }}" class="nav-link">
+                        <a href="{{ route('dashboard.analisis-pabrik') }}" class="nav-link {{ request()->routeIs('dashboard.analisis-pabrik') ? 'active' : '' }}">
                             <div class="d-flex align-items-center">
                                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                     <i class="fas fa-industry text-primary"></i>
@@ -111,7 +112,7 @@
                                 <span>Analisis Pabrik</span>
                             </div>
                         </a>
-                        <a href="{{ route('dashboard.laporan') }}" class="nav-link">
+                        <a href="{{ route('dashboard.laporan') }}" class="nav-link {{ request()->routeIs('dashboard.laporan') ? 'active' : '' }}">
                             <div class="d-flex align-items-center">
                                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                     <i class="fas fa-file-alt text-primary"></i>
