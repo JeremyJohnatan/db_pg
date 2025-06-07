@@ -273,17 +273,10 @@ body {
                             <i class="fas fa-user-edit me-2"></i>Edit Profil
                         </a>
 
-                        <!--<form action="{{ route('pengaturan.update') }}" method="POST">
-                            @csrf
-                            <input type="text" name="name" value="{{ old('name', $user->name) }}" required>
-                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required>
-                            <input type="text" name="username" value="{{ old('username', $user->username) }}" required>
-                            <button type="submit">Simpan</button>
-                        </form>-->
                       
-                        <!--<a href="{{ route('dashboard.users') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
+                        <a href="{{ route('dashboard.users') }}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
                             <i class="fas fa-lock me-2"></i>Keamanan
-                        </a>-->
+                        </a>
                        
                         <a href="{{ asset('strukturorganisasi.jpg') }}" target="_blank" class="btn btn-light border shadow-sm px-4 py-2 rounded-3 shortcut-btn">
                             <i class="fas fa-sitemap me-2"></i> Struktur Organisasi

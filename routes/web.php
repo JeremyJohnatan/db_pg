@@ -45,6 +45,10 @@ Route::middleware(['auth'])->group(function ()
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users');
     Route::resource('users', UserController::class)->except(['show']);
 
+     //pengaturan route    
+        Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
+        Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update'); 
+
     // API routes untuk AJAX data
     Route::prefix('api')->group(function () {
 
@@ -61,29 +65,28 @@ Route::middleware(['auth'])->group(function ()
     });
 
     // Profile routes
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::post('/profile/update', [ProfileController::class, 'update'])
-        ->name('profile.update')
-        ->middleware('auth');
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+        Route::post('/profile/update', [ProfileController::class, 'update'])
+            ->name('profile.update')
+            ->middleware('auth');
 
     });
 
-    //pengaturan route    
-        Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
-        Route::post('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');  
-    
-     
+   
+            
     // Tambahkan route untuk password
-    Route::get('/users/{user}/password', [UserController::class, 'password'])->name('users.password');
-    Route::put('/users/{user}/update-password', [UserController::class, 'updatePassword'])->name('users.update-password');
-// Tambahkan atau update routes berikut di routes/web.php
+        Route::get('/users/{user}/password', [UserController::class, 'password'])->name('users.password');
+        Route::put('/users/{user}/update-password', [UserController::class, 'updatePassword'])->name('users.update-password');
+    // Tambahkan atau update routes berikut di routes/web.php
 
-// Laporan routes
-    Route::get('/dashboard/laporan', [LaporanController::class, 'indexDashboard'])->name('dashboard.laporan');
-    Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
-    Route::get('/laporan/preview/{id}', [LaporanController::class, 'preview'])->name('laporan.preview');
-    Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
-    Route::get('/laporan/print/{id}', [LaporanController::class, 'print'])->name('laporan.print');
-    Route::get('/laporan/download-all', [LaporanController::class, 'downloadAll'])->name('laporan.download-all');
-    Route::delete('/laporan/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
-    ;
+    // Laporan routes
+        Route::get('/dashboard/laporan', [LaporanController::class, 'indexDashboard'])->name('dashboard.laporan');
+        Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+        Route::get('/laporan/preview/{id}', [LaporanController::class, 'preview'])->name('laporan.preview');
+        Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
+        Route::get('/laporan/print/{id}', [LaporanController::class, 'print'])->name('laporan.print');
+        Route::get('/laporan/download-all', [LaporanController::class, 'downloadAll'])->name('laporan.download-all');
+        Route::delete('/laporan/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
+        ;
+
+    // 
